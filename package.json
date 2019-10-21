@@ -18,6 +18,16 @@
   "engines": [
     "node"
   ],
+  "appium": {
+    "driverName": "safari",
+    "automationName": "Safari",
+    "platformNames": [
+      "Mac",
+      "Windows",
+      "iOS"
+    ],
+    "mainClass": "SafariDriver"
+  },
   "main": "./build/index.js",
   "bin": {},
   "directories": {
