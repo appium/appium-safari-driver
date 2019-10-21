@@ -7,8 +7,8 @@ const DEFAULT_HOST = 'localhost';
 const DEFAULT_PORT = 4797;
 
 async function main () {
-  let port = yargs.argv.port || DEFAULT_PORT;
-  let host = yargs.argv.host || DEFAULT_HOST;
+  let port = yargs.argv.port || yargs.argv.p || DEFAULT_PORT;
+  let host = yargs.argv.host || yargs.argv.h || DEFAULT_HOST;
   return startServer(port, host);
 }
 
