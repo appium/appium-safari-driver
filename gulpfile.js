@@ -1,4 +1,4 @@
-"use strict";
+'use strict';
 
 let gulp = require('gulp');
 let boilerplate = require('appium-gulp-plugins').boilerplate.use(gulp);
