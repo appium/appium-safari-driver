@@ -17,4 +17,4 @@ if (require.main === module) {
 }
 
 export default SafariDriver;
-export { startServer };
+export { SafariDriver, startServer };
