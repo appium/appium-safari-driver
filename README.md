@@ -17,7 +17,6 @@ Then you need to decide where the automated test is going to be executed. Safari
 
 Safari driver allows to define multiple criterions for platform selection and also to fine-tune your automation session properties. This could be done via the following session capabilities:
 
-
 Capability Name | Description
 --- | ---
 platformName | safaridriver binary can only create WebDriver sessions for desktop or mobile Safari and can only run on Mac OS. Value of platformName could equal to 'Mac' or 'iOS' in order to start Safari driver session for the corresponding platform. Values of platformName are compared case-insensitively.
@@ -47,12 +46,16 @@ import time
 
 def setup_module(module):
     common_caps = {
+        # It does not really matter what to put there, although setting 'Safari' might cause a failure
+        # depending on the particular client library
         'browserName': 'AppiumSafari',
+        # automationName capability presence is mandatory for this Safari Driver to be selected
         'automationName': 'Safari',
     }
     real_device_caps = {
         **common_caps,
         'platformName': 'iOS',
+        # This capability is optional
         'safari:deviceType': 'iPhone',
         # Do not forget to verify that Remote Automation is enabled for this device
         'safari:deviceUDID': '<MyDeviceUDID>',
