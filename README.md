@@ -3,8 +3,7 @@ appium-safari-driver
 
 This is Appium driver for automating Safari on [Mac OS X](https://developer.apple.com/documentation/webkit/testing_with_webdriver_in_safari?language=objc) and iOS [since version 13](https://webkit.org/blog/9395/webdriver-is-coming-to-safari-in-ios-13/).
 The driver only supports Safari automation using [W3C WebDriver protocol](https://www.w3.org/TR/webdriver/).
-Under the hood this driver is a wrapper/proxy over Apple's `safaridriver` binary, that implements all the heavy lifting.
-Check the output of `man safaridriver` command to get more details on the supported features and possible pitfalls.
+Under the hood this driver is a wrapper/proxy over Apple's `safaridriver` binary. Check the output of `man safaridriver` command to get more details on the supported features and possible pitfalls.
 
 ## Usage
 
