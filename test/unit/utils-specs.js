@@ -19,7 +19,7 @@ describe('formatCapsForServer', function () {
       platformName: 'mac',
     });
     result.should.eql({
-      browserName: 'safari',
+      browserName: 'Safari',
       browserVersion: '12',
       platformName: 'mac',
     });
