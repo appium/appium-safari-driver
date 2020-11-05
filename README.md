@@ -87,7 +87,7 @@ class WebKitFeatureStatusTest(unittest.TestCase):
 
         # Enter "CSS" into the search box.
         # Ensures that at least one result appears in search
-        search_box = self.driver.find_element_by_id("search")
+        search_box = self.driver.find_element_by_css("#search")
         search_box.send_keys("CSS")
         value = search_box.get_attribute("value")
         self.assertTrue(len(value) > 0)
