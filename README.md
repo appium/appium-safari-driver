@@ -87,6 +87,8 @@ class WebKitFeatureStatusTest(unittest.TestCase):
 
         # Enter "CSS" into the search box.
         # Ensures that at least one result appears in search
+        # !!! Remember there are no ID and NAME locators in W3C standard
+        # These two have been superseded by CSS ones
         search_box = self.driver.find_element_by_css("#search")
         search_box.send_keys("CSS")
         value = search_box.get_attribute("value")

@@ -8,6 +8,7 @@ chai.use(chaiAsPromised);
 
 const HOST = '127.0.0.1';
 const PORT = 4567;
+const MOCHA_TIMEOUT = 240000;
 const CAPS = {
   browserName: 'AppiumSafari',
   platformName: 'ios',
@@ -17,6 +18,8 @@ const CAPS = {
 };
 
 describe('Mobile SafariDriver', function () {
+  this.timeout(MOCHA_TIMEOUT);
+
   let server;
   let driver;
   before(async function () {
