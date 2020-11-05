@@ -20,11 +20,10 @@ Safari driver allows to define multiple criterions for platform selection and al
 
 Capability Name | Description
 --- | ---
-platformName | safaridriver can only create WebDriver sessions for Safari and can only run on Mac OS. Value of platformName must equal to 'Mac' in order to start Safari driver session. Values of platformName are compared case-insensitively.
+platformName | safaridriver binary can only create WebDriver sessions for desktop or mobile Safari and can only run on Mac OS. Value of platformName could equal to 'Mac' or 'iOS' in order to start Safari driver session for the corresponding platform. Values of platformName are compared case-insensitively.
 automationName | Value of automationName must equal to 'Safari' in order to start Safari driver session. Values of automationName are compared case-insensitively.
 browserName | safaridriver can only create WebDriver sessions for Safari. Any value passed to this capability will be changed to 'Safari'.
 browserVersion | safaridriver will only create a session using hosts whose Safari version matches the value of browserVersion. Browser version numbers are prefix-matched. For example, if the value of browserVersion is '12', this will allow hosts with a Safari version of '12.0.1' or '12.1'.
-appium:targetPlatform | If the value of targetPlatform is 'mac' or 'macOS', safaridriver will only create a session using the macOS host on which safaridriver is running.  If the value of targetPlatform is 'iOS' (the default value), safaridriver will only create a session on a paired iOS device or simulator. Values of targetPlatform are compared case-insensitively
 safari:platformVersion | safaridriver will only create a session using hosts whose OS version matches the value of safari:platformVersion. OS version numbers are prefix-matched. For example, if the value of safari:platformVersion is '12',  this will allow hosts with an OS version of '12.0' or '12.1' but not '10.12'.
 safari:platformBuildVersion | safaridriver will only create a session using hosts whose OS build version matches the value of safari:platformBuildVersion. example of a macOS build version is '18E193'. On macOS, the OS build version can be determined by running the sw_vers(1) utility.
 safari:useSimulator | If the value of safari:useSimulator is true, safaridriver will only use iOS Simulator hosts. If the value of safari:useSimulator is false, safaridriver will not use iOS Simulator hosts. NOTE: An Xcode installation is required in order to run WebDriver tests on iOS Simulator hosts.
@@ -48,13 +47,12 @@ import time
 
 def setup_module(module):
     common_caps = {
-        'platformName': 'Mac',
         'browserName': 'AppiumSafari',
         'automationName': 'Safari',
     }
     real_device_caps = {
         **common_caps,
-        'targetPlatform': 'iOS',
+        'platformName': 'iOS',
         'safari:deviceType': 'iPhone',
         # Do not forget to verify that Remote Automation is enabled for this device
         'safari:deviceUDID': '<MyDeviceUDID>',
@@ -62,14 +60,14 @@ def setup_module(module):
     }
     simulator_caps = {
         **common_caps,
-        'targetPlatform': 'iOS',
+        'platformName': 'iOS',
         'safari:platformVersion': '14.1'
         'safari:deviceName': 'iPad Air 2',
         'safari:useSimulator': True,
     }
     desktop_browser_caps = {
         **common_caps,
-        'targetPlatform': 'Mac',
+        'platformName': 'Mac',
     }
 
     WebKitFeatureStatusTest.driver = webdriver.Remote('http://localhost:4723/wd/hub', simulator_caps)

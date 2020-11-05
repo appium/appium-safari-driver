@@ -16,7 +16,7 @@ describe('formatCapsForServer', function () {
   it('should assign default caps', function () {
     const result = formatCapsForServer({
       browserVersion: '12',
-      targetPlatform: 'mac',
+      platformName: 'mac',
     });
     result.should.eql({
       browserName: 'safari',

@@ -10,8 +10,7 @@ const HOST = '127.0.0.1';
 const PORT = 4567;
 const CAPS = {
   browserName: 'AppiumSafari',
-  platformName: 'mac',
-  targetPlatform: 'ios',
+  platformName: 'ios',
   'safari:useSimulator': true,
   'safari:platformVersion': process.env.PLATFORM_VERSION || '14.1',
   'safari:deviceName': process.env.DEVICE_NAME || 'iPhone 11 Pro Max',

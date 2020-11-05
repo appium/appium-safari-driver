@@ -11,7 +11,6 @@ const PORT = 4567;
 const CAPS = {
   browserName: 'AppiumSafari',
   platformName: 'mac',
-  targetPlatform: 'mac',
 };
 
 describe('Desktop SafariDriver', function () {
