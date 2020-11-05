@@ -15,6 +15,7 @@ describe('formatCapsForServer', function () {
 
   it('should assign default caps', function () {
     const result = formatCapsForServer({
+      browserName: 'yolo',
       browserVersion: '12',
       platformName: 'mac',
     });
