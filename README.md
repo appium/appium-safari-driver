@@ -83,6 +83,27 @@ def driver(request):
     drv.quit()
 
 
+class TimeoutError(Exception):
+    pass
+
+
+def wait_until_truthy(func, timeout_sec=5.0, interval_sec=0.5):
+    started = time.time()
+    original_error = None
+    while time.time() - timeout_sec < started:
+        original_error = None
+        try:
+            result = func()
+            if result:
+                return result
+        except Exception as e:
+            original_error = e
+        time.sleep(interval_sec)
+    if original_error is None:
+        raise TimeoutError(f'Condition unmet after {timeout_sec}s timeout')
+    raise original_error
+
+
 def shown_feature_count(drv):
     return len(drv.execute_script("return document.querySelectorAll('li.feature:not(.is-hidden)')"))
 
@@ -99,21 +120,15 @@ def test_feature_status_page_search(driver):
     value = search_box.get_attribute('value')
     assert len(value) > 0
     search_box.submit()
-    # Hardcoded sleeps are evil, always prefer using explicit waits
-    time.sleep(1)
     # Count the visible results when filters are applied
     # so one result shows up in at most one filter
-    feature_count = shown_feature_count(driver)
-    assert feature_count > 0
+    assert wait_until_truthy(lambda: shown_feature_count(driver) > 0)
 
 
 def test_feature_status_page_filters(driver):
     driver.get('https://webkit.org/status/')
 
-    # Hardcoded sleeps are evil, always prefer using explicit waits
-    time.sleep(1)
-    filters = driver.execute_script("return document.querySelectorAll('.filter-toggle')")
-    assert len(filters) == 7
+    assert wait_until_truthy(lambda: len(driver.execute_script("return document.querySelectorAll('.filter-toggle')")) == 7)
 
     # Make sure every filter is turned off.
     for checked_filter in filter(lambda f: f.is_selected(), filters):
