@@ -37,14 +37,15 @@ webkit:WebRTC | This capability allows a test to temporarily change Safari's pol
 ## Example
 
 ```python
-# python
-from selenium.webdriver.common.by import By
-from appium import webdriver
-import unittest
+# Python3 + PyTest
+import pytest
 import time
 
+from selenium.webdriver.common.by import By
+from appium import webdriver
 
-def setup_module(module):
+
+def generate_caps():
     common_caps = {
         # It does not really matter what to put there, although setting 'Safari' might cause a failure
         # depending on the particular client library
@@ -64,7 +65,7 @@ def setup_module(module):
     simulator_caps = {
         **common_caps,
         'platformName': 'iOS',
-        'safari:platformVersion': '14.1'
+        'safari:platformVersion': '14.1',
         'safari:deviceName': 'iPad Air 2',
         'safari:useSimulator': True,
     }
@@ -72,57 +73,57 @@ def setup_module(module):
         **common_caps,
         'platformName': 'Mac',
     }
-
-    WebKitFeatureStatusTest.driver = webdriver.Remote('http://localhost:4723/wd/hub', simulator_caps)
-
-
-def teardown_module(module):
-    WebKitFeatureStatusTest.driver.quit()
+    return [real_device_caps, simulator_caps, desktop_browser_caps]
 
 
-class WebKitFeatureStatusTest(unittest.TestCase):
-
-    def test_feature_status_page_search(self):
-        self.driver.get("https://webkit.org/status/")
-
-        # Enter "CSS" into the search box.
-        # Ensures that at least one result appears in search
-        # !!! Remember there are no ID and NAME locators in W3C standard
-        # These two have been superseded by CSS ones
-        search_box = self.driver.find_element_by_css("#search")
-        search_box.send_keys("CSS")
-        value = search_box.get_attribute("value")
-        self.assertTrue(len(value) > 0)
-        search_box.submit()
-        time.sleep(1)
-        # Count the visible results when filters are applied
-        # so one result shows up in at most one filter
-        feature_count = self.shown_feature_count()
-        self.assertTrue(feature_count > 0)
-
-    def test_feature_status_page_filters(self):
-        self.driver.get("https://webkit.org/status/")
-
-        time.sleep(1)
-        filters = self.driver.execute_script("return document.querySelectorAll('.filter-toggle')")
-        self.assertTrue(len(filters) is 7)
-
-        # Make sure every filter is turned off.
-        for checked_filter in filter(lambda f: f.is_selected(), filters):
-            checked_filter.click()
-
-        # Make sure you can select every filter.
-        for filt in filters:
-            filt.click()
-            self.assertTrue(filt.is_selected())
-            filt.click()
-
-    def shown_feature_count(self):
-                return len(self.driver.execute_script("return document.querySelectorAll('li.feature:not(.is-hidden)')"))
+@pytest.fixture(params=generate_caps())
+def driver(request):
+    drv = webdriver.Remote('http://localhost:4723/wd/hub', request.param)
+    yield drv
+    drv.quit()
 
 
-if __name__ == "__main__":
-    unittest.main()
+def shown_feature_count(drv):
+    return len(drv.execute_script("return document.querySelectorAll('li.feature:not(.is-hidden)')"))
+
+
+def test_feature_status_page_search(driver):
+    driver.get('https://webkit.org/status/')
+
+    # Enter "CSS" into the search box.
+    # Ensures that at least one result appears in search
+    # !!! Remember there are no ID and NAME locators in W3C standard
+    # These two have been superseded by CSS ones
+    search_box = driver.find_element_by_css('#search')
+    search_box.send_keys('CSS')
+    value = search_box.get_attribute('value')
+    assert len(value) > 0
+    search_box.submit()
+    # Hardcoded sleeps are evil, always prefer using explicit waits
+    time.sleep(1)
+    # Count the visible results when filters are applied
+    # so one result shows up in at most one filter
+    feature_count = shown_feature_count(driver)
+    assert feature_count > 0
+
+
+def test_feature_status_page_filters(driver):
+    driver.get('https://webkit.org/status/')
+
+    # Hardcoded sleeps are evil, always prefer using explicit waits
+    time.sleep(1)
+    filters = driver.execute_script("return document.querySelectorAll('.filter-toggle')")
+    assert len(filters) == 7
+
+    # Make sure every filter is turned off.
+    for checked_filter in filter(lambda f: f.is_selected(), filters):
+        checked_filter.click()
+
+    # Make sure you can select every filter.
+    for filt in filters:
+        filt.click()
+        assert filt.is_selected()
+        filt.click()
 ```
 
 ## Development
