@@ -104,10 +104,6 @@ def wait_until_truthy(func, timeout_sec=5.0, interval_sec=0.5):
     raise original_error
 
 
-def shown_feature_count(drv):
-    return len(drv.execute_script("return document.querySelectorAll('li.feature:not(.is-hidden)')"))
-
-
 def test_feature_status_page_search(driver):
     driver.get('https://webkit.org/status/')
 
@@ -122,7 +118,7 @@ def test_feature_status_page_search(driver):
     search_box.submit()
     # Count the visible results when filters are applied
     # so one result shows up in at most one filter
-    assert wait_until_truthy(lambda: shown_feature_count(driver) > 0)
+    assert wait_until_truthy(lambda: len(driver.execute_script("return document.querySelectorAll('li.feature:not(.is-hidden)')")) > 0)
 
 
 def test_feature_status_page_filters(driver):
