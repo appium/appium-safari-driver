@@ -90,7 +90,7 @@ class TimeoutError(Exception):
 def wait_until_truthy(func, timeout_sec=5.0, interval_sec=0.5):
     started = time.time()
     original_error = None
-    while time.time() - timeout_sec < started:
+    while time.time() - started < timeout_sec:
         original_error = None
         try:
             result = func()
