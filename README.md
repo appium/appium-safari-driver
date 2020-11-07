@@ -41,8 +41,8 @@ webkit:WebRTC | This capability allows a test to temporarily change Safari's pol
 import pytest
 import time
 
-from selenium.webdriver.common.by import By
 from appium import webdriver
+from selenium.webdriver.common.by import By
 
 
 def generate_caps():
