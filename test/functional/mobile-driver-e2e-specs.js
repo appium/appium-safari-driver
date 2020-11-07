@@ -3,13 +3,11 @@ import { startServer } from '../..';
 import chaiAsPromised from 'chai-as-promised';
 import chai from 'chai';
 import Simctl from 'node-simctl';
+import { HOST, PORT, MOCHA_TIMEOUT } from '../utils';
 
 chai.should();
 chai.use(chaiAsPromised);
 
-const HOST = '127.0.0.1';
-const PORT = 4567;
-const MOCHA_TIMEOUT = 240000;
 const PLATFORM_VERSION = process.env.PLATFORM_VERSION || '14.1';
 const DEVICE_NAME = process.env.DEVICE_NAME || 'iPhone 11 Pro Max';
 const CAPS = {

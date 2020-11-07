@@ -21,6 +21,9 @@ stages:
 - stage: Integration_Tests
   jobs:
   - job: Node_Integration_Tests
+    env:
+      CI: true
+      _FORCE_LOGS: 1
     steps:
     - template: azure-templates/node_setup_steps.yml
     - script: npm install
