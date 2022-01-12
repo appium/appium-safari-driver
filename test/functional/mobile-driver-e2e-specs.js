@@ -68,8 +68,8 @@ describe('Mobile SafariDriver', function () {
 
   it('should start and stop a session', async function () {
     await driver.url('https://appium.io/');
-    const button = await driver.findElement('css', '#downloadLink');
-    await driver.getElementText(button).should.eventually.eql('Download Appium');
+    const button = await driver.$('#downloadLink');
+    await button.getText().should.eventually.eql('Download Appium');
   });
 });
 
