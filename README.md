@@ -1,25 +1,27 @@
-appium-safari-driver
+Appium Safari Driver
 ====
 
-This is Appium driver for automating Safari on [Mac OS X](https://developer.apple.com/documentation/webkit/testing_with_webdriver_in_safari?language=objc) and iOS [since version 13](https://webkit.org/blog/9395/webdriver-is-coming-to-safari-in-ios-13/).
+This is Appium driver for automating Safari on [macOS](https://developer.apple.com/documentation/webkit/testing_with_webdriver_in_safari?language=objc) and iOS [since version 13](https://webkit.org/blog/9395/webdriver-is-coming-to-safari-in-ios-13/).
 The driver only supports Safari automation using [W3C WebDriver protocol](https://www.w3.org/TR/webdriver/).
 Under the hood this driver is a wrapper/proxy over Apple's `safaridriver` binary. Check the output of `man safaridriver` command to get more details on the supported features and possible pitfalls.
 
 ## Usage
 
-It is mandatory to run the `safaridriver --enable` command from the Mac OS terminal and provide your administrator password before any automated session will be executed.
+It is mandatory to run the `safaridriver --enable` command from the macOS terminal and provide your administrator password before any automated session will be executed.
 In order to automate Safari on real devices it is also necessary to enable Remote Automation switch in `Settings → Safari → Advanced → Remote Automation` for these particular devices.
 
 Then you need to decide where the automated test is going to be executed. Safari driver supports the following target platforms:
- - Mac OS (High Sierra or newer)
+ - macOS (High Sierra or newer)
  - iOS Simulator (iOS version 13 or newer)
  - iOS Real Device (iOS version 13 or newer)
+
+Since the version 3.0.0 this driver is only compatible with Appium 2. Use the `appium driver install safari` CLI command to add it to your server dist.
 
 Safari driver allows to define multiple criterions for platform selection and also to fine-tune your automation session properties. This could be done via the following session capabilities:
 
 Capability Name | Description
 --- | ---
-platformName | safaridriver binary can only create WebDriver sessions for desktop or mobile Safari and can only run on Mac OS. Value of platformName could equal to 'Mac' or 'iOS' in order to start Safari driver session for the corresponding platform. Values of platformName are compared case-insensitively.
+platformName | safaridriver binary can only create WebDriver sessions for desktop or mobile Safari and can only run on macOS. Value of platformName could equal to 'Mac' or 'iOS' in order to start Safari driver session for the corresponding platform. Values of platformName are compared case-insensitively.
 automationName | Value of automationName must equal to 'Safari' in order to start Safari driver session. Values of automationName are compared case-insensitively.
 browserName | safaridriver can only create WebDriver sessions for Safari. Any value passed to this capability will be changed to 'Safari'.
 browserVersion | safaridriver will only create a session using hosts whose Safari version matches the value of browserVersion. Browser version numbers are prefix-matched. For example, if the value of browserVersion is '12', this will allow hosts with a Safari version of '12.0.1' or '12.1'.
