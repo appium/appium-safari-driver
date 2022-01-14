@@ -1,4 +1,4 @@
-import wd from 'wd';
+import { remote } from 'webdriverio';
 import { startServer } from '../..';
 import chaiAsPromised from 'chai-as-promised';
 import chai from 'chai';
@@ -53,20 +53,23 @@ describe('Mobile SafariDriver', function () {
     }
   });
   beforeEach(async function () {
-    driver = wd.promiseChainRemote(HOST, PORT);
-    await driver.init(CAPS);
+    driver = await remote({
+      hostname: HOST,
+      port: PORT,
+      capabilities: CAPS,
+    });
   });
   afterEach(async function () {
     if (driver) {
-      await driver.quit();
+      await driver.deleteSession();
       driver = null;
     }
   });
 
   it('should start and stop a session', async function () {
-    await driver.get('https://appium.io/');
-    const button = await driver.elementByCss('#downloadLink');
-    await button.text().should.eventually.eql('Download Appium');
+    await driver.url('https://appium.io/');
+    const button = await driver.$('#downloadLink');
+    await button.getText().should.eventually.eql('Download Appium');
   });
 });
 
