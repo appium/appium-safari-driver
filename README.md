@@ -1,6 +1,9 @@
 Appium Safari Driver
 ====
 
+[![NPM version](http://img.shields.io/npm/v/appium-safari-driver.svg)](https://npmjs.org/package/appium-safari-driver)
+[![Downloads](http://img.shields.io/npm/dm/appium-safari-driver.svg)](https://npmjs.org/package/appium-safari-driver)
+
 [![Release](https://github.com/appium/appium-safari-driver/actions/workflows/publish.js.yml/badge.svg)](https://github.com/appium/appium-safari-driver/actions/workflows/publish.js.yml)
 
 This is Appium driver for automating Safari on [macOS](https://developer.apple.com/documentation/webkit/testing_with_webdriver_in_safari?language=objc) and iOS [since version 13](https://webkit.org/blog/9395/webdriver-is-coming-to-safari-in-ios-13/).
