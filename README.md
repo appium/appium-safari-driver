@@ -1,6 +1,8 @@
 Appium Safari Driver
 ====
 
+[![Release](https://github.com/appium/appium-safari-driver/actions/workflows/publish.js.yml/badge.svg)](https://github.com/appium/appium-safari-driver/actions/workflows/publish.js.yml)
+
 This is Appium driver for automating Safari on [macOS](https://developer.apple.com/documentation/webkit/testing_with_webdriver_in_safari?language=objc) and iOS [since version 13](https://webkit.org/blog/9395/webdriver-is-coming-to-safari-in-ios-13/).
 The driver only supports Safari automation using [W3C WebDriver protocol](https://www.w3.org/TR/webdriver/).
 Under the hood this driver is a wrapper/proxy over Apple's `safaridriver` binary. Check the output of `man safaridriver` command to get more details on the supported features and possible pitfalls.
@@ -146,4 +148,3 @@ def test_feature_status_page_filters(driver):
 npm install
 gulp watch
 ```
-
