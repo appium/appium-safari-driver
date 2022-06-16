@@ -1,5 +1,5 @@
 import { remote } from 'webdriverio';
-import { startServer } from '../..';
+import { startServer } from '../server';
 import chaiAsPromised from 'chai-as-promised';
 import chai from 'chai';
 import Simctl from 'node-simctl';
@@ -13,6 +13,7 @@ const DEVICE_NAME = process.env.DEVICE_NAME || 'iPhone 11 Pro Max';
 const CAPS = {
   browserName: 'AppiumSafari',
   platformName: 'ios',
+  'appium:automationName': 'safari',
   'safari:useSimulator': true,
   'safari:platformVersion': PLATFORM_VERSION,
   'safari:deviceName': DEVICE_NAME,
