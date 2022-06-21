@@ -1,5 +1,4 @@
 import { remote } from 'webdriverio';
-import { startServer } from '../server';
 import chaiAsPromised from 'chai-as-promised';
 import chai from 'chai';
 import { HOST, PORT, MOCHA_TIMEOUT } from '../utils';
@@ -17,17 +16,7 @@ const CAPS = {
 describe('Desktop SafariDriver', function () {
   this.timeout(MOCHA_TIMEOUT);
 
-  let server;
   let driver;
-  before(async function () {
-    server = await startServer(PORT, HOST);
-  });
-  after(async function () {
-    if (server) {
-      await server.close();
-      server = null;
-    }
-  });
   beforeEach(async function () {
     driver = await remote({
       hostname: HOST,

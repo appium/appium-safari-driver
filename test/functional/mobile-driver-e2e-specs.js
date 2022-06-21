@@ -1,5 +1,4 @@
 import { remote } from 'webdriverio';
-import { startServer } from '../server';
 import chaiAsPromised from 'chai-as-promised';
 import chai from 'chai';
 import Simctl from 'node-simctl';
@@ -22,7 +21,6 @@ const CAPS = {
 describe('Mobile SafariDriver', function () {
   this.timeout(MOCHA_TIMEOUT);
 
-  let server;
   let driver;
   before(async function () {
     if (process.env.CI) {
@@ -43,14 +41,6 @@ describe('Mobile SafariDriver', function () {
       simctl.udid = device.udid;
       await simctl.bootDevice();
       await simctl.startBootMonitor();
-    }
-
-    server = await startServer(PORT, HOST);
-  });
-  after(async function () {
-    if (server) {
-      await server.close();
-      server = null;
     }
   });
   beforeEach(async function () {
