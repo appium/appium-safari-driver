@@ -31,5 +31,5 @@ stages:
     - script: |
         npm install -g appium@next
         npm install
-        appium driver install --source=local .
+        appium driver install --source=local "$(pwd)"
     - script: npm run e2e-test
