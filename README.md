@@ -49,43 +49,40 @@ import pytest
 import time
 
 from appium import webdriver
+# Options are available in Python client since v2.6.0
+from appium.options.ios import SafariOptions
 from selenium.webdriver.common.by import By
 
 
-def generate_caps():
+def generate_options():
     common_caps = {
         # It does not really matter what to put there, although setting 'Safari' might cause a failure
         # depending on the particular client library
         'browserName': 'AppiumSafari',
-        # automationName capability presence is mandatory for this Safari Driver to be selected
-        'automationName': 'Safari',
     }
-    real_device_caps = {
-        **common_caps,
-        'platformName': 'iOS',
-        # This capability is optional
-        'safari:deviceType': 'iPhone',
-        # Do not forget to verify that Remote Automation is enabled for this device
-        'safari:deviceUDID': '<MyDeviceUDID>',
-        'safari:useSimulator': False,
-    }
-    simulator_caps = {
-        **common_caps,
-        'platformName': 'iOS',
-        'safari:platformVersion': '14.1',
-        'safari:deviceName': 'iPad Air 2',
-        'safari:useSimulator': True,
-    }
-    desktop_browser_caps = {
+    real_device_opts = SafariOptions().load_capabilities(common_caps)
+    # This is optional
+    real_device_opts.device_type = 'iPhone'
+    # Do not forget to verify that Remote Automation is enabled for this device
+    real_device_opts.device_udid = '<MyDeviceUDID>'
+    real_device_opts.use_simulator = False
+
+    simulator_opts = SafariOptions().load_capabilities(common_caps)
+    simulator_opts.platform_version = '14.1'
+    simulator_opts.device_name = 'iPad Air 2'
+    simulator_opts.use_simulator = True
+
+    desktop_browser_opts = SafariOptions().load_capabilities({
         **common_caps,
         'platformName': 'Mac',
-    }
-    return [real_device_caps, simulator_caps, desktop_browser_caps]
+    })
+    return [real_device_opts, simulator_opts, desktop_browser_opts]
 
 
-@pytest.fixture(params=generate_caps())
+@pytest.fixture(params=generate_options())
 def driver(request):
-    drv = webdriver.Remote('http://localhost:4723/wd/hub', request.param)
+    # The default URL is http://127.0.0.1:4723/wd/hub in Appium1
+    drv = webdriver.Remote('http://127.0.0.1:4723', options=request.param)
     yield drv
     drv.quit()
 
