@@ -1,4 +1,4 @@
-import SafariDriver from '../..';
+import SafariDriver from '../../lib/driver';
 import chai from 'chai';
 const should = chai.should();
 

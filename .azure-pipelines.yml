@@ -15,9 +15,8 @@ stages:
   - job: Node_Unit_Tests
     steps:
     - template: azure-templates/node_setup_steps.yml
-    - script: |
-        npm install -g appium@next
-        npm install
+    - script: npm install
+    - script: npm run lint
     - script: npm run test
 
 - stage: Integration_Tests
@@ -29,7 +28,7 @@ stages:
     steps:
     - template: azure-templates/node_setup_steps.yml
     - script: |
-        npm install -g appium@next
+        npm i -g appium@next
         npm install
     - script: |
         export APPIUM_TEST_SERVER_PORT=4567
