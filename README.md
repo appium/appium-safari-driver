@@ -146,6 +146,7 @@ def test_feature_status_page_filters(driver):
 ```bash
 # clone repo, then in repo dir:
 npm install
-gulp watch
+npm run lint
+npm run test
 ```
 
