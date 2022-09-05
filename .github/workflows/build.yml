@@ -9,14 +9,14 @@ jobs:
     outputs:
       versions: ${{ steps.generate-matrix.outputs.versions }}
     steps:
-      - name: Generate Node.js versions matrix
-        id: generate-matrix
-        run: |
-          current_lts=$(curl -s https://nodejs.org/en/ | grep -E -o 'Download [0-9.]+ LTS' | grep -E -o '([0-9]+)' | head -n 1)
-          previous_lts=$(( current_lts - 2 ))
-          next_lts=$(( current_lts + 2 ))
-          VERSIONS="[$previous_lts, $current_lts, $next_lts]"
-          echo ::set-output name=versions::${VERSIONS}
+    - name: Generate Node.js versions matrix
+      id: generate-matrix
+      run: |
+        current_lts=$(curl -s https://nodejs.org/en/ | grep -E -o 'Download [0-9.]+ LTS' | grep -E -o '([0-9]+)' | head -n 1)
+        previous_lts=$(( current_lts - 2 ))
+        next_lts=$(( current_lts + 2 ))
+        VERSIONS="[$previous_lts, $current_lts, $next_lts]"
+        echo ::set-output name=versions::${VERSIONS}
 
   unit_test:
     needs:
