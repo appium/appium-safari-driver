@@ -12,7 +12,7 @@ Under the hood this driver is a wrapper/proxy over Apple's `safaridriver` binary
 
 > **Note**
 >
-> Since version 1.0.0 Safari driver has dropped the support of Appium 1, and is only compatible to Appium 2. Use the `appium driver install safari` 
+> Since version 3.0.0 Safari driver has dropped the support of Appium 1, and is only compatible to Appium 2. Use the `appium driver install safari` 
 > command to add it to your Appium 2 dist.
 
 
