@@ -1,3 +1,10 @@
+## [3.2.7](https://github.com/appium/appium-safari-driver/compare/v3.2.6...v3.2.7) (2022-12-05)
+
+
+### Miscellaneous Chores
+
+* **deps-dev:** bump webdriverio from 7.27.0 to 8.0.5 ([#48](https://github.com/appium/appium-safari-driver/issues/48)) ([2b0f9a9](https://github.com/appium/appium-safari-driver/commit/2b0f9a9b468bd5de0b686125d8241327633fd711))
+
 ## [3.2.6](https://github.com/appium/appium-safari-driver/compare/v3.2.5...v3.2.6) (2022-12-01)
 
 
