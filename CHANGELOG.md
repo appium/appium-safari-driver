@@ -1,3 +1,10 @@
+## [3.3.0](https://github.com/appium/appium-safari-driver/compare/v3.2.7...v3.3.0) (2023-01-12)
+
+
+### Features
+
+* Add newMethodMap ([#50](https://github.com/appium/appium-safari-driver/issues/50)) ([5ec5df0](https://github.com/appium/appium-safari-driver/commit/5ec5df03c70d5ffddad6f65e81f67e23a6cef8d7))
+
 ## [3.2.7](https://github.com/appium/appium-safari-driver/compare/v3.2.6...v3.2.7) (2022-12-05)
 
 
