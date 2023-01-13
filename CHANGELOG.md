@@ -1,3 +1,10 @@
+## [3.3.1](https://github.com/appium/appium-safari-driver/compare/v3.3.0...v3.3.1) (2023-01-13)
+
+
+### Miscellaneous Chores
+
+* **deps-dev:** bump rimraf from 3.0.2 to 4.0.4 ([#51](https://github.com/appium/appium-safari-driver/issues/51)) ([f962fdb](https://github.com/appium/appium-safari-driver/commit/f962fdbfbf48ae43c62811703ee6bc973763400a))
+
 ## [3.3.0](https://github.com/appium/appium-safari-driver/compare/v3.2.7...v3.3.0) (2023-01-12)
 
 
