@@ -1,3 +1,10 @@
+## [3.3.2](https://github.com/appium/appium-safari-driver/compare/v3.3.1...v3.3.2) (2023-01-17)
+
+
+### Miscellaneous Chores
+
+* **deps-dev:** bump semantic-release from 19.0.5 to 20.0.2 ([#49](https://github.com/appium/appium-safari-driver/issues/49)) ([3ef94f6](https://github.com/appium/appium-safari-driver/commit/3ef94f6d9c076a812348a78e5bb59209424a3903))
+
 ## [3.3.1](https://github.com/appium/appium-safari-driver/compare/v3.3.0...v3.3.1) (2023-01-13)
 
 
