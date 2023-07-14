@@ -1,3 +1,10 @@
+## [3.3.4](https://github.com/appium/appium-safari-driver/compare/v3.3.3...v3.3.4) (2023-07-14)
+
+
+### Miscellaneous Chores
+
+* **deps-dev:** bump conventional-changelog-conventionalcommits ([#59](https://github.com/appium/appium-safari-driver/issues/59)) ([911cbd4](https://github.com/appium/appium-safari-driver/commit/911cbd4d200a5dcce7eac2fd893050874f889414))
+
 ## [3.3.3](https://github.com/appium/appium-safari-driver/compare/v3.3.2...v3.3.3) (2023-04-10)
 
 
