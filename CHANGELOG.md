@@ -1,3 +1,10 @@
+## [3.4.0](https://github.com/appium/appium-safari-driver/compare/v3.3.4...v3.4.0) (2023-07-14)
+
+
+### Features
+
+* add acceptInsecureCerts as safaridriver 15.4+ have it ([#63](https://github.com/appium/appium-safari-driver/issues/63)) ([0bf746a](https://github.com/appium/appium-safari-driver/commit/0bf746a3455c61313aeca0a75e9ee0877bc1661b))
+
 ## [3.3.4](https://github.com/appium/appium-safari-driver/compare/v3.3.3...v3.3.4) (2023-07-14)
 
 
