@@ -26,11 +26,12 @@ describe('formatCapsForServer', function () {
     });
   });
 
-  it('should only pass caps with supported prefixes', function () {
+  it('should only pass caps with supported prefixes and standard caps', function () {
     const result = formatCapsForServer({
       'safari:deviceUDID': '1234',
       'webkit:yolo': '567',
       'appium:bar': '789',
+      'acceptInsecureCerts': true
     });
     result.should.eql({
       browserName: 'Safari',
@@ -38,6 +39,7 @@ describe('formatCapsForServer', function () {
       platformName: 'iOS',
       'safari:deviceUDID': '1234',
       'webkit:yolo': '567',
+      'acceptInsecureCerts': true
     });
   });
 });
