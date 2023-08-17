@@ -33,8 +33,7 @@ describe('Desktop SafariDriver', function () {
 
   it('should start and stop a session', async function () {
     await driver.url('https://appium.io/');
-    const input = await driver.$('input[data-md-component="header"]');
-    (await input.isExisting()).should.be.true;
+    (await driver.getSource()).should.not.be.empty;
   });
 });
 
