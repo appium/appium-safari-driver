@@ -33,8 +33,8 @@ describe('Desktop SafariDriver', function () {
 
   it('should start and stop a session', async function () {
     await driver.url('https://appium.io/');
-    const button = await driver.$('#downloadLink');
-    await button.getText().should.eventually.eql('Download Appium');
+    const input = await driver.$('input[data-md-component="search-query"]');
+    (await input.isExisting()).should.be.true;
   });
 });
 
