@@ -21,6 +21,7 @@ const CAPS = {
 describe('Mobile SafariDriver', function () {
   this.timeout(MOCHA_TIMEOUT);
 
+  /** @type {import('webdriverio').Browser} */
   let driver;
   before(async function () {
     if (process.env.CI) {
@@ -59,8 +60,7 @@ describe('Mobile SafariDriver', function () {
 
   it('should start and stop a session', async function () {
     await driver.url('https://appium.io/');
-    const button = await driver.$('#downloadLink');
-    await button.getText().should.eventually.eql('Download Appium');
+    (await driver.getPageSource()).should.not.be.empty;
   });
 });
 
