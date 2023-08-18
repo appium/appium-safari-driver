@@ -1,3 +1,15 @@
+## [3.5.0](https://github.com/appium/appium-safari-driver/compare/v3.4.0...v3.5.0) (2023-08-18)
+
+
+### Features
+
+* Switch babel to typescript ([#65](https://github.com/appium/appium-safari-driver/issues/65)) ([e49d833](https://github.com/appium/appium-safari-driver/commit/e49d833c5d3b7d7dd52a9e36f4ee602eb0952c49))
+
+
+### Miscellaneous Chores
+
+* **deps-dev:** bump lint-staged from 13.3.0 to 14.0.0 ([#64](https://github.com/appium/appium-safari-driver/issues/64)) ([67a4e75](https://github.com/appium/appium-safari-driver/commit/67a4e75606122166ad206a4ced07491b9a7fac86))
+
 ## [3.4.0](https://github.com/appium/appium-safari-driver/compare/v3.3.4...v3.4.0) (2023-07-14)
 
 
