@@ -1,3 +1,10 @@
+## [3.5.1](https://github.com/appium/appium-safari-driver/compare/v3.5.0...v3.5.1) (2023-08-25)
+
+
+### Miscellaneous Chores
+
+* **deps-dev:** bump semantic-release from 20.1.3 to 21.1.0 ([#69](https://github.com/appium/appium-safari-driver/issues/69)) ([2e363e1](https://github.com/appium/appium-safari-driver/commit/2e363e18d3215ebb5b26fb8bc59ceaf47fb3b071))
+
 ## [3.5.0](https://github.com/appium/appium-safari-driver/compare/v3.4.0...v3.5.0) (2023-08-18)
 
 
