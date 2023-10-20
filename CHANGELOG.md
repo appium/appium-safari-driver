@@ -1,3 +1,14 @@
+## [3.5.3](https://github.com/appium/appium-safari-driver/compare/v3.5.2...v3.5.3) (2023-10-20)
+
+
+### Miscellaneous Chores
+
+* **deps-dev:** bump eslint-config-prettier from 8.10.0 to 9.0.0 ([#89](https://github.com/appium/appium-safari-driver/issues/89)) ([4288be3](https://github.com/appium/appium-safari-driver/commit/4288be37d4cdd48c6e4a7b6cd7146e4ce0c9dd5a))
+* **deps-dev:** bump lint-staged from 14.0.1 to 15.0.2 ([#87](https://github.com/appium/appium-safari-driver/issues/87)) ([0838ae5](https://github.com/appium/appium-safari-driver/commit/0838ae5a654799de5922fb803f957340648a069b))
+* **deps-dev:** bump semantic-release from 21.1.2 to 22.0.5 ([#80](https://github.com/appium/appium-safari-driver/issues/80)) ([d033993](https://github.com/appium/appium-safari-driver/commit/d0339936f4ad2d4dd18e08c1de0afc167d80ec4f))
+* **deps-dev:** bump sinon from 15.2.0 to 16.1.3 ([#91](https://github.com/appium/appium-safari-driver/issues/91)) ([9c97ece](https://github.com/appium/appium-safari-driver/commit/9c97ece783679291b4c571520217bf94e67c5b3f))
+* Use latest types ([7a610b5](https://github.com/appium/appium-safari-driver/commit/7a610b5a300f4027a109c1dab651a1cadc8e9b69))
+
 ## [3.5.2](https://github.com/appium/appium-safari-driver/compare/v3.5.1...v3.5.2) (2023-08-28)
 
 
