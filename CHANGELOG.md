@@ -1,3 +1,10 @@
+## [3.5.4](https://github.com/appium/appium-safari-driver/compare/v3.5.3...v3.5.4) (2023-10-24)
+
+
+### Miscellaneous Chores
+
+* **deps-dev:** bump sinon from 16.1.3 to 17.0.0 ([#92](https://github.com/appium/appium-safari-driver/issues/92)) ([41e2e0a](https://github.com/appium/appium-safari-driver/commit/41e2e0aaf67be2f21ff54f51d108b134e8c6ed10))
+
 ## [3.5.3](https://github.com/appium/appium-safari-driver/compare/v3.5.2...v3.5.3) (2023-10-20)
 
 
