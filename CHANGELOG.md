@@ -1,3 +1,10 @@
+## [3.5.5](https://github.com/appium/appium-safari-driver/compare/v3.5.4...v3.5.5) (2023-10-25)
+
+
+### Miscellaneous Chores
+
+* **deps-dev:** bump @typescript-eslint/eslint-plugin from 5.62.0 to 6.9.0 ([#93](https://github.com/appium/appium-safari-driver/issues/93)) ([cf9915f](https://github.com/appium/appium-safari-driver/commit/cf9915f4498ae02d3270119723e18f04c81db955))
+
 ## [3.5.4](https://github.com/appium/appium-safari-driver/compare/v3.5.3...v3.5.4) (2023-10-24)
 
 
