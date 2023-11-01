@@ -1,3 +1,10 @@
+## [3.5.6](https://github.com/appium/appium-safari-driver/compare/v3.5.5...v3.5.6) (2023-11-01)
+
+
+### Miscellaneous Chores
+
+* **deps:** bump asyncbox from 2.9.4 to 3.0.0 ([#94](https://github.com/appium/appium-safari-driver/issues/94)) ([f62f562](https://github.com/appium/appium-safari-driver/commit/f62f562a60d5ab31e76e7894a3a599293342a084))
+
 ## [3.5.5](https://github.com/appium/appium-safari-driver/compare/v3.5.4...v3.5.5) (2023-10-25)
 
 
