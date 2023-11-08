@@ -1,3 +1,10 @@
+## [3.5.8](https://github.com/appium/appium-safari-driver/compare/v3.5.7...v3.5.8) (2023-11-08)
+
+
+### Miscellaneous Chores
+
+* use omit to prune dev and peer ([#96](https://github.com/appium/appium-safari-driver/issues/96)) ([50032d6](https://github.com/appium/appium-safari-driver/commit/50032d60ba2c354be3374458bd9ab3bccce51c21))
+
 ## [3.5.7](https://github.com/appium/appium-safari-driver/compare/v3.5.6...v3.5.7) (2023-11-06)
 
 
