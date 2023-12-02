@@ -1,3 +1,10 @@
+## [3.5.9](https://github.com/appium/appium-safari-driver/compare/v3.5.8...v3.5.9) (2023-12-02)
+
+
+### Miscellaneous Chores
+
+* update the release build ([#100](https://github.com/appium/appium-safari-driver/issues/100)) ([2027010](https://github.com/appium/appium-safari-driver/commit/20270101b6f0977ec7fffaf2741b59a2939d81ee))
+
 ## [3.5.8](https://github.com/appium/appium-safari-driver/compare/v3.5.7...v3.5.8) (2023-11-08)
 
 
