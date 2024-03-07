@@ -1,3 +1,10 @@
+## [3.5.11](https://github.com/appium/appium-safari-driver/compare/v3.5.10...v3.5.11) (2024-03-07)
+
+
+### Miscellaneous Chores
+
+* bump typescript ([a079a3a](https://github.com/appium/appium-safari-driver/commit/a079a3ad6f077dd568a7b311e25af5acdf447851))
+
 ## [3.5.10](https://github.com/appium/appium-safari-driver/compare/v3.5.9...v3.5.10) (2024-01-16)
 
 
