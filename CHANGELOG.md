@@ -1,3 +1,15 @@
+## [3.5.12](https://github.com/appium/appium-safari-driver/compare/v3.5.11...v3.5.12) (2024-04-10)
+
+
+### Bug Fixes
+
+* Linter ([#116](https://github.com/appium/appium-safari-driver/issues/116)) ([bdb7469](https://github.com/appium/appium-safari-driver/commit/bdb7469a6577b17fc718db6575a6304fee71a0ce))
+
+
+### Miscellaneous Chores
+
+* Remove extra imports ([6c27bda](https://github.com/appium/appium-safari-driver/commit/6c27bdaf53da0c10bab5e52afc76ebb6ebc0cb8c))
+
 ## [3.5.11](https://github.com/appium/appium-safari-driver/compare/v3.5.10...v3.5.11) (2024-03-07)
 
 
