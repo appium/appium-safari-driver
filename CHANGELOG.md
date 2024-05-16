@@ -1,3 +1,10 @@
+## [3.5.13](https://github.com/appium/appium-safari-driver/compare/v3.5.12...v3.5.13) (2024-05-16)
+
+
+### Miscellaneous Chores
+
+* Update dev dependencies ([c13cc34](https://github.com/appium/appium-safari-driver/commit/c13cc347559b463931ab3e0829a86bc5a9d62b6e))
+
 ## [3.5.12](https://github.com/appium/appium-safari-driver/compare/v3.5.11...v3.5.12) (2024-04-10)
 
 
