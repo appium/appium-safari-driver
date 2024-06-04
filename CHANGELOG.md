@@ -1,3 +1,9 @@
+## [3.5.15](https://github.com/appium/appium-safari-driver/compare/v3.5.14...v3.5.15) (2024-06-04)
+
+### Miscellaneous Chores
+
+* **deps-dev:** bump semantic-release from 23.1.1 to 24.0.0 and conventional-changelog-conventionalcommits to 8.0.0 ([#121](https://github.com/appium/appium-safari-driver/issues/121)) ([3eea6cb](https://github.com/appium/appium-safari-driver/commit/3eea6cbc24aa884538bb81e045cd28e938ff2d19))
+
 ## [3.5.14](https://github.com/appium/appium-safari-driver/compare/v3.5.13...v3.5.14) (2024-05-16)
 
 
