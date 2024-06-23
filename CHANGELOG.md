@@ -1,3 +1,9 @@
+## [3.5.16](https://github.com/appium/appium-safari-driver/compare/v3.5.15...v3.5.16) (2024-06-23)
+
+### Miscellaneous Chores
+
+* Bump chai and chai-as-promised ([#123](https://github.com/appium/appium-safari-driver/issues/123)) ([da4d9de](https://github.com/appium/appium-safari-driver/commit/da4d9defe178ce98da612bf8c22b8e578b564013))
+
 ## [3.5.15](https://github.com/appium/appium-safari-driver/compare/v3.5.14...v3.5.15) (2024-06-04)
 
 ### Miscellaneous Chores
