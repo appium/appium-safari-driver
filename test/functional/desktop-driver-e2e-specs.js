@@ -1,10 +1,5 @@
 import { remote } from 'webdriverio';
-import chaiAsPromised from 'chai-as-promised';
-import chai from 'chai';
 import { HOST, PORT, MOCHA_TIMEOUT } from '../utils';
-
-chai.should();
-chai.use(chaiAsPromised);
 
 
 const CAPS = {
@@ -15,6 +10,15 @@ const CAPS = {
 
 describe('Desktop SafariDriver', function () {
   this.timeout(MOCHA_TIMEOUT);
+  let chai;
+
+  before(async function () {
+    chai = await import('chai');
+    const chaiAsPromised = await import('chai-as-promised');
+
+    chai.should();
+    chai.use(chaiAsPromised.default);
+  });
 
   /** @type {import('webdriverio').Browser} */
   let driver;

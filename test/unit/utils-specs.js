@@ -1,9 +1,13 @@
 import { formatCapsForServer } from '../../lib/utils';
-import chai from 'chai';
-
-chai.should();
 
 describe('formatCapsForServer', function () {
+  let chai;
+
+  before(async function () {
+    chai = await import('chai');
+    chai.should();
+  });
+
   it('should format empty caps', function () {
     const result = formatCapsForServer({});
     result.should.eql({
