@@ -1,3 +1,9 @@
+## [3.5.17](https://github.com/appium/appium-safari-driver/compare/v3.5.16...v3.5.17) (2024-07-29)
+
+### Miscellaneous Chores
+
+* **deps-dev:** bump @types/node from 20.14.13 to 22.0.0 ([#126](https://github.com/appium/appium-safari-driver/issues/126)) ([1d60a46](https://github.com/appium/appium-safari-driver/commit/1d60a46f4f9c7c35afb2cad5b86f06dab7ef0584))
+
 ## [3.5.16](https://github.com/appium/appium-safari-driver/compare/v3.5.15...v3.5.16) (2024-06-23)
 
 ### Miscellaneous Chores
