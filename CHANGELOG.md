@@ -1,3 +1,9 @@
+## [3.5.18](https://github.com/appium/appium-safari-driver/compare/v3.5.17...v3.5.18) (2024-08-21)
+
+### Miscellaneous Chores
+
+* **deps-dev:** bump webdriverio from 8.40.3 to 9.0.5 ([#129](https://github.com/appium/appium-safari-driver/issues/129)) ([684e23d](https://github.com/appium/appium-safari-driver/commit/684e23dccdc10af69167ca1754e7373f07206922))
+
 ## [3.5.17](https://github.com/appium/appium-safari-driver/compare/v3.5.16...v3.5.17) (2024-07-29)
 
 ### Miscellaneous Chores
