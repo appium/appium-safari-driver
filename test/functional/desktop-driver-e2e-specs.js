@@ -6,6 +6,7 @@ const CAPS = {
   browserName: 'AppiumSafari',
   platformName: 'mac',
   'appium:automationName': 'safari',
+  'wdio:enforceWebDriverClassic': true,
 };
 
 describe('Desktop SafariDriver', function () {

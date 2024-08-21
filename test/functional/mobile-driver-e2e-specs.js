@@ -11,6 +11,7 @@ const CAPS = {
   'safari:useSimulator': true,
   'safari:platformVersion': PLATFORM_VERSION,
   'safari:deviceName': DEVICE_NAME,
+  'wdio:enforceWebDriverClassic': true,
 };
 
 describe('Mobile SafariDriver', function () {
