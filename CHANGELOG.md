@@ -1,3 +1,9 @@
+## [3.5.19](https://github.com/appium/appium-safari-driver/compare/v3.5.18...v3.5.19) (2024-12-13)
+
+### Miscellaneous Chores
+
+* Replace occurrences of the deprecated errorAndThrow API ([#131](https://github.com/appium/appium-safari-driver/issues/131)) ([684fc87](https://github.com/appium/appium-safari-driver/commit/684fc87eb7ac8971950cd25f9392cbb9cb53be9b))
+
 ## [3.5.18](https://github.com/appium/appium-safari-driver/compare/v3.5.17...v3.5.18) (2024-08-21)
 
 ### Miscellaneous Chores
