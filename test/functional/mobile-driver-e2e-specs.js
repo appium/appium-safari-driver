@@ -1,5 +1,5 @@
 import { remote } from 'webdriverio';
-import * as Simctl from 'node-simctl';
+import { Simctl } from 'node-simctl';
 import { HOST, PORT, MOCHA_TIMEOUT } from '../utils';
 
 const PLATFORM_VERSION = process.env.PLATFORM_VERSION || '14.1';
