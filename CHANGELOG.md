@@ -1,3 +1,9 @@
+## [3.5.20](https://github.com/appium/appium-safari-driver/compare/v3.5.19...v3.5.20) (2025-01-03)
+
+### Miscellaneous Chores
+
+* use "@appium/eslint-config-appium-ts": "^1.0.0" ([#132](https://github.com/appium/appium-safari-driver/issues/132)) ([3db90ab](https://github.com/appium/appium-safari-driver/commit/3db90ab5137192155cd9ac463bd16bfd4e6d1c98))
+
 ## [3.5.19](https://github.com/appium/appium-safari-driver/compare/v3.5.18...v3.5.19) (2024-12-13)
 
 ### Miscellaneous Chores
