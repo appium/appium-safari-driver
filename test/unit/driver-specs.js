@@ -1,4 +1,4 @@
-import SafariDriver from '../../lib/driver';
+import * as SafariDriver from '../../lib/driver';
 
 describe('SafariDriver', function () {
   let chai;
