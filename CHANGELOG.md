@@ -1,3 +1,9 @@
+## [3.5.21](https://github.com/appium/appium-safari-driver/compare/v3.5.20...v3.5.21) (2025-01-28)
+
+### Miscellaneous Chores
+
+* **deps-dev:** bump mocha from 10.8.2 to 11.1.0 ([#134](https://github.com/appium/appium-safari-driver/issues/134)) ([030f297](https://github.com/appium/appium-safari-driver/commit/030f297e43226667a86d53d378441f48b7c161cd))
+
 ## [3.5.20](https://github.com/appium/appium-safari-driver/compare/v3.5.19...v3.5.20) (2025-01-03)
 
 ### Miscellaneous Chores
