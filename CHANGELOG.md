@@ -1,3 +1,9 @@
+## [3.5.22](https://github.com/appium/appium-safari-driver/compare/v3.5.21...v3.5.22) (2025-02-02)
+
+### Miscellaneous Chores
+
+* Improve typing ([#135](https://github.com/appium/appium-safari-driver/issues/135)) ([f63a347](https://github.com/appium/appium-safari-driver/commit/f63a3474efd70c200423058b7323e26626e7b27d))
+
 ## [3.5.21](https://github.com/appium/appium-safari-driver/compare/v3.5.20...v3.5.21) (2025-01-28)
 
 ### Miscellaneous Chores
