@@ -1,3 +1,9 @@
+## [3.5.23](https://github.com/appium/appium-safari-driver/compare/v3.5.22...v3.5.23) (2025-02-21)
+
+### Bug Fixes
+
+* Accept reqBasePath proxy option ([#137](https://github.com/appium/appium-safari-driver/issues/137)) ([a0357bb](https://github.com/appium/appium-safari-driver/commit/a0357bb066b3bbc520f21f979a1f9d6c2efc54db))
+
 ## [3.5.22](https://github.com/appium/appium-safari-driver/compare/v3.5.21...v3.5.22) (2025-02-02)
 
 ### Miscellaneous Chores
