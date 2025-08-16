@@ -10,10 +10,9 @@ This is Appium driver for automating Safari on [macOS](https://developer.apple.c
 The driver only supports Safari automation using [W3C WebDriver protocol](https://www.w3.org/TR/webdriver/).
 Under the hood this driver is a wrapper/proxy over Apple's `safaridriver` binary. Check the output of `man safaridriver` command to get more details on the supported features and possible pitfalls.
 
-> **Note**
->
-> Since version 3.0.0 Safari driver has dropped the support of Appium 1, and is only compatible to Appium 2. Use the `appium driver install safari`
-> command to add it to your Appium 2 dist.
+> [!IMPORTANT]
+> Since major version *4.0.0* this driver is only compatible to Appium 3. Use the `appium driver install safari`
+> command to add it to your dist.
 
 
 ## Usage
