@@ -11,8 +11,8 @@ The driver only supports Safari automation using [W3C WebDriver protocol](https:
 Under the hood this driver is a wrapper/proxy over Apple's `safaridriver` binary. Check the output of `man safaridriver` command to get more details on the supported features and possible pitfalls.
 
 > [!IMPORTANT]
-> Since major version *4.0.0* this driver is only compatible to Appium 3. Use the `appium driver install safari`
-> command to add it to your dist.
+> Since major version *4.0.0*, this driver is only compatible with Appium 3. Use the `appium driver install safari`
+> command to add it to your distribution.
 
 
 ## Usage
