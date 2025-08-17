@@ -1,3 +1,9 @@
+## [3.5.26](https://github.com/appium/appium-safari-driver/compare/v3.5.25...v3.5.26) (2025-08-17)
+
+### Miscellaneous Chores
+
+* drop rimraf deps from dev deps as no references ([#141](https://github.com/appium/appium-safari-driver/issues/141)) ([9e14555](https://github.com/appium/appium-safari-driver/commit/9e145553a84b7f79d4eb7b6b0909a1003b70fb32))
+
 ## [3.5.25](https://github.com/appium/appium-safari-driver/compare/v3.5.24...v3.5.25) (2025-06-10)
 
 ### Miscellaneous Chores
