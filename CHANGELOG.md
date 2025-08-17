@@ -1,3 +1,15 @@
+## [4.0.0](https://github.com/appium/appium-safari-driver/compare/v3.5.26...v4.0.0) (2025-08-17)
+
+### ⚠ BREAKING CHANGES
+
+* Required Node.js version has been bumped to ^20.19.0 || ^22.12.0 || >=24.0.0
+* Required npm version has been bumped to >=10
+* Required Appium server version has been bumped to >=3.0.0-rc.2
+
+### Features
+
+* Update server compatibility ([#140](https://github.com/appium/appium-safari-driver/issues/140)) ([5637c9c](https://github.com/appium/appium-safari-driver/commit/5637c9cc3e340ba35b850c5f3e5e8b9652a3874f))
+
 ## [3.5.26](https://github.com/appium/appium-safari-driver/compare/v3.5.25...v3.5.26) (2025-08-17)
 
 ### Miscellaneous Chores
