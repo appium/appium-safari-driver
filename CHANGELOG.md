@@ -1,3 +1,9 @@
+## [4.0.1](https://github.com/appium/appium-safari-driver/compare/v4.0.0...v4.0.1) (2025-08-23)
+
+### Miscellaneous Chores
+
+* **deps-dev:** bump chai from 5.3.2 to 6.0.0 ([#142](https://github.com/appium/appium-safari-driver/issues/142)) ([b725271](https://github.com/appium/appium-safari-driver/commit/b725271d095320bbbdf4c5c37548a97584897feb))
+
 ## [4.0.0](https://github.com/appium/appium-safari-driver/compare/v3.5.26...v4.0.0) (2025-08-17)
 
 ### ⚠ BREAKING CHANGES
