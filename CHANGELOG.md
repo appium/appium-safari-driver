@@ -1,3 +1,9 @@
+## [4.0.2](https://github.com/appium/appium-safari-driver/compare/v4.0.1...v4.0.2) (2025-11-15)
+
+### Miscellaneous Chores
+
+* publish via trusted publisher ([#146](https://github.com/appium/appium-safari-driver/issues/146)) ([385a2ad](https://github.com/appium/appium-safari-driver/commit/385a2ad42d9fbd05b9427145b787da0f95c550a6))
+
 ## [4.0.1](https://github.com/appium/appium-safari-driver/compare/v4.0.0...v4.0.1) (2025-08-23)
 
 ### Miscellaneous Chores
