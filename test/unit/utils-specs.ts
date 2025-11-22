@@ -1,16 +1,10 @@
 import { formatCapsForServer } from '../../lib/utils';
+import { expect } from 'chai';
 
 describe('formatCapsForServer', function () {
-  let chai;
-
-  before(async function () {
-    chai = await import('chai');
-    chai.should();
-  });
-
   it('should format empty caps', function () {
     const result = formatCapsForServer({});
-    result.should.eql({
+    expect(result).to.eql({
       browserName: 'Safari',
       browserVersion: undefined,
       platformName: 'iOS',
@@ -23,7 +17,7 @@ describe('formatCapsForServer', function () {
       browserVersion: '12',
       platformName: 'mac',
     });
-    result.should.eql({
+    expect(result).to.eql({
       browserName: 'Safari',
       browserVersion: '12',
       platformName: 'mac',
@@ -37,7 +31,7 @@ describe('formatCapsForServer', function () {
       'appium:bar': '789',
       'acceptInsecureCerts': true
     });
-    result.should.eql({
+    expect(result).to.eql({
       browserName: 'Safari',
       browserVersion: undefined,
       platformName: 'iOS',
@@ -47,3 +41,4 @@ describe('formatCapsForServer', function () {
     });
   });
 });
+

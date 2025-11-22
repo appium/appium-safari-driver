@@ -1,6 +1,11 @@
 import { remote } from 'webdriverio';
 import { HOST, PORT, MOCHA_TIMEOUT } from '../utils';
+import type { Browser } from 'webdriverio';
+import { expect } from 'chai';
+import * as chai from 'chai';
+import * as chaiAsPromised from 'chai-as-promised';
 
+chai.use(chaiAsPromised.default);
 
 const CAPS = {
   browserName: 'AppiumSafari',
@@ -11,18 +16,9 @@ const CAPS = {
 
 describe('Desktop SafariDriver', function () {
   this.timeout(MOCHA_TIMEOUT);
-  let chai;
 
-  before(async function () {
-    chai = await import('chai');
-    const chaiAsPromised = await import('chai-as-promised');
+  let driver: Browser | null = null;
 
-    chai.should();
-    chai.use(chaiAsPromised.default);
-  });
-
-  /** @type {import('webdriverio').Browser} */
-  let driver;
   beforeEach(async function () {
     driver = await remote({
       hostname: HOST,
@@ -38,9 +34,8 @@ describe('Desktop SafariDriver', function () {
   });
 
   it('should start and stop a session', async function () {
-    await driver.url('https://appium.io/');
-    (await driver.getPageSource()).should.not.be.empty;
+    await driver!.url('https://appium.io/');
+    expect(await driver!.getPageSource()).to.not.be.empty;
   });
 });
-
 

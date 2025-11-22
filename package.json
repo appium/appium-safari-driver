@@ -55,8 +55,8 @@
     "lint": "eslint .",
     "lint:fix": "npm run lint -- --fix",
     "prepare": "npm run build",
-    "test": "mocha --exit --timeout 1m \"./test/unit/**/*-specs.js\"",
-    "e2e-test": "mocha --exit --timeout 5m \"./test/functional/**/*-specs.js\""
+    "test": "mocha --exit --timeout 1m \"./test/unit/**/*-specs.ts\"",
+    "e2e-test": "mocha --exit --timeout 5m \"./test/functional/**/*-specs.ts\""
   },
   "peerDependencies": {
     "appium": "^3.0.0-rc.2"
