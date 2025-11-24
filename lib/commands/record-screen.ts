@@ -2,6 +2,9 @@ import _ from 'lodash';
 import { util, fs, net, tempDir } from 'appium/support';
 import { waitForCondition } from 'asyncbox';
 import { Simctl } from 'node-simctl';
+import { SubProcess } from 'teen_process';
+import type { AppiumLogger, StringRecord } from '@appium/types';
+import type { SafariDriver } from '../driver';
 
 const STARTUP_INTERVAL_MS = 300;
 const STARTUP_TIMEOUT_MS = 10 * 1000;
@@ -9,20 +12,26 @@ const DEFAULT_TIME_LIMIT_MS = 60 * 10 * 1000; // 10 minutes
 const PROCESS_SHUTDOWN_TIMEOUT_MS = 10 * 1000;
 const DEFAULT_EXT = '.mp4';
 
-/**
- *
- * @param {string} localFile
- * @param {string|null} remotePath
- * @param {Object} uploadOptions
- * @returns
- */
-async function uploadRecordedMedia (localFile, remotePath = null, uploadOptions = {}) {
+interface UploadOptions {
+  user?: string;
+  pass?: string;
+  method?: string;
+  headers?: Record<string, string>;
+  fileFieldName?: string;
+  formFields?: Record<string, string> | Array<[string, string]>;
+}
+
+async function uploadRecordedMedia (
+  localFile: string,
+  remotePath: string | null = null,
+  uploadOptions: UploadOptions = {}
+): Promise<string> {
   if (_.isEmpty(remotePath) || !remotePath) {
     return (await util.toInMemoryBase64(localFile)).toString();
   }
 
   const {user, pass, method, headers, fileFieldName, formFields} = uploadOptions;
-  const options = {
+  const options: any = {
     method: method || 'PUT',
     headers,
     fileFieldName,
@@ -35,7 +44,7 @@ async function uploadRecordedMedia (localFile, remotePath = null, uploadOptions 
   return '';
 }
 
-const VIDEO_FILES = new Set();
+const VIDEO_FILES = new Set<string>();
 process.on('exit', () => {
   for (const videoFile of VIDEO_FILES) {
     try {
@@ -44,32 +53,40 @@ process.on('exit', () => {
   }
 });
 
-class ScreenRecorder {
-  /**
-   * @param {string} udid
-   * @param {string} videoPath
-   * @param {import('@appium/types').AppiumLogger} log
-   * @param {{codec?: string, display?: string, mask?: string, timeLimit?: string|number}} [opts={}]
-   */
-  constructor (udid, videoPath, log, opts = {}) {
+interface ScreenRecorderOptions {
+  codec?: string;
+  display?: string;
+  mask?: string;
+  timeLimit?: string | number;
+}
+
+export class ScreenRecorder {
+  private log: AppiumLogger;
+  private _process: SubProcess | null = null;
+  private _udid: string;
+  private _videoPath: string;
+  private _codec?: string;
+  private _display?: string;
+  private _mask?: string;
+  private _timeLimitMs: number = DEFAULT_TIME_LIMIT_MS;
+  private _timer: NodeJS.Timeout | null = null;
+
+  constructor (udid: string, videoPath: string, log: AppiumLogger, opts: ScreenRecorderOptions = {}) {
     this.log = log;
-    this._process = null;
     this._udid = udid;
     this._videoPath = videoPath;
     this._codec = opts.codec;
     this._display = opts.display;
     this._mask = opts.mask;
-    this._timeLimitMs = DEFAULT_TIME_LIMIT_MS;
     if (opts.timeLimit) {
       const timeLimitMs = parseInt(String(opts.timeLimit), 10);
       if (timeLimitMs > 0) {
         this._timeLimitMs = timeLimitMs * 1000;
       }
     }
-    this._timer = null;
   }
 
-  async getVideoPath () {
+  async getVideoPath (): Promise<string> {
     if (await fs.exists(this._videoPath)) {
       VIDEO_FILES.add(this._videoPath);
       return this._videoPath;
@@ -77,28 +94,12 @@ class ScreenRecorder {
     return '';
   }
 
-  get isRunning () {
+  get isRunning (): boolean {
     return !!(this._process?.isRunning);
   }
 
-  async _enforceTermination () {
-    if (this.isRunning) {
-      this.log.debug('Force-stopping the currently running video recording');
-      try {
-        await /** @type {import('teen_process').SubProcess} */ (this._process).stop('SIGKILL');
-      } catch {}
-    }
-    this._process = null;
-    const videoPath = await this.getVideoPath();
-    if (videoPath) {
-      await fs.rimraf(videoPath);
-      VIDEO_FILES.delete(videoPath);
-    }
-    return '';
-  }
-
-  async start () {
-    const args = [
+  async start (): Promise<void> {
+    const args: string[] = [
       this._udid, 'recordVideo'
     ];
     if (this._display) {
@@ -153,7 +154,7 @@ class ScreenRecorder {
       if (this.isRunning) {
         try {
           await this.stop();
-        } catch (e) {
+        } catch (e: any) {
           this.log.error(e);
         }
       }
@@ -161,7 +162,7 @@ class ScreenRecorder {
     this.log.info(`The video recording has started. Will timeout in ${this._timeLimitMs}ms`);
   }
 
-  async stop (force = false) {
+  async stop (force: boolean = false): Promise<string> {
     if (this._timer) {
       clearTimeout(this._timer);
       this._timer = null;
@@ -176,8 +177,12 @@ class ScreenRecorder {
       return await this.getVideoPath();
     }
 
+    if (!this._process) {
+      throw new Error('Screen recording process is not available');
+    }
+
     try {
-      await /** @type {import('teen_process').SubProcess} */ (this._process).stop('SIGINT', PROCESS_SHUTDOWN_TIMEOUT_MS);
+      await this._process.stop('SIGINT', PROCESS_SHUTDOWN_TIMEOUT_MS);
     } catch {
       await this._enforceTermination();
       throw new Error(`Screen recording has failed to stop after ${PROCESS_SHUTDOWN_TIMEOUT_MS}ms`);
@@ -185,9 +190,25 @@ class ScreenRecorder {
 
     return await this.getVideoPath();
   }
+
+  private async _enforceTermination (): Promise<string> {
+    if (this.isRunning && this._process) {
+      this.log.debug('Force-stopping the currently running video recording');
+      try {
+        await this._process.stop('SIGKILL');
+      } catch {}
+    }
+    this._process = null;
+    const videoPath = await this.getVideoPath();
+    if (videoPath) {
+      await fs.rimraf(videoPath);
+      VIDEO_FILES.delete(videoPath);
+    }
+    return '';
+  }
 }
 
-async function extractSimulatorUdid (caps) {
+async function extractSimulatorUdid (caps: StringRecord): Promise<string | null> {
   if (caps['safari:useSimulator'] === false) {
     return null;
   }
@@ -211,33 +232,37 @@ async function extractSimulatorUdid (caps) {
   return null;
 }
 
-
-/**
- * @typedef {Object} StartRecordingOptions
- *
- * @property {string} codec [hevc] - Specifies the codec type: "h264" or "hevc"
- * @property {string} display [internal] - Supports "internal" or "external". Default is "internal"
- * @property {string} mask - For non-rectangular displays, handle the mask by policy:
- * - ignored: The mask is ignored and the unmasked framebuffer is saved.
- * - alpha: Not supported, but retained for compatibility; the mask is rendered black.
- * - black: The mask is rendered black.
- * @property {string|number} timeLimit [600] - The maximum recording time, in seconds. The default
- * value is 600 seconds (10 minutes).
- * @property {boolean} forceRestart [true] - Whether to ignore the call if a screen recording is currently running
- * (`false`) or to start a new recording immediately and terminate the existing one if running (`true`).
- */
+export interface StartRecordingOptions {
+  /** Specifies the codec type: "h264" or "hevc" */
+  codec?: string;
+  /** Supports "internal" or "external". Default is "internal" */
+  display?: string;
+  /** For non-rectangular displays, handle the mask by policy:
+   * - ignored: The mask is ignored and the unmasked framebuffer is saved.
+   * - alpha: Not supported, but retained for compatibility; the mask is rendered black.
+   * - black: The mask is rendered black.
+   */
+  mask?: string;
+  /** The maximum recording time, in seconds. The default value is 600 seconds (10 minutes). */
+  timeLimit?: string | number;
+  /** Whether to ignore the call if a screen recording is currently running
+   * (`false`) or to start a new recording immediately and terminate the existing one if running (`true`).
+   */
+  forceRestart?: boolean;
+}
 
 /**
  * Record the Simulator's display in background while the automated test is running.
  * This method uses `xcrun simctl io recordVideo` helper under the hood.
  * Check the output of `xcrun simctl io` command for more details.
  *
- * @this {SafariDriver}
- * @param {StartRecordingOptions} options - The available options.
- * @this {import('../driver').SafariDriver}
+ * @param options - The available options.
  * @throws {Error} If screen recording has failed to start or is not supported for the destination device.
  */
-export async function startRecordingScreen (options) {
+export async function startRecordingScreen (
+  this: SafariDriver,
+  options?: StartRecordingOptions
+): Promise<void> {
   const {
     timeLimit,
     codec,
@@ -280,38 +305,44 @@ export async function startRecordingScreen (options) {
   }
 }
 
-/**
- * @typedef {Object} StopRecordingOptions
- *
- * @property {string} remotePath - The path to the remote location, where the resulting video should be uploaded.
- * The following protocols are supported: http/https, ftp.
- * Null or empty string value (the default setting) means the content of resulting
- * file should be encoded as Base64 and passed as the endpoint response value.
- * An exception will be thrown if the generated media file is too big to
- * fit into the available process memory.
- * @property {string} user - The name of the user for the remote authentication.
- * @property {string} pass - The password for the remote authentication.
- * @property {string} method - The http multipart upload method name. The 'PUT' one is used by default.
- * @property {Object} headers - Additional headers mapping for multipart http(s) uploads
- * @property {string} fileFieldName [file] - The name of the form field, where the file content BLOB should be stored for
- *                                            http(s) uploads
- * @property {Object|[string, string][]} formFields - Additional form fields for multipart http(s) uploads
- */
+export interface StopRecordingOptions {
+  /** The path to the remote location, where the resulting video should be uploaded.
+   * The following protocols are supported: http/https, ftp.
+   * Null or empty string value (the default setting) means the content of resulting
+   * file should be encoded as Base64 and passed as the endpoint response value.
+   * An exception will be thrown if the generated media file is too big to
+   * fit into the available process memory.
+   */
+  remotePath?: string;
+  /** The name of the user for the remote authentication. */
+  user?: string;
+  /** The password for the remote authentication. */
+  pass?: string;
+  /** The http multipart upload method name. The 'PUT' one is used by default. */
+  method?: string;
+  /** Additional headers mapping for multipart http(s) uploads */
+  headers?: Record<string, string>;
+  /** The name of the form field, where the file content BLOB should be stored for http(s) uploads */
+  fileFieldName?: string;
+  /** Additional form fields for multipart http(s) uploads */
+  formFields?: Record<string, string> | Array<[string, string]>;
+}
 
 /**
  * Stop recording the screen.
  * If no screen recording has been started before then the method returns an empty string.
  *
- * @this {SafariDriver}
- * @param {StopRecordingOptions} options - The available options.
- * @returns {Promise<string>} Base64-encoded content of the recorded media file if 'remotePath'
+ * @param options - The available options.
+ * @returns Base64-encoded content of the recorded media file if 'remotePath'
  * parameter is falsy or an empty string.
- * @this {import('../driver').SafariDriver}
  * @throws {Error} If there was an error while getting the name of a media file
  * or the file content cannot be uploaded to the remote location
  * or screen recording is not supported on the device under test.
  */
-export async function stopRecordingScreen (options) {
+export async function stopRecordingScreen (
+  this: SafariDriver,
+  options?: StopRecordingOptions
+): Promise<string> {
   if (!this._screenRecorder) {
     this.log.info('No screen recording has been started. Doing nothing');
     return '';
@@ -327,9 +358,6 @@ export async function stopRecordingScreen (options) {
     const {size} = await fs.stat(videoPath);
     this.log.debug(`The size of the resulting screen recording is ${util.toReadableSizeString(size)}`);
   }
-  return await uploadRecordedMedia(videoPath, options?.remotePath, options);
+  return await uploadRecordedMedia(videoPath, options?.remotePath ?? null, options ?? {});
 }
 
-/**
- * @typedef {import('../driver').SafariDriver} SafariDriver
- */
