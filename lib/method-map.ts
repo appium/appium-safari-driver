@@ -1,4 +1,7 @@
-export const newMethodMap = /** @type {const} */ ({
+import type { SafariDriver } from './driver';
+import type { MethodMap } from '@appium/types';
+
+export const newMethodMap = {
   '/session/:sessionId/appium/start_recording_screen': {
     POST: {
       command: 'startRecordingScreen',
@@ -11,4 +14,5 @@ export const newMethodMap = /** @type {const} */ ({
       payloadParams: { optional: ['options'] }
     }
   },
-});
+} as const satisfies MethodMap<SafariDriver>;
+

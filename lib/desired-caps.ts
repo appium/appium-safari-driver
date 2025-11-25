@@ -1,3 +1,5 @@
+import type {Constraints} from '@appium/types';
+
 const desiredCapConstraints = {
   browserName: {
     isString: true,
@@ -35,6 +37,9 @@ const desiredCapConstraints = {
   'webkit:WebRTC': {
     isObject: true
   },
-};
+} as const satisfies Constraints;
 
 export { desiredCapConstraints };
+
+export type SafariConstraints = typeof desiredCapConstraints;
+
