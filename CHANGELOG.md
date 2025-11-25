@@ -1,3 +1,9 @@
+## [4.1.0](https://github.com/appium/appium-safari-driver/compare/v4.0.2...v4.1.0) (2025-11-25)
+
+### Features
+
+* Migrate driver sources to typescript ([#148](https://github.com/appium/appium-safari-driver/issues/148)) ([c851874](https://github.com/appium/appium-safari-driver/commit/c8518746317289f5db9b27c30639a8b8b42778ae))
+
 ## [4.0.2](https://github.com/appium/appium-safari-driver/compare/v4.0.1...v4.0.2) (2025-11-15)
 
 ### Miscellaneous Chores
