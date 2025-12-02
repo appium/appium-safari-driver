@@ -1,3 +1,9 @@
+## [4.1.1](https://github.com/appium/appium-safari-driver/compare/v4.1.0...v4.1.1) (2025-12-02)
+
+### Miscellaneous Chores
+
+* **deps:** bump actions/setup-node from 3 to 6 ([#150](https://github.com/appium/appium-safari-driver/issues/150)) ([6a6cffe](https://github.com/appium/appium-safari-driver/commit/6a6cffe5e0b622415329681176e3515d28cee933))
+
 ## [4.1.0](https://github.com/appium/appium-safari-driver/compare/v4.0.2...v4.1.0) (2025-11-25)
 
 ### Features
