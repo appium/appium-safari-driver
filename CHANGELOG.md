@@ -1,3 +1,9 @@
+## [4.1.2](https://github.com/appium/appium-safari-driver/compare/v4.1.1...v4.1.2) (2025-12-02)
+
+### Miscellaneous Chores
+
+* **deps:** bump actions/checkout from 2 to 6 ([#151](https://github.com/appium/appium-safari-driver/issues/151)) ([5b71f38](https://github.com/appium/appium-safari-driver/commit/5b71f38d3ab32f72c247ac8d57bfffadf6271f82))
+
 ## [4.1.1](https://github.com/appium/appium-safari-driver/compare/v4.1.0...v4.1.1) (2025-12-02)
 
 ### Miscellaneous Chores
