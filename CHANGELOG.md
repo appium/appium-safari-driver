@@ -1,3 +1,9 @@
+## [4.1.4](https://github.com/appium/appium-safari-driver/compare/v4.1.3...v4.1.4) (2025-12-12)
+
+### Miscellaneous Chores
+
+* **deps:** remove source-map-support ([#153](https://github.com/appium/appium-safari-driver/issues/153)) ([0105b59](https://github.com/appium/appium-safari-driver/commit/0105b59852e84e67116dc502200d39ddecf736f4))
+
 ## [4.1.3](https://github.com/appium/appium-safari-driver/compare/v4.1.2...v4.1.3) (2025-12-11)
 
 ### Miscellaneous Chores
