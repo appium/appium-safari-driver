@@ -39,7 +39,7 @@
     "lib": "lib"
   },
   "dependencies": {
-    "asyncbox": "^3.0.0",
+    "asyncbox": "^4.0.1",
     "bluebird": "^3.5.1",
     "lodash": "^4.17.4",
     "node-simctl": "^8.0.0",
