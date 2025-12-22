@@ -1,3 +1,9 @@
+## [4.1.6](https://github.com/appium/appium-safari-driver/compare/v4.1.5...v4.1.6) (2025-12-22)
+
+### Miscellaneous Chores
+
+* bump teen_process ([#155](https://github.com/appium/appium-safari-driver/issues/155)) ([4321da2](https://github.com/appium/appium-safari-driver/commit/4321da20edb63ad82175c82f2dd8ab24b1e1e95c))
+
 ## [4.1.5](https://github.com/appium/appium-safari-driver/compare/v4.1.4...v4.1.5) (2025-12-18)
 
 ### Miscellaneous Chores
