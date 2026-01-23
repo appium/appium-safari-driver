@@ -33,11 +33,21 @@
     ],
     "mainClass": "SafariDriver"
   },
-  "main": "./build/index.js",
+  "main": "./build/lib/index.js",
+  "types": "./build/lib/index.d.ts",
   "bin": {},
   "directories": {
     "lib": "lib"
   },
+  "files": [
+    "lib",
+    "build",
+    "tsconfig.json",
+    "!build/tsconfig.tsbuildinfo",
+    "!build/test",
+    "LICENSE",
+    "CHANGELOG.md"
+  ],
   "dependencies": {
     "asyncbox": "^4.0.1",
     "bluebird": "^3.5.1",
