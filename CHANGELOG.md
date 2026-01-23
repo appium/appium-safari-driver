@@ -1,3 +1,9 @@
+## [4.1.7](https://github.com/appium/appium-safari-driver/compare/v4.1.6...v4.1.7) (2026-01-23)
+
+### Miscellaneous Chores
+
+* Update published dist payload ([#158](https://github.com/appium/appium-safari-driver/issues/158)) ([34c22a0](https://github.com/appium/appium-safari-driver/commit/34c22a048b4f33c266d7a74b379eab84fac351b7))
+
 ## [4.1.6](https://github.com/appium/appium-safari-driver/compare/v4.1.5...v4.1.6) (2025-12-22)
 
 ### Miscellaneous Chores
