@@ -1,17 +1,12 @@
 import os from 'os';
 import path from 'path';
-import { JWProxy, errors } from 'appium/driver';
-import { fs, logger, util } from 'appium/support';
-import { SubProcess } from 'teen_process';
-import { waitForCondition } from 'asyncbox';
-import { findAPortNotInUse } from 'portscanner';
-import { execSync } from 'child_process';
-import type {
-  AppiumLogger,
-  StringRecord,
-  HTTPMethod,
-  HTTPBody,
-} from '@appium/types';
+import {JWProxy, errors} from 'appium/driver';
+import {fs, logger, util} from 'appium/support';
+import {SubProcess} from 'teen_process';
+import {waitForCondition} from 'asyncbox';
+import {findAPortNotInUse} from 'portscanner';
+import {execSync} from 'child_process';
+import type {AppiumLogger, StringRecord, HTTPMethod, HTTPBody} from '@appium/types';
 
 const SD_BINARY = 'safaridriver';
 const STARTUP_TIMEOUT = 10000; // seconds
@@ -20,18 +15,18 @@ const SAFARI_PORT_RANGE: [number, number] = [5100, 5200];
 // we never run multiple Safari driver processes for the same Appium process
 const SAFARI_SERVER_GUARD = util.getLockFileGuard(
   path.resolve(os.tmpdir(), 'safari_server_guard.lock'),
-  {timeout: 5, tryRecovery: true}
+  {timeout: 5, tryRecovery: true},
 );
-
 
 class SafariProxy extends JWProxy {
   didProcessExit?: boolean;
 
-  override async proxyCommand (url: string, method: HTTPMethod, body: HTTPBody = null) {
+  override async proxyCommand(url: string, method: HTTPMethod, body: HTTPBody = null) {
     if (this.didProcessExit) {
       throw new errors.InvalidContextError(
         `'${method} ${url}' cannot be proxied to Safari Driver server because ` +
-        'the process is not running (probably crashed). Check the server log for more details');
+          'the process is not running (probably crashed). Check the server log for more details',
+      );
     }
     return await super.proxyCommand(url, method, body);
   }
@@ -42,15 +37,15 @@ class SafariDriverProcess {
   public port: number | null = null;
   public proc: SubProcess | null = null;
 
-  constructor () {
+  constructor() {
     this.log = logger.getLogger('SafariDriverProcess');
   }
 
-  get isRunning (): boolean {
-    return !!(this.proc?.isRunning);
+  get isRunning(): boolean {
+    return !!this.proc?.isRunning;
   }
 
-  async init (): Promise<void> {
+  async init(): Promise<void> {
     await SAFARI_SERVER_GUARD(async () => {
       if (this.isRunning) {
         return;
@@ -62,16 +57,19 @@ class SafariDriverProcess {
       } catch {
         throw new Error(
           `Cannot find any free port in range ${startPort}..${endPort}. ` +
-          `Double check the processes that are locking ports within this range and terminate ` +
-          `these which are not needed anymore`);
+            `Double check the processes that are locking ports within this range and terminate ` +
+            `these which are not needed anymore`,
+        );
       }
 
       let safariBin: string;
       try {
         safariBin = await fs.which(SD_BINARY);
       } catch {
-        throw new Error(`${SD_BINARY} binary cannot be found in PATH. ` +
-          `Please make sure it is present on your system`);
+        throw new Error(
+          `${SD_BINARY} binary cannot be found in PATH. ` +
+            `Please make sure it is present on your system`,
+        );
       }
       this.proc = new SubProcess(safariBin, ['-p', String(this.port), '--diagnose']);
       this.proc.on('output', (stdout, stderr) => {
@@ -86,7 +84,7 @@ class SafariDriverProcess {
     });
   }
 
-  async kill (): Promise<void> {
+  async kill(): Promise<void> {
     if (this.isRunning) {
       try {
         await this.proc?.stop('SIGKILL');
@@ -113,22 +111,22 @@ export class SafariDriverServer {
   private _proxy: SafariProxy | null = null;
   private readonly log: AppiumLogger;
 
-  constructor (log: AppiumLogger) {
+  constructor(log: AppiumLogger) {
     this.log = log;
   }
 
-  get proxy (): SafariProxy {
+  get proxy(): SafariProxy {
     if (!this._proxy) {
       throw new Error('Safari driver proxy is not initialized');
     }
     return this._proxy;
   }
 
-  get isRunning (): boolean {
-    return !!(SAFARI_DRIVER_PROCESS.isRunning);
+  get isRunning(): boolean {
+    return !!SAFARI_DRIVER_PROCESS.isRunning;
   }
 
-  async start (caps: StringRecord, opts: SessionOptions = {}): Promise<void> {
+  async start(caps: StringRecord, opts: SessionOptions = {}): Promise<void> {
     await SAFARI_DRIVER_PROCESS.init();
 
     const proxyOptions: any = {
@@ -150,29 +148,34 @@ export class SafariDriverServer {
     });
 
     try {
-      await waitForCondition(async () => {
-        try {
-          await this.proxy.command('/status', 'GET');
-          return true;
-        } catch (err: any) {
-          if (this.proxy.didProcessExit) {
-            throw new Error(err.message);
+      await waitForCondition(
+        async () => {
+          try {
+            await this.proxy.command('/status', 'GET');
+            return true;
+          } catch (err: any) {
+            if (this.proxy.didProcessExit) {
+              throw new Error(err.message);
+            }
+            return false;
           }
-          return false;
-        }
-      }, {
-        waitMs: STARTUP_TIMEOUT,
-        intervalMs: 1000,
-      });
+        },
+        {
+          waitMs: STARTUP_TIMEOUT,
+          intervalMs: 1000,
+        },
+      );
     } catch (e: any) {
       if (/Condition unmet/.test(e.message)) {
         if (SAFARI_DRIVER_PROCESS.isRunning) {
           // avoid "frozen" processes,
           await SAFARI_DRIVER_PROCESS.kill();
         }
-        throw new Error(`Safari Driver server is not listening within ${STARTUP_TIMEOUT}ms timeout. ` +
-          `Make sure it has been executed manually at least once with '--enable' command line argument. ` +
-          `Check the server log for more details`);
+        throw new Error(
+          `Safari Driver server is not listening within ${STARTUP_TIMEOUT}ms timeout. ` +
+            `Make sure it has been executed manually at least once with '--enable' command line argument. ` +
+            `Check the server log for more details`,
+        );
       }
       throw e;
     }
@@ -181,11 +184,11 @@ export class SafariDriverServer {
       capabilities: {
         firstMatch: [{}],
         alwaysMatch: caps,
-      }
+      },
     });
   }
 
-  async stop (): Promise<void> {
+  async stop(): Promise<void> {
     if (!this.isRunning) {
       this.log.info(`${SD_BINARY} session cannot be stopped, because the server is not running`);
       return;
@@ -202,4 +205,3 @@ export class SafariDriverServer {
 }
 
 export default SafariDriverServer;
-

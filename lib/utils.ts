@@ -1,10 +1,10 @@
-import { STANDARD_CAPS } from 'appium/driver';
+import {STANDARD_CAPS} from 'appium/driver';
 import _ from 'lodash';
-import type { StringRecord } from '@appium/types';
+import type {StringRecord} from '@appium/types';
 
 const SAFARI_CAP_PREFIXES = ['safari:', 'webkit:'];
 
-function formatCapsForServer (caps: StringRecord): StringRecord {
+function formatCapsForServer(caps: StringRecord): StringRecord {
   const result: StringRecord = {
     browserName: 'Safari',
     browserVersion: caps.browserVersion,
@@ -20,5 +20,4 @@ function formatCapsForServer (caps: StringRecord): StringRecord {
   return result;
 }
 
-export { formatCapsForServer };
-
+export {formatCapsForServer};

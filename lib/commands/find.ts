@@ -1,5 +1,5 @@
-import { util } from 'appium/support';
-import type { SafariDriver } from '../driver';
+import {util} from 'appium/support';
+import type {SafariDriver} from '../driver';
 
 /**
  * Find element(s) using the specified strategy and selector.
@@ -11,12 +11,12 @@ import type { SafariDriver } from '../driver';
  * @param context - Optional context element ID
  * @returns Promise that resolves to the found element(s)
  */
-export async function findElOrEls (
+export async function findElOrEls(
   this: SafariDriver,
   strategy: string,
   selector: string,
   mult: boolean,
-  context?: string
+  context?: string,
 ): Promise<any> {
   const endpoint = `/element${context ? `/${util.unwrapElement(context)}/element` : ''}${mult ? 's' : ''}`;
   return await this.safari.proxy.command(endpoint, 'POST', {
@@ -24,4 +24,3 @@ export async function findElOrEls (
     value: selector,
   });
 }
-

@@ -1,8 +1,8 @@
-import { remote } from 'webdriverio';
-import { Simctl } from 'node-simctl';
-import { HOST, PORT, MOCHA_TIMEOUT } from '../utils';
-import type { Browser } from 'webdriverio';
-import { expect } from 'chai';
+import {remote} from 'webdriverio';
+import {Simctl} from 'node-simctl';
+import {HOST, PORT, MOCHA_TIMEOUT} from '../utils';
+import type {Browser} from 'webdriverio';
+import {expect} from 'chai';
 import * as chai from 'chai';
 import * as chaiAsPromised from 'chai-as-promised';
 
@@ -65,4 +65,3 @@ describe('Mobile SafariDriver', function () {
     expect(await driver!.getPageSource()).to.not.be.empty;
   });
 });
-

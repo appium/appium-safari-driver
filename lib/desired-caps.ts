@@ -5,41 +5,40 @@ const desiredCapConstraints = {
     isString: true,
   },
   browserVersion: {
-    isString: true
+    isString: true,
   },
   acceptInsecureCerts: {
-    isBoolean: true
+    isBoolean: true,
   },
   'safari:platformVersion': {
-    isString: true
+    isString: true,
   },
   'safari:platformBuildVersion': {
-    isString: true
+    isString: true,
   },
   'safari:useSimulator': {
-    isBoolean: true
+    isBoolean: true,
   },
   'safari:deviceType': {
-    isString: true
+    isString: true,
   },
   'safari:deviceName': {
-    isString: true
+    isString: true,
   },
   'safari:deviceUDID': {
-    isString: true
+    isString: true,
   },
   'safari:automaticInspection': {
-    isBoolean: true
+    isBoolean: true,
   },
   'safari:automaticProfiling': {
-    isBoolean: true
+    isBoolean: true,
   },
   'webkit:WebRTC': {
-    isObject: true
+    isObject: true,
   },
 } as const satisfies Constraints;
 
-export { desiredCapConstraints };
+export {desiredCapConstraints};
 
 export type SafariConstraints = typeof desiredCapConstraints;
-

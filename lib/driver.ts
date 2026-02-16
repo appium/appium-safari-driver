@@ -7,14 +7,14 @@ import type {
   ExternalDriver,
   W3CDriverCaps,
 } from '@appium/types';
-import { BaseDriver } from 'appium/driver';
-import { SafariDriverServer } from './safari';
-import { desiredCapConstraints, type SafariConstraints } from './desired-caps';
+import {BaseDriver} from 'appium/driver';
+import {SafariDriverServer} from './safari';
+import {desiredCapConstraints, type SafariConstraints} from './desired-caps';
 import * as cookieCommands from './commands/cookies';
 import * as findCommands from './commands/find';
 import * as recordScreenCommands from './commands/record-screen';
-import { formatCapsForServer } from './utils';
-import { newMethodMap } from './method-map';
+import {formatCapsForServer} from './utils';
+import {newMethodMap} from './method-map';
 
 const NO_PROXY: RouteMatcher[] = [
   ['GET', new RegExp('^/session/[^/]+/appium')],
@@ -36,7 +36,7 @@ export class SafariDriver
 
   static newMethodMap = newMethodMap;
 
-  constructor (opts: InitialOpts = {} as InitialOpts) {
+  constructor(opts: InitialOpts = {} as InitialOpts) {
     super(opts);
     this.desiredCapConstraints = desiredCapConstraints;
     this.locatorStrategies = [
@@ -52,30 +52,30 @@ export class SafariDriver
     this.resetState();
   }
 
-  get safari (): SafariDriverServer {
+  get safari(): SafariDriverServer {
     if (!this._safari) {
       throw new Error('Safari driver server is not initialized');
     }
     return this._safari;
   }
 
-  override proxyActive (): boolean {
+  override proxyActive(): boolean {
     return this.isProxyActive;
   }
 
-  override getProxyAvoidList (): RouteMatcher[] {
+  override getProxyAvoidList(): RouteMatcher[] {
     return NO_PROXY;
   }
 
-  override canProxy (): boolean {
+  override canProxy(): boolean {
     return true;
   }
 
-  override async createSession (
+  override async createSession(
     w3cCaps1: W3CSafariDriverCaps,
     w3cCaps2?: W3CSafariDriverCaps,
     w3cCaps3?: W3CSafariDriverCaps,
-    driverData?: DriverData[]
+    driverData?: DriverData[],
   ): Promise<DefaultCreateSessionResult<SafariConstraints>> {
     const [sessionId, caps] = await super.createSession(w3cCaps1, w3cCaps2, w3cCaps3, driverData);
     this._safari = new SafariDriverServer(this.log);
@@ -92,7 +92,7 @@ export class SafariDriver
     return [sessionId, caps];
   }
 
-  override async deleteSession (): Promise<void> {
+  override async deleteSession(): Promise<void> {
     this.log.info('Ending Safari session');
     await this._screenRecorder?.stop(true);
     await this._safari?.stop();
@@ -101,7 +101,7 @@ export class SafariDriver
     await super.deleteSession();
   }
 
-  private resetState (): void {
+  private resetState(): void {
     this._safari = null;
     this.proxyReqRes = null;
     this.isProxyActive = false;
@@ -119,4 +119,3 @@ export class SafariDriver
 export default SafariDriver;
 
 type W3CSafariDriverCaps = W3CDriverCaps<SafariConstraints>;
-

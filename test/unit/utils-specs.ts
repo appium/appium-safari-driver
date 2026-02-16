@@ -1,5 +1,5 @@
-import { formatCapsForServer } from '../../lib/utils';
-import { expect } from 'chai';
+import {formatCapsForServer} from '../../lib/utils';
+import {expect} from 'chai';
 
 describe('formatCapsForServer', function () {
   it('should format empty caps', function () {
@@ -29,7 +29,7 @@ describe('formatCapsForServer', function () {
       'safari:deviceUDID': '1234',
       'webkit:yolo': '567',
       'appium:bar': '789',
-      'acceptInsecureCerts': true
+      acceptInsecureCerts: true,
     });
     expect(result).to.eql({
       browserName: 'Safari',
@@ -37,8 +37,7 @@ describe('formatCapsForServer', function () {
       platformName: 'iOS',
       'safari:deviceUDID': '1234',
       'webkit:yolo': '567',
-      'acceptInsecureCerts': true
+      acceptInsecureCerts: true,
     });
   });
 });
-
