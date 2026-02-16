@@ -1,4 +1,4 @@
-import { SafariDriver } from './driver';
+import {SafariDriver} from './driver';
 
 export default SafariDriver;
-export { SafariDriver };
+export {SafariDriver};
