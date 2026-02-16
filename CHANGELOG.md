@@ -1,3 +1,9 @@
+## [4.1.9](https://github.com/appium/appium-safari-driver/compare/v4.1.8...v4.1.9) (2026-02-16)
+
+### Bug Fixes
+
+* format ([#162](https://github.com/appium/appium-safari-driver/issues/162)) ([0b49181](https://github.com/appium/appium-safari-driver/commit/0b491817bfe0d16c19498f1a4745ffa7887a0894))
+
 ## [4.1.8](https://github.com/appium/appium-safari-driver/compare/v4.1.7...v4.1.8) (2026-01-31)
 
 ### Miscellaneous Chores
