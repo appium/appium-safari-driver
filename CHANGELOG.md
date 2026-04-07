@@ -1,3 +1,9 @@
+## [4.1.10](https://github.com/appium/appium-safari-driver/compare/v4.1.9...v4.1.10) (2026-04-07)
+
+### Miscellaneous Chores
+
+* **deps-dev:** bump @appium/eslint-config-appium-ts ([#163](https://github.com/appium/appium-safari-driver/issues/163)) ([a00db7c](https://github.com/appium/appium-safari-driver/commit/a00db7cf9c86e132e828724cd55e752a74415fdf))
+
 ## [4.1.9](https://github.com/appium/appium-safari-driver/compare/v4.1.8...v4.1.9) (2026-02-16)
 
 ### Bug Fixes
