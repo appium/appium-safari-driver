@@ -5,7 +5,7 @@
     "appium",
     "safari"
   ],
-  "version": "4.1.9",
+  "version": "4.1.10",
   "author": "Appium Contributors",
   "license": "Apache-2.0",
   "repository": {
@@ -41,10 +41,7 @@
   },
   "files": [
     "lib",
-    "build",
-    "tsconfig.json",
-    "!build/tsconfig.tsbuildinfo",
-    "!build/test",
+    "build/lib",
     "LICENSE",
     "CHANGELOG.md"
   ],
@@ -73,7 +70,7 @@
     "appium": "^3.0.0-rc.2"
   },
   "devDependencies": {
-    "@appium/eslint-config-appium-ts": "^2.0.0-rc.1",
+    "@appium/eslint-config-appium-ts": "^3.0.1",
     "@appium/tsconfig": "^1.0.0-rc.1",
     "@appium/types": "^1.0.0-rc.1",
     "@semantic-release/changelog": "^6.0.1",
