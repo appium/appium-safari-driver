@@ -1,3 +1,9 @@
+## [4.1.11](https://github.com/appium/appium-safari-driver/compare/v4.1.10...v4.1.11) (2026-04-10)
+
+### Miscellaneous Chores
+
+* **deps-dev:** bump typescript from 5.9.3 to 6.0.2 ([#164](https://github.com/appium/appium-safari-driver/issues/164)) ([09500b8](https://github.com/appium/appium-safari-driver/commit/09500b8882abd867df001cc586491b6b9afdb90d))
+
 ## [4.1.10](https://github.com/appium/appium-safari-driver/compare/v4.1.9...v4.1.10) (2026-04-07)
 
 ### Miscellaneous Chores
