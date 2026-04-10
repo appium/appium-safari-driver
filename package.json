@@ -41,10 +41,7 @@
   },
   "files": [
     "lib",
-    "build",
-    "tsconfig.json",
-    "!build/tsconfig.tsbuildinfo",
-    "!build/test",
+    "build/lib",
     "LICENSE",
     "CHANGELOG.md"
   ],
