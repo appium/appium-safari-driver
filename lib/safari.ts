@@ -1,11 +1,11 @@
-import os from 'os';
-import path from 'path';
+import os from 'node:os';
+import path from 'node:path';
 import {JWProxy, errors} from 'appium/driver';
 import {fs, logger, util} from 'appium/support';
 import {SubProcess} from 'teen_process';
 import {waitForCondition} from 'asyncbox';
 import {findAPortNotInUse} from 'portscanner';
-import {execSync} from 'child_process';
+import {execSync} from 'node:child_process';
 import type {AppiumLogger, StringRecord, HTTPMethod, HTTPBody} from '@appium/types';
 
 const SD_BINARY = 'safaridriver';
