@@ -43,7 +43,8 @@
     "lib",
     "build/lib",
     "LICENSE",
-    "CHANGELOG.md"
+    "CHANGELOG.md",
+    "npm-shrinkwrap.json"
   ],
   "dependencies": {
     "asyncbox": "^6.1.0",
