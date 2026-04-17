@@ -1,3 +1,9 @@
+## [4.1.12](https://github.com/appium/appium-safari-driver/compare/v4.1.11...v4.1.12) (2026-04-17)
+
+### Bug Fixes
+
+* Add missing shrinkwrap ([2d86a90](https://github.com/appium/appium-safari-driver/commit/2d86a90dfdf39d6ab9c90028d3f096c521206457))
+
 ## [4.1.11](https://github.com/appium/appium-safari-driver/compare/v4.1.10...v4.1.11) (2026-04-10)
 
 ### Miscellaneous Chores
