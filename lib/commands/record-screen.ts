@@ -53,6 +53,48 @@ process.on('exit', () => {
   }
 });
 
+export interface StartRecordingOptions {
+  /** Specifies the codec type: "h264" or "hevc" */
+  codec?: string;
+  /** Supports "internal" or "external". Default is "internal" */
+  display?: string;
+  /** For non-rectangular displays, handle the mask by policy:
+   * - ignored: The mask is ignored and the unmasked framebuffer is saved.
+   * - alpha: Not supported, but retained for compatibility; the mask is rendered black.
+   * - black: The mask is rendered black.
+   */
+  mask?: string;
+  /** The maximum recording time, in seconds. The default value is 600 seconds (10 minutes). */
+  timeLimit?: string | number;
+  /** Whether to ignore the call if a screen recording is currently running
+   * (`false`) or to start a new recording immediately and terminate the existing one if running (`true`).
+   */
+  forceRestart?: boolean;
+}
+
+export interface StopRecordingOptions {
+  /** The path to the remote location, where the resulting video should be uploaded.
+   * The following protocols are supported: http/https, ftp.
+   * Null or empty string value (the default setting) means the content of resulting
+   * file should be encoded as Base64 and passed as the endpoint response value.
+   * An exception will be thrown if the generated media file is too big to
+   * fit into the available process memory.
+   */
+  remotePath?: string;
+  /** The name of the user for the remote authentication. */
+  user?: string;
+  /** The password for the remote authentication. */
+  pass?: string;
+  /** The http multipart upload method name. The 'PUT' one is used by default. */
+  method?: string;
+  /** Additional headers mapping for multipart http(s) uploads */
+  headers?: Record<string, string>;
+  /** The name of the form field, where the file content BLOB should be stored for http(s) uploads */
+  fileFieldName?: string;
+  /** Additional form fields for multipart http(s) uploads */
+  formFields?: Record<string, string> | Array<[string, string]>;
+}
+
 interface ScreenRecorderOptions {
   codec?: string;
   display?: string;
@@ -91,16 +133,16 @@ export class ScreenRecorder {
     }
   }
 
+  get isRunning(): boolean {
+    return !!this._process?.isRunning;
+  }
+
   async getVideoPath(): Promise<string> {
     if (await fs.exists(this._videoPath)) {
       VIDEO_FILES.add(this._videoPath);
       return this._videoPath;
     }
     return '';
-  }
-
-  get isRunning(): boolean {
-    return !!this._process?.isRunning;
   }
 
   async start(): Promise<void> {
@@ -214,51 +256,6 @@ export class ScreenRecorder {
   }
 }
 
-async function extractSimulatorUdid(caps: StringRecord): Promise<string | null> {
-  if (caps['safari:useSimulator'] === false) {
-    return null;
-  }
-
-  const allDevices = _.flatMap(_.values(await new Simctl().getDevices(null, 'iOS')));
-  for (const {name, udid, state, sdk} of allDevices) {
-    if (state !== 'Booted') {
-      continue;
-    }
-
-    if (_.toLower(caps['safari:deviceUDID']) === _.toLower(udid)) {
-      return udid;
-    }
-    if (
-      _.toLower(caps['safari:deviceName']) === _.toLower(name) &&
-      ((caps['safari:platformVersion'] && caps['safari:platformVersion'] === sdk) ||
-        !caps['safari:platformVersion'])
-    ) {
-      return udid;
-    }
-  }
-
-  return null;
-}
-
-export interface StartRecordingOptions {
-  /** Specifies the codec type: "h264" or "hevc" */
-  codec?: string;
-  /** Supports "internal" or "external". Default is "internal" */
-  display?: string;
-  /** For non-rectangular displays, handle the mask by policy:
-   * - ignored: The mask is ignored and the unmasked framebuffer is saved.
-   * - alpha: Not supported, but retained for compatibility; the mask is rendered black.
-   * - black: The mask is rendered black.
-   */
-  mask?: string;
-  /** The maximum recording time, in seconds. The default value is 600 seconds (10 minutes). */
-  timeLimit?: string | number;
-  /** Whether to ignore the call if a screen recording is currently running
-   * (`false`) or to start a new recording immediately and terminate the existing one if running (`true`).
-   */
-  forceRestart?: boolean;
-}
-
 /**
  * Record the Simulator's display in background while the automated test is running.
  * This method uses `xcrun simctl io recordVideo` helper under the hood.
@@ -309,29 +306,6 @@ export async function startRecordingScreen(
   }
 }
 
-export interface StopRecordingOptions {
-  /** The path to the remote location, where the resulting video should be uploaded.
-   * The following protocols are supported: http/https, ftp.
-   * Null or empty string value (the default setting) means the content of resulting
-   * file should be encoded as Base64 and passed as the endpoint response value.
-   * An exception will be thrown if the generated media file is too big to
-   * fit into the available process memory.
-   */
-  remotePath?: string;
-  /** The name of the user for the remote authentication. */
-  user?: string;
-  /** The password for the remote authentication. */
-  pass?: string;
-  /** The http multipart upload method name. The 'PUT' one is used by default. */
-  method?: string;
-  /** Additional headers mapping for multipart http(s) uploads */
-  headers?: Record<string, string>;
-  /** The name of the form field, where the file content BLOB should be stored for http(s) uploads */
-  fileFieldName?: string;
-  /** Additional form fields for multipart http(s) uploads */
-  formFields?: Record<string, string> | Array<[string, string]>;
-}
-
 /**
  * Stop recording the screen.
  * If no screen recording has been started before then the method returns an empty string.
@@ -365,4 +339,30 @@ export async function stopRecordingScreen(
     );
   }
   return await uploadRecordedMedia(videoPath, options?.remotePath ?? null, options ?? {});
+}
+
+async function extractSimulatorUdid(caps: StringRecord): Promise<string | null> {
+  if (caps['safari:useSimulator'] === false) {
+    return null;
+  }
+
+  const allDevices = _.flatMap(_.values(await new Simctl().getDevices(null, 'iOS')));
+  for (const {name, udid, state, sdk} of allDevices) {
+    if (state !== 'Booted') {
+      continue;
+    }
+
+    if (_.toLower(caps['safari:deviceUDID']) === _.toLower(udid)) {
+      return udid;
+    }
+    if (
+      _.toLower(caps['safari:deviceName']) === _.toLower(name) &&
+      ((caps['safari:platformVersion'] && caps['safari:platformVersion'] === sdk) ||
+        !caps['safari:platformVersion'])
+    ) {
+      return udid;
+    }
+  }
+
+  return null;
 }

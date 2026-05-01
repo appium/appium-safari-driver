@@ -33,9 +33,10 @@ class SafariProxy extends JWProxy {
 }
 
 class SafariDriverProcess {
-  private readonly log: AppiumLogger;
   public port: number | null = null;
   public proc: SubProcess | null = null;
+
+  private readonly log: AppiumLogger;
 
   constructor() {
     this.log = logger.getLogger('SafariDriverProcess');

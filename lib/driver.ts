@@ -25,16 +25,26 @@ const NO_PROXY: RouteMatcher[] = [
   ['DELETE', new RegExp('^/session/[^/]+/cookie$')],
 ];
 
+type W3CSafariDriverCaps = W3CDriverCaps<SafariConstraints>;
+
 export class SafariDriver
   extends BaseDriver<SafariConstraints, StringRecord>
   implements ExternalDriver<SafariConstraints, string, StringRecord>
 {
-  private isProxyActive: boolean;
-  private _safari: SafariDriverServer | null;
+  static newMethodMap = newMethodMap;
+
   proxyReqRes: ((...args: any[]) => any) | null;
   _screenRecorder: recordScreenCommands.ScreenRecorder | null;
 
-  static newMethodMap = newMethodMap;
+  deleteCookies = cookieCommands.deleteCookies;
+
+  findElOrEls = findCommands.findElOrEls;
+
+  startRecordingScreen = recordScreenCommands.startRecordingScreen;
+  stopRecordingScreen = recordScreenCommands.stopRecordingScreen;
+
+  private isProxyActive: boolean;
+  private _safari: SafariDriverServer | null;
 
   constructor(opts: InitialOpts = {} as InitialOpts) {
     super(opts);
@@ -107,15 +117,6 @@ export class SafariDriver
     this.isProxyActive = false;
     this._screenRecorder = null;
   }
-
-  deleteCookies = cookieCommands.deleteCookies;
-
-  findElOrEls = findCommands.findElOrEls;
-
-  startRecordingScreen = recordScreenCommands.startRecordingScreen;
-  stopRecordingScreen = recordScreenCommands.stopRecordingScreen;
 }
 
 export default SafariDriver;
-
-type W3CSafariDriverCaps = W3CDriverCaps<SafariConstraints>;
