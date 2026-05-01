@@ -27,9 +27,7 @@ const NO_PROXY: RouteMatcher[] = [
 
 type W3CSafariDriverCaps = W3CDriverCaps<SafariConstraints>;
 
-export default SafariDriver;
-
-export class SafariDriver
+export default class SafariDriver
   extends BaseDriver<SafariConstraints, StringRecord>
   implements ExternalDriver<SafariConstraints, string, StringRecord>
 {
