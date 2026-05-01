@@ -27,7 +27,7 @@ const NO_PROXY: RouteMatcher[] = [
 
 type W3CSafariDriverCaps = W3CDriverCaps<SafariConstraints>;
 
-export default class SafariDriver
+export class SafariDriver
   extends BaseDriver<SafariConstraints, StringRecord>
   implements ExternalDriver<SafariConstraints, string, StringRecord>
 {
@@ -118,3 +118,5 @@ export default class SafariDriver
     this._screenRecorder = null;
   }
 }
+
+export default SafariDriver;
