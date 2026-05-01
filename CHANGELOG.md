@@ -1,3 +1,9 @@
+## [4.1.13](https://github.com/appium/appium-safari-driver/compare/v4.1.12...v4.1.13) (2026-05-01)
+
+### Bug Fixes
+
+* lint ([#165](https://github.com/appium/appium-safari-driver/issues/165)) ([1c062e8](https://github.com/appium/appium-safari-driver/commit/1c062e8460697db4daa38bb8d1303b1e711c424e))
+
 ## [4.1.12](https://github.com/appium/appium-safari-driver/compare/v4.1.11...v4.1.12) (2026-04-17)
 
 ### Bug Fixes
