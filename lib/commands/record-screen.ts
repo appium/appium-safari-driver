@@ -345,7 +345,7 @@ async function extractSimulatorUdid(caps: StringRecord): Promise<string | null> 
     return null;
   }
 
-  const allDevices = Object.values(await new Simctl().getDevices(null, 'iOS')).flatMap((x) => x);
+  const allDevices = Object.values(await new Simctl().getDevices(null, 'iOS')).flat();
   for (const {name, udid, state, sdk} of allDevices) {
     if (state !== 'Booted') {
       continue;

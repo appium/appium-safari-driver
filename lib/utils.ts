@@ -17,7 +17,7 @@ function formatCapsForServer(caps: StringRecord): StringRecord {
   for (const [name, value] of Object.entries(caps)) {
     if (SAFARI_CAP_PREFIXES.some((prefix) => name.startsWith(prefix))) {
       result[name] = value;
-    } else if (!Object.prototype.hasOwnProperty.call(result, name) && STANDARD_CAPS.has(name as any)) {
+    } else if (!Object.hasOwn(result, name) && STANDARD_CAPS.has(name as any)) {
       result[name] = value;
     }
   }
