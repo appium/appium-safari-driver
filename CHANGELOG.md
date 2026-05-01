@@ -1,3 +1,9 @@
+## [4.1.14](https://github.com/appium/appium-safari-driver/compare/v4.1.13...v4.1.14) (2026-05-01)
+
+### Miscellaneous Chores
+
+* remove lodash ([#166](https://github.com/appium/appium-safari-driver/issues/166)) ([aca1cf6](https://github.com/appium/appium-safari-driver/commit/aca1cf6bf3dd921d561d4baf61e5a73e4be339fe))
+
 ## [4.1.13](https://github.com/appium/appium-safari-driver/compare/v4.1.12...v4.1.13) (2026-05-01)
 
 ### Bug Fixes
