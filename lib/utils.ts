@@ -1,5 +1,4 @@
 import {STANDARD_CAPS} from 'appium/driver';
-import _ from 'lodash';
 import type {StringRecord} from '@appium/types';
 
 const SAFARI_CAP_PREFIXES = ['safari:', 'webkit:'];
@@ -15,10 +14,10 @@ function formatCapsForServer(caps: StringRecord): StringRecord {
     browserVersion: caps.browserVersion,
     platformName: caps.platformName || 'iOS',
   };
-  for (const [name, value] of _.toPairs(caps)) {
+  for (const [name, value] of Object.entries(caps)) {
     if (SAFARI_CAP_PREFIXES.some((prefix) => name.startsWith(prefix))) {
       result[name] = value;
-    } else if (!_.has(result, name) && STANDARD_CAPS.has(name as any)) {
+    } else if (!(name in result) && STANDARD_CAPS.has(name as any)) {
       result[name] = value;
     }
   }

@@ -1,4 +1,3 @@
-import _ from 'lodash';
 import {util, fs, net, tempDir} from 'appium/support';
 import {waitForCondition} from 'asyncbox';
 import {Simctl} from 'node-simctl';
@@ -26,7 +25,7 @@ async function uploadRecordedMedia(
   remotePath: string | null = null,
   uploadOptions: UploadOptions = {},
 ): Promise<string> {
-  if (_.isEmpty(remotePath) || !remotePath) {
+  if (!remotePath) {
     return (await util.toInMemoryBase64(localFile)).toString();
   }
 
@@ -163,7 +162,7 @@ export class ScreenRecorder {
     });
     this.log.debug(`Starting video recording with arguments: ${util.quote(args)}`);
     this._process.on('output', (stdout, stderr) => {
-      const line = _.trim(stdout || stderr);
+      const line = (stdout || stderr)?.trim() ?? '';
       if (line) {
         this.log.debug(`[recordVideo@${this._udid.substring(0, 8)}] ${line}`);
       }
@@ -332,7 +331,7 @@ export async function stopRecordingScreen(
     this.log.info('No video data is found. Returning an empty string');
     return '';
   }
-  if (_.isEmpty(options?.remotePath)) {
+  if (!options?.remotePath) {
     const {size} = await fs.stat(videoPath);
     this.log.debug(
       `The size of the resulting screen recording is ${util.toReadableSizeString(size)}`,
@@ -346,17 +345,17 @@ async function extractSimulatorUdid(caps: StringRecord): Promise<string | null> 
     return null;
   }
 
-  const allDevices = _.flatMap(_.values(await new Simctl().getDevices(null, 'iOS')));
+  const allDevices = Object.values(await new Simctl().getDevices(null, 'iOS')).flatMap((x) => x);
   for (const {name, udid, state, sdk} of allDevices) {
     if (state !== 'Booted') {
       continue;
     }
 
-    if (_.toLower(caps['safari:deviceUDID']) === _.toLower(udid)) {
+    if (caps['safari:deviceUDID']?.toLowerCase() === udid.toLowerCase()) {
       return udid;
     }
     if (
-      _.toLower(caps['safari:deviceName']) === _.toLower(name) &&
+      caps['safari:deviceName']?.toLowerCase() === name.toLowerCase() &&
       ((caps['safari:platformVersion'] && caps['safari:platformVersion'] === sdk) ||
         !caps['safari:platformVersion'])
     ) {
