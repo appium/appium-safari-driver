@@ -1,3 +1,9 @@
+## [4.1.15](https://github.com/appium/appium-safari-driver/compare/v4.1.14...v4.1.15) (2026-05-04)
+
+### Miscellaneous Chores
+
+* Ditch unused bluebird imports ([#167](https://github.com/appium/appium-safari-driver/issues/167)) ([f2de354](https://github.com/appium/appium-safari-driver/commit/f2de354fa120fde0163050ff0f50d708ec85bf6f))
+
 ## [4.1.14](https://github.com/appium/appium-safari-driver/compare/v4.1.13...v4.1.14) (2026-05-01)
 
 ### Miscellaneous Chores
