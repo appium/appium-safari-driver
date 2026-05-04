@@ -48,7 +48,6 @@
   ],
   "dependencies": {
     "asyncbox": "^6.1.0",
-    "bluebird": "^3.5.1",
     "node-simctl": "^8.0.0",
     "portscanner": "2.2.0",
     "teen_process": "^4.0.4"
@@ -75,7 +74,6 @@
     "@appium/types": "^1.0.0-rc.1",
     "@semantic-release/changelog": "^6.0.1",
     "@semantic-release/git": "^10.0.1",
-    "@types/bluebird": "^3.5.38",
     "@types/mocha": "^10.0.1",
     "@types/node": "^25.0.0",
     "chai": "^6.0.0",
