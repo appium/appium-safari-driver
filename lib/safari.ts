@@ -156,7 +156,7 @@ export class SafariDriverServer {
             return true;
           } catch (err: any) {
             if (this.proxy.didProcessExit) {
-              throw new Error(err.message);
+              throw new Error(err.message, {cause: err});
             }
             return false;
           }
@@ -176,6 +176,7 @@ export class SafariDriverServer {
           `Safari Driver server is not listening within ${STARTUP_TIMEOUT}ms timeout. ` +
             `Make sure it has been executed manually at least once with '--enable' command line argument. ` +
             `Check the server log for more details`,
+          {cause: e},
         );
       }
       throw e;

@@ -33,8 +33,8 @@ export class SafariDriver
 {
   static newMethodMap = newMethodMap;
 
-  proxyReqRes: ((...args: any[]) => any) | null;
-  _screenRecorder: recordScreenCommands.ScreenRecorder | null;
+  proxyReqRes: ((...args: any[]) => any) | null = null;
+  _screenRecorder: recordScreenCommands.ScreenRecorder | null = null;
 
   deleteCookies = cookieCommands.deleteCookies;
 
@@ -43,8 +43,8 @@ export class SafariDriver
   startRecordingScreen = recordScreenCommands.startRecordingScreen;
   stopRecordingScreen = recordScreenCommands.stopRecordingScreen;
 
-  private isProxyActive: boolean;
-  private _safari: SafariDriverServer | null;
+  private isProxyActive = false;
+  private _safari: SafariDriverServer | null = null;
 
   constructor(opts: InitialOpts = {} as InitialOpts) {
     super(opts);

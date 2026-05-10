@@ -1,7 +1,7 @@
 import {util, fs, net, tempDir} from 'appium/support';
 import {waitForCondition} from 'asyncbox';
 import {Simctl} from 'node-simctl';
-import {SubProcess} from 'teen_process';
+import type {SubProcess} from 'teen_process';
 import type {AppiumLogger, StringRecord} from '@appium/types';
 import type {SafariDriver} from '../driver';
 
