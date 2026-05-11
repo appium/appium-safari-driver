@@ -1,3 +1,9 @@
+## [4.1.16](https://github.com/appium/appium-safari-driver/compare/v4.1.15...v4.1.16) (2026-05-11)
+
+### Miscellaneous Chores
+
+* Enable strict TS mode ([#168](https://github.com/appium/appium-safari-driver/issues/168)) ([61e1db1](https://github.com/appium/appium-safari-driver/commit/61e1db13d310e70339b5167f3197c6eb2991d88b))
+
 ## [4.1.15](https://github.com/appium/appium-safari-driver/compare/v4.1.14...v4.1.15) (2026-05-04)
 
 ### Miscellaneous Chores
