@@ -1,12 +1,9 @@
+import {describe, it, before, beforeEach, afterEach} from 'node:test';
+import assert from 'node:assert/strict';
 import {remote} from 'webdriverio';
 import {Simctl} from 'node-simctl';
-import {HOST, PORT, MOCHA_TIMEOUT} from '../utils';
+import {HOST, PORT, TEST_TIMEOUT} from '../utils.js';
 import type {Browser} from 'webdriverio';
-import {expect} from 'chai';
-import * as chai from 'chai';
-import * as chaiAsPromised from 'chai-as-promised';
-
-chai.use(chaiAsPromised.default);
 
 const PLATFORM_VERSION = process.env.PLATFORM_VERSION || '14.1';
 const DEVICE_NAME = process.env.DEVICE_NAME || 'iPhone 11 Pro Max';
@@ -20,19 +17,12 @@ const CAPS = {
   'wdio:enforceWebDriverClassic': true,
 };
 
-describe('Mobile SafariDriver', function () {
-  this.timeout(MOCHA_TIMEOUT);
+const describeMobile = process.env.CI ? describe.skip : describe;
 
+describeMobile('Mobile SafariDriver', {timeout: TEST_TIMEOUT}, () => {
   let driver: Browser | null = null;
 
-  before(async function () {
-    if (process.env.CI) {
-      // In Azure CI the stuff unexpectedly fails with
-      // "The device is not configured to allow remote control via WebDriver. To fix this, toggle 'Allow Remote Automation' in Safari's settings (Settings App > Safari > Advanced)."
-      // error
-      return this.skip();
-    }
-
+  before(async () => {
     // Preboot Simulator to avoid unexpected timeouts
     const simctl = new Simctl();
     const allDevices = await simctl.getDevices(PLATFORM_VERSION, 'iOS');
@@ -46,22 +36,22 @@ describe('Mobile SafariDriver', function () {
       await simctl.startBootMonitor();
     }
   });
-  beforeEach(async function () {
+  beforeEach(async () => {
     driver = await remote({
       hostname: HOST,
       port: PORT,
       capabilities: CAPS,
     });
   });
-  afterEach(async function () {
+  afterEach(async () => {
     if (driver) {
       await driver.deleteSession();
       driver = null;
     }
   });
 
-  it('should start and stop a session', async function () {
+  it('should start and stop a session', async () => {
     await driver!.url('https://appium.io/');
-    expect(await driver!.getPageSource()).to.not.be.empty;
+    assert.ok(await driver!.getPageSource());
   });
 });

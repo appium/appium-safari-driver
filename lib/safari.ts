@@ -1,7 +1,7 @@
 import os from 'node:os';
 import path from 'node:path';
-import {JWProxy, errors} from 'appium/driver';
-import {fs, logger, util} from 'appium/support';
+import {JWProxy, errors} from 'appium/driver.js';
+import {fs, logger, util} from 'appium/support.js';
 import {SubProcess} from 'teen_process';
 import {waitForCondition} from 'asyncbox';
 import {findAPortNotInUse} from 'portscanner';

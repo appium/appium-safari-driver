@@ -1,4 +1,4 @@
-import type {SafariDriver} from '../driver';
+import type {SafariDriver} from '../driver.js';
 
 /**
  * Delete all cookies visible to the current page.
