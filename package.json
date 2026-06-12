@@ -71,7 +71,9 @@
     "prepare": "npm run build",
     "pretest": "npm run build",
     "test": "node --test --test-timeout=60000 \"build/test/unit/**/*.test.js\"",
-    "e2e-test": "npm run build && node --test --test-timeout=300000 \"build/test/functional/**/*.test.js\""
+    "e2e-test": "npm run build && node --test --test-timeout=300000 \"build/test/functional/**/*.test.js\"",
+    "e2e-test:desktop": "npm run build && node --test --test-timeout=300000 build/test/functional/desktop-driver-e2e.test.js",
+    "e2e-test:simulator": "npm run build && node --test --test-timeout=300000 build/test/functional/mobile-driver-e2e.test.js"
   },
   "peerDependencies": {
     "appium": "^3.0.0-rc.2"

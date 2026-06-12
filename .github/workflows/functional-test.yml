@@ -12,13 +12,26 @@ concurrency:
 
 jobs:
   test:
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+        - target: desktop
+          npm_script: e2e-test:desktop
+          artifact: appium-desktop.log
+        - target: simulator
+          npm_script: e2e-test:simulator
+          artifact: appium-simulator.log
+          platform_version: '26.5'
+          device_name: iPhone 17
+    name: ${{ matrix.target }}
     env:
       CI: true
       APPIUM_TEST_SERVER_PORT: 4567
       APPIUM_TEST_SERVER_HOST: 127.0.0.1
       APPIUM_STARTUP_TIMEOUT_SEC: 30
-      PLATFORM_VERSION: '26.5'
-      DEVICE_NAME: iPhone 17
+      PLATFORM_VERSION: ${{ matrix.platform_version }}
+      DEVICE_NAME: ${{ matrix.device_name }}
       _FORCE_LOGS: 1
     runs-on: macos-26
     steps:
@@ -34,6 +47,21 @@ jobs:
       name: Install dev dependencies
     - run: sudo safaridriver --enable
       name: Enable safaridriver
+    - name: Prepare iOS simulator
+      if: matrix.target == 'simulator'
+      id: prepareSimulator
+      uses: futureware-tech/simulator-action@v5
+      with:
+        model: "${{ matrix.device_name }}"
+        os_version: "${{ matrix.platform_version }}"
+        shutdown_after_job: false
+        wait_for_boot: true
+    - name: Finalize iOS simulator boot
+      if: matrix.target == 'simulator'
+      run: xcrun --sdk iphonesimulator --show-sdk-version
+    - name: Set simulator UDID
+      if: matrix.target == 'simulator'
+      run: echo "DEVICE_UDID=${{ steps.prepareSimulator.outputs.udid }}" >> "$GITHUB_ENV"
     - run: |
         cwd=$(pwd)
         pushd "$cwd"
@@ -57,11 +85,11 @@ jobs:
           fi
         done
       name: Wait for Appium server startup
-    - run: npm run e2e-test
-      name: Run functional tests
+    - run: npm run ${{ matrix.npm_script }}
+      name: Run ${{ matrix.target }} functional tests
     - name: Save server output
       if: ${{ always() }}
       uses: actions/upload-artifact@master
       with:
-        name: appium.log
+        name: ${{ matrix.artifact }}
         path: appium.log
