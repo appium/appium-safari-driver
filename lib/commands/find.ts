@@ -1,5 +1,5 @@
-import {util} from 'appium/support';
-import type {SafariDriver} from '../driver';
+import {util} from 'appium/support.js';
+import type {SafariDriver} from '../driver.js';
 
 /**
  * Find element(s) using the specified strategy and selector.

@@ -1,4 +1,4 @@
-import {STANDARD_CAPS} from 'appium/driver';
+import {STANDARD_CAPS} from 'appium/driver.js';
 import type {StringRecord} from '@appium/types';
 
 const SAFARI_CAP_PREFIXES = ['safari:', 'webkit:'];

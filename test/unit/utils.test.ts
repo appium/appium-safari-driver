@@ -1,37 +1,38 @@
-import {formatCapsForServer} from '../../lib/utils';
-import {expect} from 'chai';
+import {describe, it} from 'node:test';
+import assert from 'node:assert/strict';
+import {formatCapsForServer} from '../../lib/utils.js';
 
-describe('formatCapsForServer', function () {
-  it('should format empty caps', function () {
+describe('formatCapsForServer', () => {
+  it('should format empty caps', () => {
     const result = formatCapsForServer({});
-    expect(result).to.eql({
+    assert.deepEqual(result, {
       browserName: 'Safari',
       browserVersion: undefined,
       platformName: 'iOS',
     });
   });
 
-  it('should assign default caps', function () {
+  it('should assign default caps', () => {
     const result = formatCapsForServer({
       browserName: 'yolo',
       browserVersion: '12',
       platformName: 'mac',
     });
-    expect(result).to.eql({
+    assert.deepEqual(result, {
       browserName: 'Safari',
       browserVersion: '12',
       platformName: 'mac',
     });
   });
 
-  it('should only pass caps with supported prefixes and standard caps', function () {
+  it('should only pass caps with supported prefixes and standard caps', () => {
     const result = formatCapsForServer({
       'safari:deviceUDID': '1234',
       'webkit:yolo': '567',
       'appium:bar': '789',
       acceptInsecureCerts: true,
     });
-    expect(result).to.eql({
+    assert.deepEqual(result, {
       browserName: 'Safari',
       browserVersion: undefined,
       platformName: 'iOS',

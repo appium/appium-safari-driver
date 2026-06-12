@@ -7,14 +7,14 @@ import type {
   ExternalDriver,
   W3CDriverCaps,
 } from '@appium/types';
-import {BaseDriver} from 'appium/driver';
-import {SafariDriverServer} from './safari';
-import {desiredCapConstraints, type SafariConstraints} from './desired-caps';
-import * as cookieCommands from './commands/cookies';
-import * as findCommands from './commands/find';
-import * as recordScreenCommands from './commands/record-screen';
-import {formatCapsForServer} from './utils';
-import {newMethodMap} from './method-map';
+import {BaseDriver} from 'appium/driver.js';
+import {SafariDriverServer} from './safari.js';
+import {desiredCapConstraints, type SafariConstraints} from './desired-caps.js';
+import * as cookieCommands from './commands/cookies.js';
+import * as findCommands from './commands/find.js';
+import * as recordScreenCommands from './commands/record-screen.js';
+import {formatCapsForServer} from './utils.js';
+import {newMethodMap} from './method-map.js';
 
 const NO_PROXY: RouteMatcher[] = [
   ['GET', new RegExp('^/session/[^/]+/appium')],

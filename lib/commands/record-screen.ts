@@ -1,9 +1,9 @@
-import {util, fs, net, tempDir} from 'appium/support';
+import {util, fs, net, tempDir} from 'appium/support.js';
 import {waitForCondition} from 'asyncbox';
 import {Simctl} from 'node-simctl';
 import type {SubProcess} from 'teen_process';
 import type {AppiumLogger, StringRecord} from '@appium/types';
-import type {SafariDriver} from '../driver';
+import type {SafariDriver} from '../driver.js';
 
 const STARTUP_INTERVAL_MS = 300;
 const STARTUP_TIMEOUT_MS = 10 * 1000;

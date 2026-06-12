@@ -1,11 +1,8 @@
+import {describe, it, beforeEach, afterEach} from 'node:test';
+import assert from 'node:assert/strict';
 import {remote} from 'webdriverio';
-import {HOST, PORT, MOCHA_TIMEOUT} from '../utils';
+import {HOST, PORT, TEST_TIMEOUT} from '../utils.js';
 import type {Browser} from 'webdriverio';
-import {expect} from 'chai';
-import * as chai from 'chai';
-import * as chaiAsPromised from 'chai-as-promised';
-
-chai.use(chaiAsPromised.default);
 
 const CAPS = {
   browserName: 'AppiumSafari',
@@ -14,27 +11,25 @@ const CAPS = {
   'wdio:enforceWebDriverClassic': true,
 };
 
-describe('Desktop SafariDriver', function () {
-  this.timeout(MOCHA_TIMEOUT);
-
+describe('Desktop SafariDriver', {timeout: TEST_TIMEOUT}, () => {
   let driver: Browser | null = null;
 
-  beforeEach(async function () {
+  beforeEach(async () => {
     driver = await remote({
       hostname: HOST,
       port: PORT,
       capabilities: CAPS,
     });
   });
-  afterEach(async function () {
+  afterEach(async () => {
     if (driver) {
       await driver.deleteSession();
       driver = null;
     }
   });
 
-  it('should start and stop a session', async function () {
+  it('should start and stop a session', async () => {
     await driver!.url('https://appium.io/');
-    expect(await driver!.getPageSource()).to.not.be.empty;
+    assert.ok(await driver!.getPageSource());
   });
 });
