@@ -1,3 +1,13 @@
+## [5.0.0](https://github.com/appium/appium-safari-driver/compare/v4.1.16...v5.0.0) (2026-06-12)
+
+### ⚠ BREAKING CHANGES
+
+* Migrate the package to native ESM ("type": "module", exports map, NodeNext TypeScript output, .js import extensions, appium/driver.js / appium/support.js subpath imports). Consumers using require() against deep/internal paths will need to switch to ESM import or use the published exports entry point.
+
+### Features
+
+* Migrate package to ESM ([#169](https://github.com/appium/appium-safari-driver/issues/169)) ([b25795e](https://github.com/appium/appium-safari-driver/commit/b25795ef415d086cdfc25e38a0a6dad9e370b2ad))
+
 ## [4.1.16](https://github.com/appium/appium-safari-driver/compare/v4.1.15...v4.1.16) (2026-05-11)
 
 ### Miscellaneous Chores
