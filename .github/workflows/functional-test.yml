@@ -30,6 +30,23 @@ jobs:
         npm install -g "appium@$appium_ver"
         npm install
       name: Install dev dependencies
+    - run: sudo safaridriver --enable
+      name: Enable safaridriver
+    - run: |
+        RUNTIME_INFO=$(xcrun simctl list runtimes available -j | jq -c '[.runtimes[] | select(.isAvailable and (.identifier | startswith("com.apple.CoreSimulator.SimRuntime.iOS-")))] | last')
+        PLATFORM_VERSION=$(echo "$RUNTIME_INFO" | jq -r '.version')
+        RUNTIME_NAME=$(echo "$RUNTIME_INFO" | jq -r '.name')
+        DEVICE_NAME=$(xcrun simctl list devices available -j | jq -r --arg name "$RUNTIME_NAME" '.devices[$name][]? | select(.isAvailable and (.name | test("^iPhone "))) | .name' | head -1)
+        if [[ -z "$PLATFORM_VERSION" || -z "$DEVICE_NAME" ]]; then
+          echo "Unable to find an available iPhone simulator"
+          xcrun simctl list runtimes available
+          xcrun simctl list devices available
+          exit 1
+        fi
+        echo "PLATFORM_VERSION=$PLATFORM_VERSION" >> "$GITHUB_ENV"
+        echo "DEVICE_NAME=$DEVICE_NAME" >> "$GITHUB_ENV"
+        echo "Using $DEVICE_NAME ($RUNTIME_NAME)"
+      name: Configure mobile Safari e2e simulator
     - run: |
         cwd=$(pwd)
         pushd "$cwd"
