@@ -1,3 +1,9 @@
+## [5.0.1](https://github.com/appium/appium-safari-driver/compare/v5.0.0...v5.0.1) (2026-06-14)
+
+### Bug Fixes
+
+* ESM package manifest ([#170](https://github.com/appium/appium-safari-driver/issues/170)) ([cbbd4db](https://github.com/appium/appium-safari-driver/commit/cbbd4db9724f6b57dfd6c5edd68dd2a2c9fa3911))
+
 ## [5.0.0](https://github.com/appium/appium-safari-driver/compare/v4.1.16...v5.0.0) (2026-06-12)
 
 ### ⚠ BREAKING CHANGES
