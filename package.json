@@ -1,37 +1,21 @@
 {
   "name": "appium-safari-driver",
+  "version": "5.0.2",
   "description": "Appium driver for Safari browser",
   "keywords": [
     "appium",
-    "safari"
+    "safari",
+    "safaridriver"
   ],
-  "version": "5.0.2",
   "author": "Appium Contributors",
   "license": "Apache-2.0",
+  "homepage": "https://appium.github.io/appium-safari-driver",
   "repository": {
     "type": "git",
     "url": "https://github.com/appium/appium-safari-driver.git"
   },
   "bugs": {
     "url": "https://github.com/appium/appium-safari-driver/issues"
-  },
-  "engines": {
-    "node": "^20.19.0 || ^22.12.0 || >=24.0.0",
-    "npm": ">=10"
-  },
-  "prettier": {
-    "bracketSpacing": false,
-    "printWidth": 100,
-    "singleQuote": true
-  },
-  "appium": {
-    "driverName": "safari",
-    "automationName": "Safari",
-    "platformNames": [
-      "Mac",
-      "iOS"
-    ],
-    "mainClass": "SafariDriver"
   },
   "type": "module",
   "main": "./build/lib/index.js",
@@ -54,11 +38,19 @@
     "CHANGELOG.md",
     "npm-shrinkwrap.json"
   ],
-  "dependencies": {
-    "asyncbox": "^6.1.0",
-    "node-simctl": "^8.0.0",
-    "portscanner": "2.2.0",
-    "teen_process": "^4.0.4"
+  "appium": {
+    "driverName": "safari",
+    "automationName": "Safari",
+    "platformNames": [
+      "Mac",
+      "iOS"
+    ],
+    "mainClass": "SafariDriver"
+  },
+  "prettier": {
+    "bracketSpacing": false,
+    "printWidth": 100,
+    "singleQuote": true
   },
   "scripts": {
     "build": "tsc -b",
@@ -76,10 +68,17 @@
     "e2e-test:desktop": "npm run build && node --test --test-timeout=300000 build/test/functional/desktop-driver-e2e.test.js",
     "e2e-test:simulator": "npm run build && node --test --test-timeout=300000 build/test/functional/mobile-driver-e2e.test.js"
   },
+  "dependencies": {
+    "asyncbox": "^6.1.0",
+    "node-simctl": "^8.0.0",
+    "portscanner": "2.2.0",
+    "teen_process": "^4.0.4"
+  },
   "peerDependencies": {
     "appium": "^3.0.0-rc.2"
   },
   "devDependencies": {
+    "@appium/docutils": "^2.5.0",
     "@appium/eslint-config-appium-ts": "^3.0.1",
     "@appium/tsconfig": "^1.0.0-rc.1",
     "@appium/types": "^1.0.0-rc.1",
@@ -92,5 +91,9 @@
     "semantic-release": "^25.0.2",
     "typescript": "^6.0.2",
     "webdriverio": "^9.0.5"
+  },
+  "engines": {
+    "node": "^20.19.0 || ^22.12.0 || >=24.0.0",
+    "npm": ">=10"
   }
 }
