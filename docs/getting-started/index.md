@@ -13,7 +13,7 @@ There are four primary requirements to use the Safari driver:
 * Appium
 * Safari browser (pre-installed on all supported devices)
 * `safaridriver` binary accessible on the host machine PATH
-    * The binary comes pre-installed on macOS, although it must be explicitly activated. This can be achieved by opening a terminal and running `safaridriver --enable`.
+    * The binary comes pre-installed on macOS, however, it must be explicitly activated. This can be achieved by opening a terminal and running `safaridriver --enable`, and is only required once.
 
 If targeting Safari on iOS or iPadOS, additional requirements apply - refer to the [Non-macOS guide](../guides/non-macos.md)
 for more details.
