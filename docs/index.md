@@ -30,7 +30,7 @@ please visit [the Appium documentation](https://appium.io).
 -   Check out the [__Overview__](./overview.md) to learn how the driver works
 -   Go through the [__Getting Started__](./getting-started/index.md) steps to get set up
 -   Browse the [__Reference__](./reference/capabilities.md) documentation for everything exposed by the driver
--   Read the different [__Guides__](./guides/ios.md) for a variety of instructions, tips and tricks
+-   Read the different [__Guides__](./guides/non-macos.md) for a variety of instructions, tips and tricks
 -   For contributions to the driver, refer to the [__Contributing__](./contributing.md) page
 
 </div>

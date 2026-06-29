@@ -40,5 +40,5 @@ nav:
           - reference/locator-strategies.md
   - Guides:
       - Session Configuration:
-          - guides/ios.md
+          - guides/non-macos.md
   - contributing.md
