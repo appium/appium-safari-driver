@@ -15,6 +15,10 @@ Refer to the documentation of your Appium client for how to call specific endpoi
 
 !!! warning
 
-    While `safaridriver` _recognizes_ almost all the WebDriver Classic protocol endpoints, many of
-    them are only partially implemented or not implemented at all. Refer to the [Web Platform Tests WebDriver Classic test results](https://wpt.fyi/results/webdriver/tests/classic)
+    While `safaridriver` supports almost all the WebDriver Classic protocol endpoints, for many
+    endpoints, `safaridriver` implements significantly less functionality than Chrome's
+    `chromedriver` or Firefox's `geckodriver`. This is important to know if you have already
+    existing tests for Chrome/Edge/Firefox, and wish to reuse them for Safari.
+    
+    Refer to the [Web Platform Tests WebDriver Classic test results](https://wpt.fyi/results/webdriver/tests/classic)
     for a comparison of WebDriver Classic implementations between the major browsers.
