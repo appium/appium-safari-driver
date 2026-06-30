@@ -9,11 +9,11 @@ title: Getting Started
 
 There are four primary requirements to use the Safari driver:
 
-* macOS host machine (version 10.13 High Sierra or newer)
+* macOS host machine (version 10.13 High Sierra or later)
 * Appium
-* Safari browser (pre-installed on all supported devices)
+* Safari browser (version 11 or later; pre-installed on all supported devices)
 * `safaridriver` binary accessible on the host machine PATH
-    * The binary comes pre-installed on macOS, however, it must be explicitly activated. This can be achieved by opening a terminal and running `safaridriver --enable`, and is only required once.
+    * The binary comes pre-installed on macOS, however, it must be explicitly activated. This is only required once, and can be achieved by opening a terminal and running `safaridriver --enable`.
 
 If targeting Safari on iOS or iPadOS, additional requirements apply - refer to the [Non-macOS guide](../guides/non-macos.md)
 for more details.
