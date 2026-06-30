@@ -1,3 +1,5 @@
+## [5.0.3](https://github.com/appium/appium-safari-driver/compare/v5.0.2...v5.0.3) (2026-06-29)
+
 ## [5.0.2](https://github.com/appium/appium-safari-driver/compare/v5.0.1...v5.0.2) (2026-06-19)
 
 ### Miscellaneous Chores
