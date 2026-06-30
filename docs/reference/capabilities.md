@@ -29,13 +29,13 @@ For other capabilities recognized by the Appium server, see
 | --- | --- |
 | `safari:platformVersion` | Only allow sessions on devices that have this OS version. Numbers are prefix-matched - for example, a value of '12' will allow hosts with an OS version of '12.0.1' or '12.1'. |
 | `safari:platformBuildVersion` | Only allow sessions on devices that have this OS build version, for example '18E193'. On macOS, the OS build version can be determined by running the `sw_vers(1)` utility. |
-| `safari:useSimulator` | Whether to run tests on an iOS/iPadOS simulator device. Simulators require Xcode to be installed. Set to `false` by default. |
+| `safari:useSimulator` | Whether to run tests on an iOS/iPadOS simulator device. Note that simulators require Xcode to be installed. Set to `false` by default. |
 | `safari:deviceType` | Only allow sessions on devices that match this device type. Supported values are `iPhone` and `iPad` (case-insensitive). |
 | `safari:deviceName` | Only allow sessions on devices with this device name (case-insensitive). |
 | `safari:deviceUDID` | Only allow sessions on devices with this device UDID (case-insensitive). |
 | `safari:automaticInspection` | Whether to preload the Web Inspector and JavaScript debugger in the background. If set to `true`, when evaluating a `debugger;` statement in the test page, test execution will be paused, and the Web Inspector's Debugger tab will open. |
 | `safari:automaticProfiling` | Whether to preload the Web Inspector and start a timeline recording in the background. If set to `true`, the Timelines tab in Web Inspector will show the captured timeline recording in its entirety. |
-| `safari:diagnose` | Whether to enable `safaridriver` diagnostics for this session. Diagnostic files are saved to `~/Library/Logs/com.apple.WebDriver`. |
+| `safari:diagnose` | Whether to enable `safaridriver` diagnostics for this session. Diagnostic files are saved to `~/Library/Logs/com.apple.WebDriver`. The Safari driver enables diagnostics for all sessions, so this capability has no effect. |
 
 ## WebKit-Specific
 

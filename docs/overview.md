@@ -28,10 +28,4 @@ more about its features in [the official documentation](https://developer.apple.
 
 On a macOS host, you can also run `man safaridriver` for more information.
 
-!!! warning
-
-    While `safaridriver` _recognizes_ almost all the WebDriver Classic protocol commands, many of
-    them are only partially implemented or not implemented at all. Refer to the [Web Platform Tests WebDriver Classic test results](https://wpt.fyi/results/webdriver/tests/classic)
-    for a comparison of WebDriver Classic implementations between the major browsers.
-
 [^safari-non-macos]: Refer to the [Non-macOS guide](./guides/non-macos.md) for more details
