@@ -43,7 +43,7 @@ For other capabilities recognized by the Appium server, see
 | --- | --- |
 | `webkit:WebRTC` | Change Safari's policies for WebRTC and Media Capture. This capability is a dictionary with following optional sub-keys: `DisableInsecureMediaCapture` (whether to prevent media capture over insecure connections, which is allowed by default in WebDriver sessions), and  `DisableICECandidateFiltering` (whether to skip filtering of WebRTC ICE candidates, which by default filters out candidates that correspond to internal network addresses). |
 | `webkit:alwaysAllowAutoplay` | Whether to always allow autoplay of all media elements without user interaction, overriding any per-website settings. Requires Safari 18.6 or later. [^alwaysallowautoplay] |
-| `webKit:siteIsolationEnabled` | Whether to enable site isolation. Requires Safari 26.0 or later. [^siteisolationenabled]|
+| `webkit:siteIsolationEnabled` | Whether to enable site isolation. Requires Safari 26.0 or later. [^siteisolationenabled]|
 
 [^acceptinsecurecerts]: Added in [Safari Technology Preview 135](https://webkit.org/blog/12040/release-notes-for-safari-technology-preview-135/), whose features were [included in Safari 15.4](https://webkit.org/blog/12445/new-webkit-features-in-safari-15-4/#and-more)
 [^alwaysallowautoplay]: Added in [Safari Technology Preview 222](https://webkit.org/blog/17216/release-notes-for-safari-technology-preview-222/), whose features were included in Safari 18.6
