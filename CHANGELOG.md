@@ -1,3 +1,9 @@
+## [5.0.4](https://github.com/appium/appium-safari-driver/compare/v5.0.3...v5.0.4) (2026-07-01)
+
+### Miscellaneous Chores
+
+* downgrade conventional-changelog-conventionalcommits to v9 ([#177](https://github.com/appium/appium-safari-driver/issues/177)) ([336c322](https://github.com/appium/appium-safari-driver/commit/336c322b7af7ea3978914c38ffd4549579a99439))
+
 ## [5.0.3](https://github.com/appium/appium-safari-driver/compare/v5.0.2...v5.0.3) (2026-06-29)
 
 ## [5.0.2](https://github.com/appium/appium-safari-driver/compare/v5.0.1...v5.0.2) (2026-06-19)
