@@ -21,13 +21,9 @@ jobs:
     name: Docs
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v7.0.0
-      - name: Install Python
-        uses: actions/setup-python@v6.2.0
-        with:
-          python-version: '3.12'
+      - uses: actions/checkout@v7
       - name: Use Node.js LTS
-        uses: actions/setup-node@v6.4.0
+        uses: actions/setup-node@v6
         with:
           node-version: lts/*
           check-latest: true
