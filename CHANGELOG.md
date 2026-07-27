@@ -1,3 +1,9 @@
+## [5.0.6](https://github.com/appium/appium-safari-driver/compare/v5.0.5...v5.0.6) (2026-07-27)
+
+### Miscellaneous Chores
+
+* Integrate oxc and release configs ([#187](https://github.com/appium/appium-safari-driver/issues/187)) ([dc4697f](https://github.com/appium/appium-safari-driver/commit/dc4697f7a189221b923d1015e6dd54f6e3507123))
+
 ## [5.0.5](https://github.com/appium/appium-safari-driver/compare/v5.0.4...v5.0.5) (2026-07-27)
 
 ### Miscellaneous Chores
