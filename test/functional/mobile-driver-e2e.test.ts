@@ -1,8 +1,10 @@
-import {describe, it, before, beforeEach, afterEach} from 'node:test';
 import assert from 'node:assert/strict';
+import {describe, it, before, beforeEach, afterEach} from 'node:test';
+
 import {remote} from 'webdriverio';
-import {HOST, PORT, TEST_TIMEOUT, resolveSimulatorTarget, type SimulatorTarget} from '../utils.js';
 import type {Browser} from 'webdriverio';
+
+import {HOST, PORT, TEST_TIMEOUT, resolveSimulatorTarget, type SimulatorTarget} from '../utils.js';
 
 describe('Mobile SafariDriver', {timeout: TEST_TIMEOUT}, () => {
   let driver: Browser | null = null;

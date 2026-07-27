@@ -1,8 +1,10 @@
-import {describe, it, beforeEach, afterEach} from 'node:test';
 import assert from 'node:assert/strict';
+import {describe, it, beforeEach, afterEach} from 'node:test';
+
 import {remote} from 'webdriverio';
-import {HOST, PORT, TEST_TIMEOUT} from '../utils.js';
 import type {Browser} from 'webdriverio';
+
+import {HOST, PORT, TEST_TIMEOUT} from '../utils.js';
 
 const CAPS = {
   browserName: 'AppiumSafari',
