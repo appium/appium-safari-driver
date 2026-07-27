@@ -1,5 +1,6 @@
-import type {SafariDriver} from './driver.js';
 import type {MethodMap} from '@appium/types';
+
+import type {SafariDriver} from './driver.js';
 
 export const newMethodMap = {
   '/session/:sessionId/appium/start_recording_screen': {

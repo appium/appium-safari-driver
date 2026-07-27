@@ -1,22 +1,23 @@
+import {execSync} from 'node:child_process';
 import os from 'node:os';
 import path from 'node:path';
+
+import type {AppiumLogger, StringRecord, HTTPMethod, HTTPBody} from '@appium/types';
 import {JWProxy, errors} from 'appium/driver.js';
 import {fs, logger, util} from 'appium/support.js';
-import {SubProcess} from 'teen_process';
 import {waitForCondition} from 'asyncbox';
 import {findAPortNotInUse} from 'portscanner';
-import {execSync} from 'node:child_process';
-import type {AppiumLogger, StringRecord, HTTPMethod, HTTPBody} from '@appium/types';
+import {SubProcess} from 'teen_process';
 
 const SD_BINARY = 'safaridriver';
 const STARTUP_TIMEOUT = 10000; // seconds
 const SAFARI_PORT_RANGE: [number, number] = [5100, 5200];
 // This guard is needed to make sure
 // we never run multiple Safari driver processes for the same Appium process
-const SAFARI_SERVER_GUARD = util.getLockFileGuard(
-  path.resolve(os.tmpdir(), 'safari_server_guard.lock'),
-  {timeout: 5, tryRecovery: true},
-);
+const SAFARI_SERVER_GUARD = util.getLockFileGuard(path.resolve(os.tmpdir(), 'safari_server_guard.lock'), {
+  timeout: 5,
+  tryRecovery: true,
+});
 
 class SafariProxy extends JWProxy {
   didProcessExit?: boolean;
@@ -67,10 +68,7 @@ class SafariDriverProcess {
       try {
         safariBin = await fs.which(SD_BINARY);
       } catch {
-        throw new Error(
-          `${SD_BINARY} binary cannot be found in PATH. ` +
-            `Please make sure it is present on your system`,
-        );
+        throw new Error(`${SD_BINARY} binary cannot be found in PATH. Please make sure it is present on your system`);
       }
       this.proc = new SubProcess(safariBin, ['-p', String(this.port), '--diagnose']);
       this.proc.on('output', (stdout, stderr) => {

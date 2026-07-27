@@ -1,8 +1,9 @@
+import type {AppiumLogger, StringRecord} from '@appium/types';
 import {util, fs, net, tempDir} from 'appium/support.js';
 import {waitForCondition} from 'asyncbox';
 import {Simctl} from 'node-simctl';
 import type {SubProcess} from 'teen_process';
-import type {AppiumLogger, StringRecord} from '@appium/types';
+
 import type {SafariDriver} from '../driver.js';
 
 const STARTUP_INTERVAL_MS = 300;
@@ -112,12 +113,7 @@ export class ScreenRecorder {
   private _timeLimitMs: number = DEFAULT_TIME_LIMIT_MS;
   private _timer: NodeJS.Timeout | null = null;
 
-  constructor(
-    udid: string,
-    videoPath: string,
-    log: AppiumLogger,
-    opts: ScreenRecorderOptions = {},
-  ) {
+  constructor(udid: string, videoPath: string, log: AppiumLogger, opts: ScreenRecorderOptions = {}) {
     this.log = log;
     this._udid = udid;
     this._videoPath = videoPath;
@@ -263,10 +259,7 @@ export class ScreenRecorder {
  * @param options - The available options.
  * @throws {Error} If screen recording has failed to start or is not supported for the destination device.
  */
-export async function startRecordingScreen(
-  this: SafariDriver,
-  options?: StartRecordingOptions,
-): Promise<void> {
+export async function startRecordingScreen(this: SafariDriver, options?: StartRecordingOptions): Promise<void> {
   const {timeLimit, codec, display, mask, forceRestart = true} = options ?? {};
   if (this._screenRecorder?.isRunning) {
     this.log.info('The screen recording is already running');
@@ -281,10 +274,7 @@ export async function startRecordingScreen(
 
   const udid = await extractSimulatorUdid(this.caps);
   if (!udid) {
-    throw new Error(
-      'Cannot determine Simulator UDID to record the video from. ' +
-        'Double check your session capabilities',
-    );
+    throw new Error('Cannot determine Simulator UDID to record the video from. Double check your session capabilities');
   }
 
   const videoPath = await tempDir.path({
@@ -316,10 +306,7 @@ export async function startRecordingScreen(
  * or the file content cannot be uploaded to the remote location
  * or screen recording is not supported on the device under test.
  */
-export async function stopRecordingScreen(
-  this: SafariDriver,
-  options?: StopRecordingOptions,
-): Promise<string> {
+export async function stopRecordingScreen(this: SafariDriver, options?: StopRecordingOptions): Promise<string> {
   if (!this._screenRecorder) {
     this.log.info('No screen recording has been started. Doing nothing');
     return '';
@@ -333,9 +320,7 @@ export async function stopRecordingScreen(
   }
   if (!options?.remotePath) {
     const {size} = await fs.stat(videoPath);
-    this.log.debug(
-      `The size of the resulting screen recording is ${util.toReadableSizeString(size)}`,
-    );
+    this.log.debug(`The size of the resulting screen recording is ${util.toReadableSizeString(size)}`);
   }
   return await uploadRecordedMedia(videoPath, options?.remotePath ?? null, options ?? {});
 }
@@ -356,8 +341,7 @@ async function extractSimulatorUdid(caps: StringRecord): Promise<string | null> 
     }
     if (
       caps['safari:deviceName']?.toLowerCase() === name.toLowerCase() &&
-      ((caps['safari:platformVersion'] && caps['safari:platformVersion'] === sdk) ||
-        !caps['safari:platformVersion'])
+      ((caps['safari:platformVersion'] && caps['safari:platformVersion'] === sdk) || !caps['safari:platformVersion'])
     ) {
       return udid;
     }
