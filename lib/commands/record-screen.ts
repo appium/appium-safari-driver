@@ -274,9 +274,7 @@ export async function startRecordingScreen(this: SafariDriver, options?: StartRe
 
   const udid = await extractSimulatorUdid(this.caps);
   if (!udid) {
-    throw new Error(
-      'Cannot determine Simulator UDID to record the video from. Double check your session capabilities',
-    );
+    throw new Error('Cannot determine Simulator UDID to record the video from. Double check your session capabilities');
   }
 
   const videoPath = await tempDir.path({

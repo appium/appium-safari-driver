@@ -68,9 +68,7 @@ class SafariDriverProcess {
       try {
         safariBin = await fs.which(SD_BINARY);
       } catch {
-        throw new Error(
-          `${SD_BINARY} binary cannot be found in PATH. Please make sure it is present on your system`,
-        );
+        throw new Error(`${SD_BINARY} binary cannot be found in PATH. Please make sure it is present on your system`);
       }
       this.proc = new SubProcess(safariBin, ['-p', String(this.port), '--diagnose']);
       this.proc.on('output', (stdout, stderr) => {
