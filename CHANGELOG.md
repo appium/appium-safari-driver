@@ -1,3 +1,10 @@
+## [5.0.5](https://github.com/appium/appium-safari-driver/compare/v5.0.4...v5.0.5) (2026-07-27)
+
+### Miscellaneous Chores
+
+* **deps:** bump actions/setup-node from 6 to 7 ([#182](https://github.com/appium/appium-safari-driver/issues/182)) ([2dbb41c](https://github.com/appium/appium-safari-driver/commit/2dbb41c34205fd23b63e1436f8d891e3defb2515))
+* **deps:** bump node-simctl from 8.2.9 to 9.1.0 ([#185](https://github.com/appium/appium-safari-driver/issues/185)) ([f62427c](https://github.com/appium/appium-safari-driver/commit/f62427ca2821e7eb606a5c07a5a98df1b1371e00))
+
 ## [5.0.4](https://github.com/appium/appium-safari-driver/compare/v5.0.3...v5.0.4) (2026-07-01)
 
 ### Miscellaneous Chores
