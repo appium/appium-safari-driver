@@ -3,7 +3,7 @@ import os from 'node:os';
 import path from 'node:path';
 
 import type {AppiumLogger, StringRecord, HTTPMethod, HTTPBody} from '@appium/types';
-import {JWProxy, errors} from 'appium/driver.js';
+import {WebDriverProxy, errors} from 'appium/driver.js';
 import {fs, logger, util} from 'appium/support.js';
 import {waitForCondition} from 'asyncbox';
 import {findAPortNotInUse} from 'portscanner';
@@ -19,7 +19,7 @@ const SAFARI_SERVER_GUARD = util.getLockFileGuard(path.resolve(os.tmpdir(), 'saf
   tryRecovery: true,
 });
 
-class SafariProxy extends JWProxy {
+class SafariProxy extends WebDriverProxy {
   didProcessExit?: boolean;
 
   override async proxyCommand(url: string, method: HTTPMethod, body: HTTPBody = null) {
