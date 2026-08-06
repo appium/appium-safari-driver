@@ -1,3 +1,9 @@
+## [5.0.7](https://github.com/appium/appium-safari-driver/compare/v5.0.6...v5.0.7) (2026-08-06)
+
+### Miscellaneous Chores
+
+* rename JWProxy to WebDriverProxy ([#188](https://github.com/appium/appium-safari-driver/issues/188)) ([6fce14a](https://github.com/appium/appium-safari-driver/commit/6fce14a674bb7efee04a5a5938692026b68c330a))
+
 ## [5.0.6](https://github.com/appium/appium-safari-driver/compare/v5.0.5...v5.0.6) (2026-07-27)
 
 ### Miscellaneous Chores
