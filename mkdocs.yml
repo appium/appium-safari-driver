@@ -34,8 +34,8 @@ nav:
   - Reference:
       - Session Configuration:
           - reference/capabilities.md
-          - reference/bidi.md
           - reference/endpoints.md
+          - reference/bidi.md
       - Element Management:
           - reference/locator-strategies.md
   - Guides:

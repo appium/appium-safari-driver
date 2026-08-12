@@ -32,7 +32,7 @@ A simple capability set for a new iOS/iPadOS session can then look as follows:
 }
 ```
 
-It is recommended to use [Safari-specific capabilities](../reference/capabilities.md#safari-specific) such as
+It is recommended to use [Safari-specific capabilities](../reference/capabilities.md#safari) such as
 `safari:useSimulator`, `safari:deviceName`, `safari:deviceUDID` and others to specify the exact
 test device:
 
