@@ -1,3 +1,9 @@
+## [5.0.8](https://github.com/appium/appium-safari-driver/compare/v5.0.7...v5.0.8) (2026-08-30)
+
+### Miscellaneous Chores
+
+* **deps-dev:** bump @appium/docutils from 2.5.2 to 3.0.0 ([#190](https://github.com/appium/appium-safari-driver/issues/190)) ([4301747](https://github.com/appium/appium-safari-driver/commit/430174773b2999bd1e9b55ec10dd47f94ad26eb8))
+
 ## [5.0.7](https://github.com/appium/appium-safari-driver/compare/v5.0.6...v5.0.7) (2026-08-06)
 
 ### Miscellaneous Chores
