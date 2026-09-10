@@ -25,8 +25,7 @@
     "lib",
     "build/lib",
     "LICENSE",
-    "CHANGELOG.md",
-    "npm-shrinkwrap.json"
+    "CHANGELOG.md"
   ],
   "type": "module",
   "main": "./build/lib/index.js",
