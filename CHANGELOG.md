@@ -1,3 +1,9 @@
+## [5.0.9](https://github.com/appium/appium-safari-driver/compare/v5.0.8...v5.0.9) (2026-09-10)
+
+### Miscellaneous Chores
+
+* **ci:** publish via bundled dependencies instead of npm-shrinkwrap ([#191](https://github.com/appium/appium-safari-driver/issues/191)) ([21bdf60](https://github.com/appium/appium-safari-driver/commit/21bdf60321da9afb1f25122c41eef0e74bf09a2f))
+
 ## [5.0.8](https://github.com/appium/appium-safari-driver/compare/v5.0.7...v5.0.8) (2026-08-30)
 
 ### Miscellaneous Chores
