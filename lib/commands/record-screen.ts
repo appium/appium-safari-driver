@@ -4,6 +4,7 @@ import type {AppiumLogger, StringRecord} from '@appium/types';
 import {util, fs, net, tempDir} from 'appium/support.js';
 
 import type {SafariDriver} from '../driver.js';
+import {parseRuntimeIdentifier} from '../utils.js';
 
 const DEFAULT_TIME_LIMIT_MS = 60 * 10 * 1000; // 10 minutes
 const DEFAULT_EXT = '.mp4';
@@ -281,12 +282,6 @@ export async function stopRecordingScreen(this: SafariDriver, options?: StopReco
     this.log.debug(`The size of the resulting screen recording is ${util.toReadableSizeString(size)}`);
   }
   return await uploadRecordedMedia(videoPath, options?.remotePath ?? null, options ?? {});
-}
-
-/** Parses `com.apple.CoreSimulator.SimRuntime.iOS-17-4` into `{platform: 'iOS', version: '17.4'}`. */
-function parseRuntimeIdentifier(runtimeIdentifier: string): {platform: string; version: string} | null {
-  const match = /\.SimRuntime\.([A-Za-z]+)-([\d-]+)$/.exec(runtimeIdentifier);
-  return match ? {platform: match[1], version: match[2].replace(/-/g, '.')} : null;
 }
 
 async function extractSimulatorUdid(caps: StringRecord): Promise<string | null> {

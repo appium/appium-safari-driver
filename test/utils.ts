@@ -1,5 +1,7 @@
 import {NativeSimctl, SimDeviceState} from '@appium/coresim';
 
+import {parseRuntimeIdentifier} from '../lib/utils.js';
+
 export const HOST = process.env.APPIUM_TEST_SERVER_HOST || '127.0.0.1';
 export const PORT = parseInt(process.env.APPIUM_TEST_SERVER_PORT || '4567', 10);
 export const TEST_TIMEOUT = 240000;
@@ -10,12 +12,6 @@ export interface SimulatorTarget {
   deviceName: string;
   udid: string;
   state: string;
-}
-
-/** Parses `com.apple.CoreSimulator.SimRuntime.iOS-17-4` into `{platform: 'iOS', version: '17.4'}`. */
-function parseRuntimeIdentifier(runtimeIdentifier: string): {platform: string; version: string} | null {
-  const match = /\.SimRuntime\.([A-Za-z]+)-([\d-]+)$/.exec(runtimeIdentifier);
-  return match ? {platform: match[1], version: match[2].replace(/-/g, '.')} : null;
 }
 
 /**
