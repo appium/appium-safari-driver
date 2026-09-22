@@ -8,7 +8,7 @@ const SAFARI_CAP_PREFIXES = ['safari:', 'webkit:'];
  * @param caps - The capabilities to format.
  * @returns The formatted capabilities.
  */
-function formatCapsForServer(caps: StringRecord): StringRecord {
+export function formatCapsForServer(caps: StringRecord): StringRecord {
   const result: StringRecord = {
     browserName: 'Safari',
     browserVersion: caps.browserVersion,
@@ -25,9 +25,7 @@ function formatCapsForServer(caps: StringRecord): StringRecord {
 }
 
 /** Parses `com.apple.CoreSimulator.SimRuntime.iOS-17-4` into `{platform: 'iOS', version: '17.4'}`. */
-function parseRuntimeIdentifier(runtimeIdentifier: string): {platform: string; version: string} | null {
+export function parseRuntimeIdentifier(runtimeIdentifier: string): {platform: string; version: string} | null {
   const match = /\.SimRuntime\.([A-Za-z]+)-([\d-]+)$/.exec(runtimeIdentifier);
   return match ? {platform: match[1], version: match[2].replace(/-/g, '.')} : null;
 }
-
-export {formatCapsForServer, parseRuntimeIdentifier};
