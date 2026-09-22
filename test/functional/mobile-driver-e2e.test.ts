@@ -27,8 +27,8 @@ describe('Mobile SafariDriver', {timeout: TEST_TIMEOUT}, () => {
 
     // Preboot Simulator to avoid unexpected timeouts
     if (simulator.state !== 'Booted') {
-      await simulator.simctl.bootDevice();
-      await simulator.simctl.startBootMonitor();
+      await simulator.simctl.bootDevice(simulator.udid);
+      await simulator.simctl.waitForBoot(simulator.udid);
     }
   });
   beforeEach(async () => {

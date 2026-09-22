@@ -1,15 +1,21 @@
-import {Simctl} from 'node-simctl';
+import {NativeSimctl, SimDeviceState} from '@appium/coresim';
 
 export const HOST = process.env.APPIUM_TEST_SERVER_HOST || '127.0.0.1';
 export const PORT = parseInt(process.env.APPIUM_TEST_SERVER_PORT || '4567', 10);
 export const TEST_TIMEOUT = 240000;
 
 export interface SimulatorTarget {
-  simctl: Simctl;
+  simctl: NativeSimctl;
   platformVersion: string;
   deviceName: string;
   udid: string;
   state: string;
+}
+
+/** Parses `com.apple.CoreSimulator.SimRuntime.iOS-17-4` into `{platform: 'iOS', version: '17.4'}`. */
+function parseRuntimeIdentifier(runtimeIdentifier: string): {platform: string; version: string} | null {
+  const match = /\.SimRuntime\.([A-Za-z]+)-([\d-]+)$/.exec(runtimeIdentifier);
+  return match ? {platform: match[1], version: match[2].replace(/-/g, '.')} : null;
 }
 
 /**
@@ -23,8 +29,11 @@ export async function resolveSimulatorTarget(): Promise<SimulatorTarget> {
     throw new Error('PLATFORM_VERSION and DEVICE_NAME environment variables must be set');
   }
 
-  const simctl = new Simctl();
-  const allDevices = await simctl.getDevices(platformVersion, 'iOS');
+  const simctl = new NativeSimctl();
+  const allDevices = (await simctl.getDevices()).filter((d) => {
+    const runtimeInfo = parseRuntimeIdentifier(d.runtimeIdentifier);
+    return runtimeInfo?.platform === 'iOS' && runtimeInfo.version === platformVersion;
+  });
   const envUdid = process.env.DEVICE_UDID;
   const device = envUdid
     ? allDevices.find(({udid}) => udid.toLowerCase() === envUdid.toLowerCase())
@@ -33,12 +42,11 @@ export async function resolveSimulatorTarget(): Promise<SimulatorTarget> {
     throw new Error(`Cannot find '${deviceName}' simulator for iOS ${platformVersion}`);
   }
 
-  simctl.udid = device.udid;
   return {
     simctl,
     platformVersion,
     deviceName: device.name,
     udid: device.udid,
-    state: device.state,
+    state: SimDeviceState[device.state],
   };
 }
