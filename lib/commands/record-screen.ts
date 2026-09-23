@@ -186,12 +186,13 @@ export class ScreenRecorder {
     }
 
     try {
-      await this.simctl.stopVideoRecording(this._udid);
+      // `force: true` makes coresim release its own recording bookkeeping unconditionally, even
+      // if the underlying native stop fails - without it, a failed stop stays retryable there, so
+      // this recorder must leave `_isRunning` untouched to match (see the catch block below), or
+      // `startVideoRecording` would keep rejecting with "already in progress" forever while this
+      // recorder thinks nothing is running.
+      await this.simctl.stopVideoRecording(this._udid, {force});
     } catch (e: any) {
-      // Deliberately NOT clearing `_isRunning` here: coresim keeps its own recording entry
-      // active after a failed stop so a retry can still reach it, and a subsequent stop() call
-      // must do the same - or `startVideoRecording` will keep rejecting with "already in
-      // progress" while this recorder is stuck thinking nothing is running.
       throw new Error(`Screen recording has failed to stop: ${e.message}`, {cause: e});
     }
     this._isRunning = false;
