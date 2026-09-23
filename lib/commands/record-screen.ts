@@ -188,11 +188,10 @@ export class ScreenRecorder {
     try {
       await this.simctl.stopVideoRecording(this._udid);
     } catch (e: any) {
-      this._isRunning = false;
-      if (force) {
-        this.log.warn(`Failed to gracefully stop the screen recording: ${e.message}`);
-        return '';
-      }
+      // Deliberately NOT clearing `_isRunning` here: coresim keeps its own recording entry
+      // active after a failed stop so a retry can still reach it, and a subsequent stop() call
+      // must do the same - or `startVideoRecording` will keep rejecting with "already in
+      // progress" while this recorder is stuck thinking nothing is running.
       throw new Error(`Screen recording has failed to stop: ${e.message}`, {cause: e});
     }
     this._isRunning = false;
@@ -213,10 +212,15 @@ export class ScreenRecorder {
 
 /**
  * Record the Simulator's display in background while the automated test is running.
- * This method uses `@appium/coresim`'s native video recording under the hood.
+ * This method uses `@appium/coresim`'s native video recording under the hood, which depends on
+ * a private Simulator capture API. That API is confirmed absent on Xcode 16.4 and confirmed
+ * present on Xcode 26.5+; Apple does not document the exact minimum version, so recording may be
+ * unavailable on some Xcode installations in between (this is a narrower Xcode requirement than
+ * the previous `xcrun simctl io recordVideo`-based implementation supported).
  *
  * @param options - The available options.
- * @throws {Error} If screen recording has failed to start or is not supported for the destination device.
+ * @throws {Error} If screen recording has failed to start, or the running Xcode's Simulator does
+ * not expose the private capture API `@appium/coresim` needs for recording.
  */
 export async function startRecordingScreen(this: SafariDriver, options?: StartRecordingOptions): Promise<void> {
   const {timeLimit, codec, display, mask, forceRestart = true} = options ?? {};
