@@ -1,15 +1,12 @@
+import {NativeSimctl, SimDeviceState} from '@appium/coresim';
+import type {VideoRecordingOptions} from '@appium/coresim';
 import type {AppiumLogger, StringRecord} from '@appium/types';
 import {util, fs, net, tempDir} from 'appium/support.js';
-import {waitForCondition} from 'asyncbox';
-import {Simctl} from 'node-simctl';
-import type {SubProcess} from 'teen_process';
 
 import type {SafariDriver} from '../driver.js';
+import {parseRuntimeIdentifier} from '../utils.js';
 
-const STARTUP_INTERVAL_MS = 300;
-const STARTUP_TIMEOUT_MS = 10 * 1000;
 const DEFAULT_TIME_LIMIT_MS = 60 * 10 * 1000; // 10 minutes
-const PROCESS_SHUTDOWN_TIMEOUT_MS = 10 * 1000;
 const DEFAULT_EXT = '.mp4';
 
 interface UploadOptions {
@@ -104,7 +101,7 @@ interface ScreenRecorderOptions {
 
 export class ScreenRecorder {
   private log: AppiumLogger;
-  private _process: SubProcess | null = null;
+  private simctl: NativeSimctl;
   private _udid: string;
   private _videoPath: string;
   private _codec?: string;
@@ -112,9 +109,11 @@ export class ScreenRecorder {
   private _mask?: string;
   private _timeLimitMs: number = DEFAULT_TIME_LIMIT_MS;
   private _timer: NodeJS.Timeout | null = null;
+  private _isRunning = false;
 
   constructor(udid: string, videoPath: string, log: AppiumLogger, opts: ScreenRecorderOptions = {}) {
     this.log = log;
+    this.simctl = new NativeSimctl();
     this._udid = udid;
     this._videoPath = videoPath;
     this._codec = opts.codec;
@@ -129,7 +128,7 @@ export class ScreenRecorder {
   }
 
   get isRunning(): boolean {
-    return !!this._process?.isRunning;
+    return this._isRunning;
   }
 
   async getVideoPath(): Promise<string> {
@@ -140,59 +139,29 @@ export class ScreenRecorder {
     return '';
   }
 
+  /** Maps the legacy 'internal'/'external' display capability onto a coresim display id. */
+  private async _resolveDisplayId(): Promise<string | undefined> {
+    if (!this._display) {
+      return undefined;
+    }
+    const displays = await this.simctl.getDisplays(this._udid);
+    const wantsMain = this._display === 'internal';
+    return (displays.find((d) => d.isMain === wantsMain) ?? displays[0])?.id;
+  }
+
   async start(): Promise<void> {
-    const args: string[] = [this._udid, 'recordVideo'];
-    if (this._display) {
-      args.push('--display', this._display);
-    }
-    if (this._codec) {
-      args.push('--codec', this._codec);
-    }
-    if (this._mask) {
-      args.push('--mask', this._mask);
-    }
-    args.push('--force', this._videoPath);
-    this._process = await new Simctl().exec('io', {
-      args,
-      asynchronous: true,
-    });
-    this.log.debug(`Starting video recording with arguments: ${util.quote(args)}`);
-    this._process.on('output', (stdout, stderr) => {
-      const line = (stdout || stderr)?.trim() ?? '';
-      if (line) {
-        this.log.debug(`[recordVideo@${this._udid.substring(0, 8)}] ${line}`);
-      }
-    });
-    this._process.once('exit', async (code, signal) => {
-      this._process = null;
-      if (code === 0) {
-        this.log.debug('Screen recording exited without errors');
-      } else {
-        await this._enforceTermination();
-        this.log.warn(`Screen recording exited with error code ${code}, signal ${signal}`);
-      }
-    });
-    await this._process.start(0);
+    const options: VideoRecordingOptions = {
+      displayId: await this._resolveDisplayId(),
+      codec: this._codec as VideoRecordingOptions['codec'],
+      mask: this._mask as VideoRecordingOptions['mask'],
+    };
+    this.log.debug(`Starting video recording with options: ${JSON.stringify(options)}`);
     try {
-      await waitForCondition(
-        async () => {
-          if (!this.isRunning) {
-            throw new Error();
-          }
-          return !!(await this.getVideoPath());
-        },
-        {
-          waitMs: STARTUP_TIMEOUT_MS,
-          intervalMs: STARTUP_INTERVAL_MS,
-        },
-      );
-    } catch {
-      await this._enforceTermination();
-      throw this.log.errorWithException(
-        `The expected screen record file '${this._videoPath}' does not exist after ${STARTUP_TIMEOUT_MS}ms. ` +
-          `Check the server log for more details`,
-      );
+      await this.simctl.startVideoRecording(this._udid, this._videoPath, options);
+    } catch (e: any) {
+      throw this.log.errorWithException(`Failed to start the screen recording: ${e.message}`);
     }
+    this._isRunning = true;
     this._timer = setTimeout(async () => {
       if (this.isRunning) {
         try {
@@ -211,53 +180,48 @@ export class ScreenRecorder {
       this._timer = null;
     }
 
-    if (force) {
-      return await this._enforceTermination();
-    }
-
     if (!this.isRunning) {
       this.log.debug('Screen recording is not running. Returning the recently recorded video');
       return await this.getVideoPath();
     }
 
-    if (!this._process) {
-      throw new Error('Screen recording process is not available');
-    }
-
     try {
-      await this._process.stop('SIGINT', PROCESS_SHUTDOWN_TIMEOUT_MS);
-    } catch {
-      await this._enforceTermination();
-      throw new Error(`Screen recording has failed to stop after ${PROCESS_SHUTDOWN_TIMEOUT_MS}ms`);
+      // `force: true` makes coresim release its own recording bookkeeping unconditionally, even
+      // if the underlying native stop fails - without it, a failed stop stays retryable there, so
+      // this recorder must leave `_isRunning` untouched to match (see the catch block below), or
+      // `startVideoRecording` would keep rejecting with "already in progress" forever while this
+      // recorder thinks nothing is running.
+      await this.simctl.stopVideoRecording(this._udid, {force});
+    } catch (e: any) {
+      throw new Error(`Screen recording has failed to stop: ${e.message}`, {cause: e});
+    }
+    this._isRunning = false;
+
+    if (force) {
+      // A new recording is about to replace this one - discard what was captured so far.
+      const videoPath = await this.getVideoPath();
+      if (videoPath) {
+        await fs.rimraf(videoPath);
+        VIDEO_FILES.delete(videoPath);
+      }
+      return '';
     }
 
     return await this.getVideoPath();
-  }
-
-  private async _enforceTermination(): Promise<string> {
-    if (this.isRunning && this._process) {
-      this.log.debug('Force-stopping the currently running video recording');
-      try {
-        await this._process.stop('SIGKILL');
-      } catch {}
-    }
-    this._process = null;
-    const videoPath = await this.getVideoPath();
-    if (videoPath) {
-      await fs.rimraf(videoPath);
-      VIDEO_FILES.delete(videoPath);
-    }
-    return '';
   }
 }
 
 /**
  * Record the Simulator's display in background while the automated test is running.
- * This method uses `xcrun simctl io recordVideo` helper under the hood.
- * Check the output of `xcrun simctl io` command for more details.
+ * This method uses `@appium/coresim`'s native video recording under the hood, which depends on
+ * a private Simulator capture API. That API is confirmed absent on Xcode 16.4 and confirmed
+ * present on Xcode 26.5+; Apple does not document the exact minimum version, so recording may be
+ * unavailable on some Xcode installations in between (this is a narrower Xcode requirement than
+ * the previous `xcrun simctl io recordVideo`-based implementation supported).
  *
  * @param options - The available options.
- * @throws {Error} If screen recording has failed to start or is not supported for the destination device.
+ * @throws {Error} If screen recording has failed to start, or the running Xcode's Simulator does
+ * not expose the private capture API `@appium/coresim` needs for recording.
  */
 export async function startRecordingScreen(this: SafariDriver, options?: StartRecordingOptions): Promise<void> {
   const {timeLimit, codec, display, mask, forceRestart = true} = options ?? {};
@@ -330,9 +294,13 @@ async function extractSimulatorUdid(caps: StringRecord): Promise<string | null> 
     return null;
   }
 
-  const allDevices = Object.values(await new Simctl().getDevices(null, 'iOS')).flat();
-  for (const {name, udid, state, sdk} of allDevices) {
-    if (state !== 'Booted') {
+  const allDevices = await new NativeSimctl().getDevices();
+  for (const {name, udid, state, runtimeIdentifier} of allDevices) {
+    if (state !== SimDeviceState.Booted) {
+      continue;
+    }
+    const runtimeInfo = parseRuntimeIdentifier(runtimeIdentifier);
+    if (runtimeInfo?.platform !== 'iOS') {
       continue;
     }
 
@@ -341,7 +309,8 @@ async function extractSimulatorUdid(caps: StringRecord): Promise<string | null> 
     }
     if (
       caps['safari:deviceName']?.toLowerCase() === name.toLowerCase() &&
-      ((caps['safari:platformVersion'] && caps['safari:platformVersion'] === sdk) || !caps['safari:platformVersion'])
+      ((caps['safari:platformVersion'] && caps['safari:platformVersion'] === runtimeInfo.version) ||
+        !caps['safari:platformVersion'])
     ) {
       return udid;
     }

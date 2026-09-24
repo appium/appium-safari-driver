@@ -105,7 +105,12 @@ export class SafariDriver
 
   override async deleteSession(): Promise<void> {
     this.log.info('Ending Safari session');
-    await this._screenRecorder?.stop(true);
+    try {
+      await this._screenRecorder?.stop(true);
+    } catch (e: any) {
+      // Best-effort: teardown must proceed even if the native recorder failed to stop.
+      this.log.warn(`Failed to stop the active screen recording: ${e.message}`);
+    }
     await this._safari?.stop();
     this.resetState();
 
