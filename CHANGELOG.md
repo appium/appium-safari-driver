@@ -1,3 +1,9 @@
+## [5.0.10](https://github.com/appium/appium-safari-driver/compare/v5.0.9...v5.0.10) (2026-09-24)
+
+### Miscellaneous Chores
+
+* replace node-simctl with @appium/coresim ([#192](https://github.com/appium/appium-safari-driver/issues/192)) ([97d8d01](https://github.com/appium/appium-safari-driver/commit/97d8d01b5d087c3ba94a27aae98d050b4abc04c4))
+
 ## [5.0.9](https://github.com/appium/appium-safari-driver/compare/v5.0.8...v5.0.9) (2026-09-10)
 
 ### Miscellaneous Chores
