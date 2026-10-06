@@ -51,7 +51,7 @@ jobs:
     - name: Prepare iOS simulator
       if: matrix.target == 'simulator'
       id: prepareSimulator
-      uses: futureware-tech/simulator-action@v5
+      uses: futureware-tech/simulator-action@v6
       with:
         model: "${{ matrix.device_name }}"
         os_version: "${{ matrix.platform_version }}"
