@@ -70,7 +70,7 @@
     "@appium/types": "^1.0.0-rc.1",
     "@types/node": "^26.0.0",
     "@types/portscanner": "^2.1.4",
-    "webdriverio": "^9.0.5"
+    "webdriverio": "^10.0.0"
   },
   "peerDependencies": {
     "appium": "^3.0.0-rc.2"
