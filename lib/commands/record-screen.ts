@@ -180,25 +180,25 @@ export class ScreenRecorder {
       this._timer = null;
     }
 
-    if (!this.isRunning) {
+    if (this.isRunning) {
+      try {
+        // `force: true` makes coresim release its own recording bookkeeping unconditionally, even
+        // if the underlying native stop fails - without it, a failed stop stays retryable there, so
+        // this recorder must leave `_isRunning` untouched to match (see the catch block below), or
+        // `startVideoRecording` would keep rejecting with "already in progress" forever while this
+        // recorder thinks nothing is running.
+        await this.simctl.stopVideoRecording(this._udid, {force});
+      } catch (e: any) {
+        throw new Error(`Screen recording has failed to stop: ${e.message}`, {cause: e});
+      }
+      this._isRunning = false;
+    } else if (!force) {
       this.log.debug('Screen recording is not running. Returning the recently recorded video');
       return await this.getVideoPath();
     }
 
-    try {
-      // `force: true` makes coresim release its own recording bookkeeping unconditionally, even
-      // if the underlying native stop fails - without it, a failed stop stays retryable there, so
-      // this recorder must leave `_isRunning` untouched to match (see the catch block below), or
-      // `startVideoRecording` would keep rejecting with "already in progress" forever while this
-      // recorder thinks nothing is running.
-      await this.simctl.stopVideoRecording(this._udid, {force});
-    } catch (e: any) {
-      throw new Error(`Screen recording has failed to stop: ${e.message}`, {cause: e});
-    }
-    this._isRunning = false;
-
     if (force) {
-      // A new recording is about to replace this one - discard what was captured so far.
+      // A new recording or session teardown is replacing this one - discard what was captured so far.
       const videoPath = await this.getVideoPath();
       if (videoPath) {
         await fs.rimraf(videoPath);
@@ -225,13 +225,15 @@ export class ScreenRecorder {
  */
 export async function startRecordingScreen(this: SafariDriver, options?: StartRecordingOptions): Promise<void> {
   const {timeLimit, codec, display, mask, forceRestart = true} = options ?? {};
-  if (this._screenRecorder?.isRunning) {
-    this.log.info('The screen recording is already running');
-    if (!forceRestart) {
-      this.log.info('Doing nothing');
-      return;
+  if (this._screenRecorder) {
+    if (this._screenRecorder.isRunning) {
+      this.log.info('The screen recording is already running');
+      if (!forceRestart) {
+        this.log.info('Doing nothing');
+        return;
+      }
+      this.log.info('Forcing the active screen recording to stop');
     }
-    this.log.info('Forcing the active screen recording to stop');
     await this._screenRecorder.stop(true);
   }
   this._screenRecorder = null;
