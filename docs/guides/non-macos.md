@@ -20,7 +20,15 @@ iOS/iPadOS tests have further requirements:
     > _Settings_ -> _Apps_ -> _Safari_ -> _Advanced_ -> Turn _Remote Automation_ ON
 
 Unlike [the XCUITest driver](https://appium.github.io/appium-xcuitest-driver/), the
-WebDriverAgentRunner application and all of its related configuration are not required.
+WebDriverAgentRunner application and all of its related configuration are not required. Because
+`safaridriver` only automates web content and does not control native iOS UI or simulator settings,
+XCUITest-specific capabilities (such as `appium:safariAllowPopups`,
+`appium:locationServicesEnabled`, or `appium:locationServicesAuthorized`) have no effect in the
+Safari driver. To bypass native iOS system permission prompts (such as geolocation alerts) on iOS
+Simulators, grant the permission beforehand via
+`xcrun simctl privacy <udid> grant location com.apple.mobilesafari`, or use
+[the XCUITest driver](https://appium.github.io/appium-xcuitest-driver/) with `browserName: 'Safari'`
+when native alert or permission handling is needed.
 
 A simple capability set for a new iOS/iPadOS session can then look as follows:
 
