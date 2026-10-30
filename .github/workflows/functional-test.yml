@@ -51,15 +51,14 @@ jobs:
     - name: Prepare iOS simulator
       if: matrix.target == 'simulator'
       id: prepareSimulator
-      uses: futureware-tech/simulator-action@v5
+      uses: futureware-tech/simulator-action@v6
       with:
         model: "${{ matrix.device_name }}"
         os_version: "${{ matrix.platform_version }}"
         shutdown_after_job: false
         wait_for_boot: true
-    - name: Finalize iOS simulator boot
-      if: matrix.target == 'simulator'
-      run: xcrun --sdk iphonesimulator --show-sdk-version
+        settle_timeout_seconds: 150
+        settle_cpu_threshold_percent: 30
     - name: Set simulator UDID
       if: matrix.target == 'simulator'
       run: echo "DEVICE_UDID=${{ steps.prepareSimulator.outputs.udid }}" >> "$GITHUB_ENV"
