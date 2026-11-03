@@ -42,4 +42,29 @@ describe('ScreenRecorder', () => {
       await fs.rimraf(tmpRoot);
     }
   });
+
+  it('should not throw and should still delete video file when stop(true) fails natively', async () => {
+    const tmpRoot = await tempDir.openDir();
+    const videoPath = path.join(tmpRoot, 'failed-stop.mp4');
+    try {
+      await fs.writeFile(videoPath, 'video-bytes');
+      const recorder = new ScreenRecorder('00000000-0000-0000-0000-000000000000', videoPath, log);
+      (recorder as any).simctl = {
+        startVideoRecording: async () => {},
+        stopVideoRecording: async () => {
+          throw new Error('native stop error');
+        },
+      };
+
+      await recorder.start();
+      assert.equal(recorder.isRunning, true);
+
+      const forcedResult = await recorder.stop(true);
+      assert.equal(forcedResult, '');
+      assert.equal(recorder.isRunning, false);
+      assert.equal(await fs.exists(videoPath), false);
+    } finally {
+      await fs.rimraf(tmpRoot);
+    }
+  });
 });

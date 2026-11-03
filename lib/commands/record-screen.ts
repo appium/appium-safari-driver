@@ -189,7 +189,10 @@ export class ScreenRecorder {
         // recorder thinks nothing is running.
         await this.simctl.stopVideoRecording(this._udid, {force});
       } catch (e: any) {
-        throw new Error(`Screen recording has failed to stop: ${e.message}`, {cause: e});
+        if (!force) {
+          throw new Error(`Screen recording has failed to stop: ${e.message}`, {cause: e});
+        }
+        this.log.warn(`Screen recording has failed to stop: ${e.message}`);
       }
       this._isRunning = false;
     } else if (!force) {
@@ -234,6 +237,8 @@ export async function startRecordingScreen(this: SafariDriver, options?: StartRe
       }
       this.log.info('Forcing the active screen recording to stop');
     }
+    // Overwriting `_screenRecorder` below makes any previous recording unreachable via
+    // `stopRecordingScreen`, so clean up its temp file now rather than leaving it until exit.
     await this._screenRecorder.stop(true);
   }
   this._screenRecorder = null;
