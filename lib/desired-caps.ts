@@ -34,8 +34,17 @@ const desiredCapConstraints = {
   'safari:automaticProfiling': {
     isBoolean: true,
   },
+  'safari:diagnose': {
+    isBoolean: true,
+  },
   'webkit:WebRTC': {
     isObject: true,
+  },
+  'webkit:alwaysAllowAutoplay': {
+    isBoolean: true,
+  },
+  'webkit:siteIsolationEnabled': {
+    isBoolean: true,
   },
 } as const satisfies Constraints;
 

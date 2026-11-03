@@ -45,3 +45,14 @@ test device:
   "safari:deviceName": "iPhone 17"
 }
 ```
+
+## Known Limitations
+
+Because `safaridriver` only automates web content and does not control native iOS UI or simulator
+settings, XCUITest-specific capabilities (such as `appium:safariAllowPopups`,
+`appium:locationServicesEnabled`, or `appium:locationServicesAuthorized`) have no effect in the
+Safari driver. To bypass native iOS system permission prompts (such as geolocation alerts) on iOS
+Simulators, grant the permission beforehand via
+`xcrun simctl privacy <udid> grant location com.apple.mobilesafari`, or use
+[the XCUITest driver](https://appium.github.io/appium-xcuitest-driver/) with `browserName: 'Safari'`
+when native alert or permission handling is needed.
