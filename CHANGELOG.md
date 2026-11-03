@@ -1,3 +1,9 @@
+## [5.0.11](https://github.com/appium/appium-safari-driver/compare/v5.0.10...v5.0.11) (2026-11-03)
+
+### Bug Fixes
+
+* add missing capability constraints and document iOS simulator permission handling ([#198](https://github.com/appium/appium-safari-driver/issues/198)) ([4a68aa2](https://github.com/appium/appium-safari-driver/commit/4a68aa2b064f6987dca1a71b4913524f39dd49d6))
+
 ## [5.0.10](https://github.com/appium/appium-safari-driver/compare/v5.0.9...v5.0.10) (2026-09-24)
 
 ### Miscellaneous Chores
