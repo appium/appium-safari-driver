@@ -58,7 +58,7 @@
   },
   "dependencies": {
     "@appium/coresim": "^1.7.0",
-    "asyncbox": "^6.1.0",
+    "asyncbox": "^6.6.0",
     "portscanner": "2.2.0",
     "teen_process": "^4.0.4"
   },
