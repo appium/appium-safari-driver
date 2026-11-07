@@ -5,7 +5,7 @@ import path from 'node:path';
 import type {AppiumLogger, StringRecord, HTTPMethod, HTTPBody} from '@appium/types';
 import {WebDriverProxy, errors} from 'appium/driver.js';
 import {fs, logger, util} from 'appium/support.js';
-import {waitForCondition} from 'asyncbox';
+import {ConditionUnmetError, waitForCondition} from 'asyncbox';
 import {findAPortNotInUse} from 'portscanner';
 import {SubProcess} from 'teen_process';
 
@@ -165,7 +165,7 @@ export class SafariDriverServer {
         },
       );
     } catch (e: any) {
-      if (/Condition unmet/.test(e.message)) {
+      if (e instanceof ConditionUnmetError) {
         if (SAFARI_DRIVER_PROCESS.isRunning) {
           // avoid "frozen" processes,
           await SAFARI_DRIVER_PROCESS.kill();
