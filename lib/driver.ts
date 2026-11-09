@@ -1,7 +1,6 @@
 import type {
   RouteMatcher,
   DefaultCreateSessionResult,
-  DriverData,
   InitialOpts,
   StringRecord,
   ExternalDriver,
@@ -9,9 +8,9 @@ import type {
 } from '@appium/types';
 import {BaseDriver} from 'appium/driver.js';
 
-import * as cookieCommands from './commands/cookies.js';
-import * as findCommands from './commands/find.js';
-import * as recordScreenCommands from './commands/record-screen.js';
+import {deleteCookies} from './commands/cookies.js';
+import {findElOrEls} from './commands/find.js';
+import {startRecordingScreen, stopRecordingScreen, type ScreenRecorder} from './commands/record-screen.js';
 import {desiredCapConstraints, type SafariConstraints} from './desired-caps.js';
 import {newMethodMap} from './method-map.js';
 import {SafariDriverServer} from './safari.js';
@@ -35,14 +34,7 @@ export class SafariDriver
   static newMethodMap = newMethodMap;
 
   proxyReqRes: ((...args: any[]) => any) | null = null;
-  _screenRecorder: recordScreenCommands.ScreenRecorder | null = null;
-
-  deleteCookies = cookieCommands.deleteCookies;
-
-  findElOrEls = findCommands.findElOrEls;
-
-  startRecordingScreen = recordScreenCommands.startRecordingScreen;
-  stopRecordingScreen = recordScreenCommands.stopRecordingScreen;
+  _screenRecorder: ScreenRecorder | null = null;
 
   private isProxyActive = false;
   private _safari: SafariDriverServer | null = null;
@@ -83,12 +75,9 @@ export class SafariDriver
   }
 
   override async createSession(
-    w3cCaps1: W3CSafariDriverCaps,
-    w3cCaps2?: W3CSafariDriverCaps,
-    w3cCaps3?: W3CSafariDriverCaps,
-    driverData?: DriverData[],
+    w3cCapabilities: W3CSafariDriverCaps,
   ): Promise<DefaultCreateSessionResult<SafariConstraints>> {
-    const [sessionId, caps] = await super.createSession(w3cCaps1, w3cCaps2, w3cCaps3, driverData);
+    const [sessionId, caps] = await super.createSession(w3cCapabilities);
     this._safari = new SafariDriverServer(this.log);
     try {
       await this.safari.start(formatCapsForServer(caps), {
@@ -125,4 +114,9 @@ export class SafariDriver
   }
 }
 
-export default SafariDriver;
+Object.assign(SafariDriver.prototype, {
+  deleteCookies,
+  findElOrEls,
+  startRecordingScreen,
+  stopRecordingScreen,
+});

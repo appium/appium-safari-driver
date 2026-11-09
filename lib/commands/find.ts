@@ -2,6 +2,12 @@ import {util} from 'appium/support.js';
 
 import type {SafariDriver} from '../driver.js';
 
+declare module '../driver.js' {
+  interface SafariDriver {
+    findElOrEls(...args: Parameters<typeof findElOrEls>): ReturnType<typeof findElOrEls>;
+  }
+}
+
 /**
  * Find element(s) using the specified strategy and selector.
  * This is needed to make lookup by image working.

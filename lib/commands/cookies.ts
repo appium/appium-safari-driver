@@ -1,5 +1,11 @@
 import type {SafariDriver} from '../driver.js';
 
+declare module '../driver.js' {
+  interface SafariDriver {
+    deleteCookies(...args: Parameters<typeof deleteCookies>): ReturnType<typeof deleteCookies>;
+  }
+}
+
 /**
  * Delete all cookies visible to the current page.
  *
