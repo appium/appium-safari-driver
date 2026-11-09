@@ -1,3 +1,21 @@
+## [6.0.0](https://github.com/appium/appium-safari-driver/compare/v5.0.11...v6.0.0) (2026-11-09)
+
+### ⚠ BREAKING CHANGES
+
+* Requires Appium ^4.0.0-beta.6 (peer dependency). No longer compatible with Appium 3.
+* Drops Node 20. The minimum is now ^22.22.2 || ^24.15.0 || >=26.0.0, matching Appium 4's engine range.
+* Driver API: createSession takes a single w3cCapabilities argument, following the Appium 4 base driver. This only matters to anyone subclassing the driver.
+* Default exports removed: the package no longer has a default export. Use the named export instead: import {SafariDriver} from 'appium-safari-driver'.
+* Command methods live on the prototype: deleteCookies, findElOrEls, startRecordingScreen and stopRecordingScreen are attached to SafariDriver.prototype (with declare module typings) rather than being instance fields, so subclasses can call super for them.
+
+### Features
+
+* add Appium 4 support ([#204](https://github.com/appium/appium-safari-driver/issues/204)) ([bff1052](https://github.com/appium/appium-safari-driver/commit/bff1052803c0f1bb0903f9830d43260c8f4fcd6e))
+
+### Code Refactoring
+
+* use ConditionUnmetError instead of message matching ([#203](https://github.com/appium/appium-safari-driver/issues/203)) ([3206a56](https://github.com/appium/appium-safari-driver/commit/3206a569c00841887159eddf3c3dfcce1f1a4712))
+
 ## [5.0.11](https://github.com/appium/appium-safari-driver/compare/v5.0.10...v5.0.11) (2026-11-03)
 
 ### Bug Fixes
