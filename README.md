@@ -31,7 +31,7 @@
 This is an Appium driver for automating the Safari browser on macOS, iOS and iPadOS.
 
 > [!IMPORTANT]
-> Since major version *4.0.0*, this driver is only compatible with Appium 3.
+> Since major version *6.0.0*, this driver is only compatible with Appium 4.
 
 
 ## Documentation

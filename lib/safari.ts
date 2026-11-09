@@ -203,5 +203,3 @@ export class SafariDriverServer {
     }
   }
 }
-
-export default SafariDriverServer;

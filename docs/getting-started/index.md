@@ -25,7 +25,8 @@ and prerequisites of Appium itself can be found in [the Appium documentation](ht
 
 | Safari driver version | Supported Appium server version |
 | --- | --- |
-| >= 4.0.0 | Appium 3 |
+| >= 6.0.0 | Appium 4 |
+| 4.0.0 - 5.0.11 | Appium 3 |
 | 3.0.0 - 3.5.26 | Appium 2 |
 
 ## Installation

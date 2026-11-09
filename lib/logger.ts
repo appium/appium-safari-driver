@@ -1,5 +1,3 @@
 import {logger} from 'appium/support.js';
 
-const log = logger.getLogger('Safari');
-
-export default log;
+export const log = logger.getLogger('Safari');

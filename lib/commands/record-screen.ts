@@ -6,6 +6,13 @@ import {util, fs, net, tempDir} from 'appium/support.js';
 import type {SafariDriver} from '../driver.js';
 import {parseRuntimeIdentifier} from '../utils.js';
 
+declare module '../driver.js' {
+  interface SafariDriver {
+    startRecordingScreen(...args: Parameters<typeof startRecordingScreen>): ReturnType<typeof startRecordingScreen>;
+    stopRecordingScreen(...args: Parameters<typeof stopRecordingScreen>): ReturnType<typeof stopRecordingScreen>;
+  }
+}
+
 const DEFAULT_TIME_LIMIT_MS = 60 * 10 * 1000; // 10 minutes
 const DEFAULT_EXT = '.mp4';
 
