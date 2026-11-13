@@ -1,6 +1,6 @@
 {
   "name": "appium-safari-driver",
-  "version": "6.0.0",
+  "version": "6.0.1",
   "description": "Appium driver for Safari browser",
   "keywords": [
     "appium",

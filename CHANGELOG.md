@@ -1,3 +1,9 @@
+## [6.0.1](https://github.com/appium/appium-safari-driver/compare/v6.0.0...v6.0.1) (2026-11-13)
+
+### Miscellaneous Chores
+
+* **deps:** bump appium to 4.0.0-beta.8 ([#206](https://github.com/appium/appium-safari-driver/issues/206)) ([d1de6e7](https://github.com/appium/appium-safari-driver/commit/d1de6e7501375e7132d683aed70e833c24e30e2b))
+
 ## [6.0.0](https://github.com/appium/appium-safari-driver/compare/v5.0.11...v6.0.0) (2026-11-09)
 
 ### ⚠ BREAKING CHANGES
