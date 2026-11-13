@@ -4,9 +4,8 @@ import path from 'node:path';
 
 import type {AppiumLogger, StringRecord, HTTPMethod, HTTPBody} from '@appium/types';
 import {WebDriverProxy, errors} from 'appium/driver.js';
-import {fs, logger, util} from 'appium/support.js';
+import {fs, logger, util, net} from 'appium/support.js';
 import {ConditionUnmetError, waitForCondition} from 'asyncbox';
-import {findAPortNotInUse} from 'portscanner';
 import {SubProcess} from 'teen_process';
 
 const SD_BINARY = 'safaridriver';
@@ -55,7 +54,7 @@ class SafariDriverProcess {
 
       const [startPort, endPort] = SAFARI_PORT_RANGE;
       try {
-        this.port = await findAPortNotInUse(startPort, endPort);
+        this.port = await net.getFreePort({port: [startPort, endPort]});
       } catch {
         throw new Error(
           `Cannot find any free port in range ${startPort}..${endPort}. ` +
