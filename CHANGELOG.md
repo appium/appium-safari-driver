@@ -1,3 +1,13 @@
+## [6.0.2](https://github.com/appium/appium-safari-driver/compare/v6.0.1...v6.0.2) (2026-11-16)
+
+### Bug Fixes
+
+* clean up recorded video file on force stop after recording has ended ([#199](https://github.com/appium/appium-safari-driver/issues/199)) ([d73778f](https://github.com/appium/appium-safari-driver/commit/d73778fc697ca889ec29d74b34c80bceb5628421))
+
+### Code Refactoring
+
+* use port helpers from appium/support instead of portscanner ([#207](https://github.com/appium/appium-safari-driver/issues/207)) ([dc23153](https://github.com/appium/appium-safari-driver/commit/dc231535a2f4ea413f908bcb40273cfa091f21fa))
+
 ## [6.0.1](https://github.com/appium/appium-safari-driver/compare/v6.0.0...v6.0.1) (2026-11-13)
 
 ### Miscellaneous Chores
