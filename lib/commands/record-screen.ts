@@ -187,25 +187,24 @@ export class ScreenRecorder {
       this._timer = null;
     }
 
-    if (!this.isRunning) {
+    if (this.isRunning) {
+      try {
+        // On force, coresim releases its recording state even if native stop fails; otherwise preserve `_isRunning`.
+        await this.simctl.stopVideoRecording(this._udid, {force});
+      } catch (e: any) {
+        if (!force) {
+          throw new Error(`Screen recording has failed to stop: ${e.message}`, {cause: e});
+        }
+        this.log.warn(`Screen recording has failed to stop: ${e.message}`);
+      }
+      this._isRunning = false;
+    } else if (!force) {
       this.log.debug('Screen recording is not running. Returning the recently recorded video');
       return await this.getVideoPath();
     }
 
-    try {
-      // `force: true` makes coresim release its own recording bookkeeping unconditionally, even
-      // if the underlying native stop fails - without it, a failed stop stays retryable there, so
-      // this recorder must leave `_isRunning` untouched to match (see the catch block below), or
-      // `startVideoRecording` would keep rejecting with "already in progress" forever while this
-      // recorder thinks nothing is running.
-      await this.simctl.stopVideoRecording(this._udid, {force});
-    } catch (e: any) {
-      throw new Error(`Screen recording has failed to stop: ${e.message}`, {cause: e});
-    }
-    this._isRunning = false;
-
     if (force) {
-      // A new recording is about to replace this one - discard what was captured so far.
+      // Discard partial capture when replacing or tearing down.
       const videoPath = await this.getVideoPath();
       if (videoPath) {
         await fs.rimraf(videoPath);
@@ -219,29 +218,32 @@ export class ScreenRecorder {
 }
 
 /**
- * Record the Simulator's display in background while the automated test is running.
- * This method uses `@appium/coresim`'s native video recording under the hood, which depends on
- * a private Simulator capture API. That API is confirmed absent on Xcode 16.4 and confirmed
- * present on Xcode 26.5+; Apple does not document the exact minimum version, so recording may be
- * unavailable on some Xcode installations in between (this is a narrower Xcode requirement than
- * the previous `xcrun simctl io recordVideo`-based implementation supported).
+ * Record the Simulator's display in background via `@appium/coresim`.
+ * Requires Xcode's private Simulator capture API (confirmed absent on Xcode 16.4, present on 26.5+).
  *
  * @param options - The available options.
- * @throws {Error} If screen recording has failed to start, or the running Xcode's Simulator does
- * not expose the private capture API `@appium/coresim` needs for recording.
+ * @throws {Error} If screen recording fails to start or the capture API is unavailable.
  */
 export async function startRecordingScreen(this: SafariDriver, options?: StartRecordingOptions): Promise<void> {
   const {timeLimit, codec, display, mask, forceRestart = true} = options ?? {};
-  if (this._screenRecorder?.isRunning) {
-    this.log.info('The screen recording is already running');
-    if (!forceRestart) {
-      this.log.info('Doing nothing');
-      return;
+  if (this._screenRecorder) {
+    if (this._screenRecorder.isRunning) {
+      this.log.info('The screen recording is already running');
+      if (!forceRestart) {
+        this.log.info('Doing nothing');
+        return;
+      }
+      this.log.info('Forcing the active screen recording to stop');
     }
-    this.log.info('Forcing the active screen recording to stop');
-    await this._screenRecorder.stop(true);
+    // Best-effort cleanup so a stale temp artifact cannot block starting a new recording.
+    try {
+      await this._screenRecorder.stop(true);
+    } catch (e: any) {
+      this.log.warn(`Failed to clean up the previous screen recording: ${e.message}`);
+    } finally {
+      this._screenRecorder = null;
+    }
   }
-  this._screenRecorder = null;
 
   const udid = await extractSimulatorUdid(this.caps);
   if (!udid) {
