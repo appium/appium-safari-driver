@@ -1,3 +1,9 @@
+## [6.0.3](https://github.com/appium/appium-safari-driver/compare/v6.0.2...v6.0.3) (2026-11-16)
+
+### Miscellaneous Chores
+
+* **deps:** bump teen_process from 4.2.2 to 5.0.0 ([#208](https://github.com/appium/appium-safari-driver/issues/208)) ([b357753](https://github.com/appium/appium-safari-driver/commit/b3577536e899cf134d52334a592a3778d677442d))
+
 ## [6.0.2](https://github.com/appium/appium-safari-driver/compare/v6.0.1...v6.0.2) (2026-11-16)
 
 ### Bug Fixes
