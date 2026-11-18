@@ -1,3 +1,9 @@
+## [6.0.4](https://github.com/appium/appium-safari-driver/compare/v6.0.3...v6.0.4) (2026-11-18)
+
+### Miscellaneous Chores
+
+* **deps:** bump @appium/coresim from 1.15.1 to 2.0.4 ([#212](https://github.com/appium/appium-safari-driver/issues/212)) ([8beba3c](https://github.com/appium/appium-safari-driver/commit/8beba3c502d2908b2f7cb60ab186a8586f41d8b0))
+
 ## [6.0.3](https://github.com/appium/appium-safari-driver/compare/v6.0.2...v6.0.3) (2026-11-16)
 
 ### Miscellaneous Chores
