@@ -1,3 +1,9 @@
+## [6.0.5](https://github.com/appium/appium-safari-driver/compare/v6.0.4...v6.0.5) (2026-11-22)
+
+### Miscellaneous Chores
+
+* **deps:** bump asyncbox from 6.6.1 to 7.0.0 ([#209](https://github.com/appium/appium-safari-driver/issues/209)) ([358aca1](https://github.com/appium/appium-safari-driver/commit/358aca194cf106cc3cab6f671456f2f95b7f1472))
+
 ## [6.0.4](https://github.com/appium/appium-safari-driver/compare/v6.0.3...v6.0.4) (2026-11-18)
 
 ### Miscellaneous Chores
