@@ -39,6 +39,8 @@ nav:
       - Element Management:
           - reference/locator-strategies.md
   - Guides:
-      - Session Configuration:
+      - Platforms:
           - guides/non-macos.md
+      - Session Configuration:
+          - guides/parallel-tests.md
   - contributing.md

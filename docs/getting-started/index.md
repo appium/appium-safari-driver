@@ -71,10 +71,8 @@ a basic session:
 ```json
 // This will launch Safari on the host machine and attach to it
 {
-  ...
   "platformName": "mac",
-  "appium:automationName": "safari",
-  ...
+  "appium:automationName": "safari"
 }
 ```
 
