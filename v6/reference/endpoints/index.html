@@ -906,6 +906,8 @@
       
         
       
+        
+      
     
     
     
@@ -985,7 +987,7 @@
   <span class="md-ellipsis">
     
   
-    Session Configuration
+    Platforms
   
 
     
@@ -1001,7 +1003,7 @@
             <span class="md-nav__icon md-icon"></span>
             
   
-    Session Configuration
+    Platforms
   
 
           </label>
@@ -1022,6 +1024,98 @@
     
   
     Non-macOS Devices
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_5_2" id="__nav_5_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Session Configuration
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_5_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Session Configuration
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../guides/parallel-tests/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Testing in Parallel
   
 
     
@@ -1200,19 +1294,18 @@
 
   <h1>Endpoints</h1>
 
-<p>The Safari driver comes with a set of many available endpoints:</p>
-<ul>
-<li>The driver inherits <a href="https://appium.io/docs/en/latest/reference/api/">all endpoints supported by the Appium base driver</a></li>
-<li>The driver does not define any additional endpoints</li>
-<li>The underlying <code>safaridriver</code> binary <a href="https://developer.apple.com/documentation/webkit/macos-webdriver-commands-for-safari-12-and-later">only supports a subset of the endpoints</a> inherited from the Appium base driver</li>
-</ul>
-<p>Refer to the documentation of your Appium client for how to call specific endpoints.</p>
+<p>The Safari driver comes with a set of many available endpoints, which are primarily inherited from
+the Appium base driver, and can be found in <a href="https://appium.io/docs/en/latest/reference/api/">their Appium docs reference pages</a>.
+Refer to the documentation of your Appium client for how to call specific endpoints.</p>
+<p>The driver does not define any additional endpoints.</p>
 <div class="admonition warning">
 <p class="admonition-title">Warning</p>
-<p>While <code>safaridriver</code> supports almost all the WebDriver Classic protocol endpoints, for many
-endpoints, <code>safaridriver</code> implements significantly less functionality than Chrome's
-<code>chromedriver</code> or Firefox's <code>geckodriver</code>. This is important to know if you have already
-existing tests for Chrome/Edge/Firefox, and wish to reuse them for Safari.</p>
+<p>The underlying <code>safaridriver</code> binary <a href="https://developer.apple.com/documentation/webkit/macos-webdriver-commands-for-safari-12-and-later">only supports a subset of the endpoints</a>
+inherited from the Appium base driver. Furthermore, while the binary <em>does</em> support almost all
+the WebDriver Classic protocol endpoints, for many of them, <code>safaridriver</code> implements
+significantly less functionality than Chrome's <code>chromedriver</code> or Firefox's <code>geckodriver</code>. This
+is important to know if you have already existing tests for Chrome/Edge/Firefox, and wish to
+reuse them for Safari.</p>
 <p>Refer to the <a href="https://wpt.fyi/results/webdriver/tests/classic">Web Platform Tests WebDriver Classic test results</a>
 for a comparison of WebDriver Classic implementations between the major browsers.</p>
 </div>
@@ -1236,7 +1329,7 @@ for a comparison of WebDriver Classic implementations between the major browsers
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="July 1, 2026 08:04:59 UTC"><span class="timeago" datetime="2026-07-01T08:04:59+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="July 1, 2026 08:04:59 UTC">2026-07-01</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="November 23, 2026 15:07:05 UTC"><span class="timeago" datetime="2026-11-23T15:07:05+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="November 23, 2026 15:07:05 UTC">2026-11-23</span>
   </span>
 
     
