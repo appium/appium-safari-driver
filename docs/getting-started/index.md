@@ -71,12 +71,15 @@ a basic session:
 ```json
 // This will launch Safari on the host machine and attach to it
 {
-  ...
   "platformName": "mac",
-  "appium:automationName": "safari",
-  ...
+  "appium:automationName": "safari"
 }
 ```
+
+!!! warning
+
+    On macOS, a session can only be created if Safari **is not already running**. Make sure to
+    first close all Safari windows and fully quit the application.
 
 If testing on an iOS/iPadOS device, different capability values are required - refer to the
 [Non-macOS guide](../guides/non-macos.md).

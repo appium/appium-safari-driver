@@ -1,7 +1,4 @@
 ---
-hide:
-  - toc
-
 title: Non-macOS Devices
 ---
 
@@ -21,6 +18,8 @@ iOS/iPadOS tests have further requirements:
 
 Unlike [the XCUITest driver](https://appium.github.io/appium-xcuitest-driver/), the
 WebDriverAgentRunner application and all of its related configuration are not required.
+
+## Examples
 
 A simple capability set for a new iOS/iPadOS session can then look as follows:
 
@@ -48,11 +47,15 @@ test device:
 
 ## Known Limitations
 
-Because `safaridriver` only automates web content and does not control native iOS UI or simulator
-settings, XCUITest-specific capabilities (such as `appium:safariAllowPopups`,
+The `safaridriver` binary only automates web content, and cannot control any native iOS UI elements
+or simulator settings. As such, XCUITest-specific capabilities (such as `appium:safariAllowPopups`,
 `appium:locationServicesEnabled`, or `appium:locationServicesAuthorized`) have no effect in the
-Safari driver. To bypass native iOS system permission prompts (such as geolocation alerts) on iOS
-Simulators, grant the permission beforehand via
-`xcrun simctl privacy <udid> grant location com.apple.mobilesafari`, or use
-[the XCUITest driver](https://appium.github.io/appium-xcuitest-driver/) with `browserName: 'Safari'`
-when native alert or permission handling is needed.
+Safari driver.
+
+In order to bypass native iOS system permission prompts (such as geolocation alerts) on iOS
+Simulators, grant the permission beforehand:
+```
+xcrun simctl privacy <udid> grant location com.apple.mobilesafari
+```
+Alternatively, you can use [the XCUITest driver](https://appium.github.io/appium-xcuitest-driver/)
+with `browserName: 'Safari'` when native alert or permission handling is needed.
