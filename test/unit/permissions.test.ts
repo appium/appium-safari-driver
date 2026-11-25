@@ -1,22 +1,21 @@
 import assert from 'node:assert/strict';
 import {afterEach, describe, it, mock} from 'node:test';
 
-import {NativeSimctl, SimDeviceState} from '@appium/coresim';
 import {logger} from 'appium/support.js';
 
 import {parsePermissions, applyPermissions} from '../../lib/permissions.js';
-import {resolveSimulator} from '../../lib/simulator.js';
+import {resolveSimulator, simulatorApi} from '../../lib/simulator.js';
 
 const log = logger.getLogger('PermissionsTest');
 const RUNTIME = 'com.apple.CoreSimulator.SimRuntime.iOS-17-4';
 const SAFARI = 'com.apple.mobilesafari';
 
-const device = (udid: string, state: SimDeviceState, name = 'iPhone') =>
+const device = (udid: string, state: string, name = 'iPhone') =>
   ({udid, name, state, runtimeIdentifier: RUNTIME}) as any;
 
 describe('parsePermissions', () => {
   it('accepts valid rules', () => {
-    const rules = {[SAFARI]: {camera: 'yes', microphone: 'no', photos: 'limited'}};
+    const rules = {[SAFARI]: {location: 'yes', camera: 'no', photos: 'limited'}};
     assert.deepEqual(parsePermissions(rules), rules);
   });
 
@@ -24,27 +23,18 @@ describe('parsePermissions', () => {
     assert.throws(() => parsePermissions('{}'), /must be a map/);
     assert.throws(() => parsePermissions({[SAFARI]: 'yes'}), /must be a map/);
   });
-
-  it('rejects unknown services and states', () => {
-    assert.throws(() => parsePermissions({a: {location: 'yes'}}), /Unsupported permission service/);
-    assert.throws(() => parsePermissions({a: {camera: 'maybe'}}), /Unsupported state/);
-    assert.throws(() => parsePermissions({a: {camera: 'limited'}}), /Unsupported state/);
-  });
 });
 
 describe('resolveSimulator', () => {
   afterEach(() => mock.restoreAll());
 
   it('prefers a booted device among name matches', async () => {
-    mock.method(NativeSimctl.prototype, 'getDevices', async () => [
-      device('A', SimDeviceState.Shutdown),
-      device('B', SimDeviceState.Booted),
-    ]);
+    mock.method(simulatorApi, 'listSimulators', async () => [device('A', 'Shutdown'), device('B', 'Booted')]);
     assert.equal((await resolveSimulator({'safari:deviceName': 'iPhone'}))?.udid, 'B');
   });
 
   it('falls back to a shutdown device unless bootedOnly', async () => {
-    mock.method(NativeSimctl.prototype, 'getDevices', async () => [device('A', SimDeviceState.Shutdown)]);
+    mock.method(simulatorApi, 'listSimulators', async () => [device('A', 'Shutdown')]);
     assert.equal((await resolveSimulator({'safari:deviceName': 'iPhone'}))?.udid, 'A');
     assert.equal(await resolveSimulator({'safari:deviceName': 'iPhone'}, {bootedOnly: true}), null);
   });
@@ -55,13 +45,16 @@ describe('applyPermissions', () => {
 
   const caps = (permissions: unknown) => ({'safari:deviceUDID': 'abc', permissions});
 
-  function mockSimctl(state = SimDeviceState.Booted) {
-    mock.method(NativeSimctl.prototype, 'getDevices', async () => [device('ABC', state)]);
-    return {
-      grant: mock.method(NativeSimctl.prototype, 'grantPermission', async () => {}),
-      revoke: mock.method(NativeSimctl.prototype, 'revokePermission', async () => {}),
-      reset: mock.method(NativeSimctl.prototype, 'resetPermission', async () => {}),
+  function mockSim(state = 'Booted') {
+    const sim = {
+      startupTimeout: 1000,
+      boot: mock.fn(async () => {}),
+      waitForBoot: mock.fn(async (_timeout: number) => {}),
+      setPermissions: mock.fn(async (_bundleId: string, _rules: Record<string, string>) => {}),
     };
+    mock.method(simulatorApi, 'listSimulators', async () => [device('ABC', state)]);
+    mock.method(simulatorApi, 'getSimulator', async () => sim as any);
+    return sim;
   }
 
   it('does nothing without the capability', async () => {
@@ -69,7 +62,7 @@ describe('applyPermissions', () => {
   });
 
   it('throws if no simulator matches', async () => {
-    mock.method(NativeSimctl.prototype, 'getDevices', async () => []);
+    mock.method(simulatorApi, 'listSimulators', async () => []);
     await assert.rejects(applyPermissions(caps({a: {camera: 'yes'}}), log), /only supported on iOS Simulators/);
   });
 
@@ -80,31 +73,38 @@ describe('applyPermissions', () => {
     );
   });
 
-  it('maps TCC-backed services to coresim calls', async () => {
-    const m = mockSimctl();
+  it('passes the rules of each bundle to the simulator without booting it', async () => {
+    const sim = mockSim('Shutdown');
     await applyPermissions(
-      caps({[SAFARI]: {camera: 'yes', microphone: 'no', motion: 'unset', photos: 'limited'}}),
+      caps({[SAFARI]: {camera: 'yes', photos: 'limited'}, 'com.example.app': {microphone: 'no'}}),
       log,
     );
     assert.deepEqual(
-      m.grant.mock.calls.map((c) => c.arguments),
+      sim.setPermissions.mock.calls.map((c) => c.arguments),
       [
-        ['ABC', 'camera', SAFARI, 'granted'],
-        ['ABC', 'photos', SAFARI, 'limited'],
+        [SAFARI, {camera: 'yes', photos: 'limited'}],
+        ['com.example.app', {microphone: 'no'}],
       ],
     );
-    assert.deepEqual(m.revoke.mock.calls[0].arguments, ['ABC', 'microphone', SAFARI]);
-    assert.deepEqual(m.reset.mock.calls[0].arguments, ['ABC', 'motion', SAFARI]);
+    assert.equal(sim.boot.mock.callCount(), 0);
   });
 
-  it('names the failed rule in the error', async () => {
-    const m = mockSimctl();
-    m.grant.mock.mockImplementation(async () => {
+  it('boots the simulator for location services', async () => {
+    const sim = mockSim('Shutdown');
+    await applyPermissions(caps({[SAFARI]: {location: 'yes'}}), log);
+    assert.equal(sim.boot.mock.callCount(), 1);
+    assert.deepEqual(sim.waitForBoot.mock.calls[0].arguments, [1000]);
+    assert.equal(sim.setPermissions.mock.callCount(), 1);
+  });
+
+  it('names the failed bundle in the error', async () => {
+    const sim = mockSim();
+    sim.setPermissions.mock.mockImplementation(async () => {
       throw new Error('boom');
     });
     await assert.rejects(
       applyPermissions(caps({[SAFARI]: {camera: 'yes'}}), log),
-      /Cannot set 'camera' permission of 'com\.apple\.mobilesafari' to 'yes': boom/,
+      /Cannot set permissions of 'com\.apple\.mobilesafari' to \{"camera":"yes"\}: boom/,
     );
   });
 });

@@ -2,11 +2,11 @@ import assert from 'node:assert/strict';
 import path from 'node:path';
 import {describe, it, mock} from 'node:test';
 
-import {NativeSimctl, SimDeviceState} from '@appium/coresim';
 import {fs, logger, tempDir} from 'appium/support.js';
 
 import {ScreenRecorder} from '../../lib/commands/record-screen.js';
 import {SafariDriver} from '../../lib/driver.js';
+import {simulatorApi} from '../../lib/simulator.js';
 
 const log = logger.getLogger('ScreenRecorderTest');
 
@@ -18,7 +18,7 @@ describe('ScreenRecorder', () => {
       await fs.writeFile(videoPath, 'video-bytes');
       const recorder = new ScreenRecorder('00000000-0000-0000-0000-000000000000', videoPath, log);
       let stopCalls = 0;
-      (recorder as any).simctl = {
+      (recorder as any).sim = {
         startVideoRecording: async () => {},
         stopVideoRecording: async () => {
           stopCalls += 1;
@@ -51,7 +51,7 @@ describe('ScreenRecorder', () => {
     try {
       await fs.writeFile(videoPath, 'video-bytes');
       const recorder = new ScreenRecorder('00000000-0000-0000-0000-000000000000', videoPath, log);
-      (recorder as any).simctl = {
+      (recorder as any).sim = {
         startVideoRecording: async () => {},
         stopVideoRecording: async () => {
           throw new Error('native stop error');
@@ -76,7 +76,7 @@ describe('ScreenRecorder', () => {
     try {
       await fs.writeFile(videoPath, 'video-bytes');
       const recorder = new ScreenRecorder('00000000-0000-0000-0000-000000000000', videoPath, log);
-      (recorder as any).simctl = {
+      (recorder as any).sim = {
         startVideoRecording: async () => {},
         stopVideoRecording: async () => {
           throw new Error('native stop error');
@@ -102,16 +102,16 @@ describe('ScreenRecorder', () => {
       await fs.writeFile(firstVideoPath, 'first');
       await fs.writeFile(secondVideoPath, 'second');
 
-      mock.method(NativeSimctl.prototype, 'getDevices', async () => [
+      const fakeSim = {startVideoRecording: async () => {}, stopVideoRecording: async () => {}};
+      mock.method(simulatorApi, 'listSimulators', async () => [
         {
           udid,
           name: 'iPhone 16',
-          state: SimDeviceState.Booted,
+          state: 'Booted',
           runtimeIdentifier: 'com.apple.CoreSimulator.SimRuntime.iOS-18-0',
         } as any,
       ]);
-      mock.method(NativeSimctl.prototype, 'startVideoRecording', async () => {});
-      mock.method(NativeSimctl.prototype, 'stopVideoRecording', async () => {});
+      mock.method(simulatorApi, 'getSimulator', async () => fakeSim as any);
 
       const driver = new SafariDriver();
       driver.caps = {'safari:deviceUDID': udid} as any;

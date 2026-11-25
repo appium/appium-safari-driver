@@ -65,14 +65,19 @@ Specifies the Appium driver to use. Must be set to `Safari` (case-insensitive)
 iOS/iPadOS Simulator only. Sets application permissions before Safari is launched, so that
 the corresponding native prompts do not appear. The value maps bundle identifiers to
 `{service: state}` rules, where `state` is one of `yes` (grant), `no` (revoke) or `unset` (reset).
-The `photos` service also accepts `limited`.
+The `photos` service also accepts `limited`, and `notifications` accepts `critical`.
+The format is the same as for the `permissions` capability of
+[the XCUITest driver](https://appium.github.io/appium-xcuitest-driver/).
 
-Supported services: `camera`, `microphone`, `motion`, `speech`, `photos`, `contacts`, `calendar`,
-`reminders` and `medialibrary`.
+Supported services: `calendar`, `camera`, `contacts`, `faceid`, `health`, `homekit`, `location`,
+`location-always`, `medialibrary`, `microphone`, `motion`, `notifications`, `photos`, `reminders`,
+`siri`, `speech`, `usertracking` and `all`. `all` applies its state to every service except
+`notifications`, `location` and `location-always`, which must be listed explicitly. The Simulator is
+booted if `location` or `location-always` is requested.
 
 ```json
 {
-  "appium:permissions": {"com.apple.mobilesafari": {"camera": "yes"}}
+  "appium:permissions": {"com.apple.mobilesafari": {"location": "yes"}}
 }
 ```
 

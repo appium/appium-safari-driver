@@ -57,7 +57,7 @@
     "e2e-test:simulator": "npm run build && node --enable-source-maps --test --test-timeout=300000 build/test/functional/mobile-driver-e2e.test.js"
   },
   "dependencies": {
-    "@appium/coresim": "^2.0.4",
+    "appium-ios-simulator": "^11.2.0",
     "asyncbox": "^7.0.0",
     "teen_process": "^5.0.0"
   },

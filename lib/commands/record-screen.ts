@@ -1,10 +1,9 @@
-import {NativeSimctl} from '@appium/coresim';
-import type {VideoRecordingOptions} from '@appium/coresim';
 import type {AppiumLogger} from '@appium/types';
+import type {Simulator, VideoRecordingOptions} from 'appium-ios-simulator';
 import {util, fs, net, tempDir} from 'appium/support.js';
 
 import type {SafariDriver} from '../driver.js';
-import {resolveSimulator} from '../simulator.js';
+import {resolveSimulator, simulatorApi} from '../simulator.js';
 
 declare module '../driver.js' {
   interface SafariDriver {
@@ -60,7 +59,7 @@ process.on('exit', () => {
 export interface StartRecordingOptions {
   /** Specifies the codec type: "h264" or "hevc" */
   codec?: string;
-  /** Supports "internal" or "external". Default is "internal" */
+  /** The id of the display to record. The primary display is recorded by default */
   display?: string;
   /** For non-rectangular displays, handle the mask by policy:
    * - ignored: The mask is ignored and the unmasked framebuffer is saved.
@@ -108,7 +107,7 @@ interface ScreenRecorderOptions {
 
 export class ScreenRecorder {
   private log: AppiumLogger;
-  private simctl: NativeSimctl;
+  private sim: Simulator | null = null;
   private _udid: string;
   private _videoPath: string;
   private _codec?: string;
@@ -120,7 +119,6 @@ export class ScreenRecorder {
 
   constructor(udid: string, videoPath: string, log: AppiumLogger, opts: ScreenRecorderOptions = {}) {
     this.log = log;
-    this.simctl = new NativeSimctl();
     this._udid = udid;
     this._videoPath = videoPath;
     this._codec = opts.codec;
@@ -146,25 +144,20 @@ export class ScreenRecorder {
     return '';
   }
 
-  /** Maps the legacy 'internal'/'external' display capability onto a coresim display id. */
-  private async _resolveDisplayId(): Promise<string | undefined> {
-    if (!this._display) {
-      return undefined;
-    }
-    const displays = await this.simctl.getDisplays(this._udid);
-    const wantsMain = this._display === 'internal';
-    return (displays.find((d) => d.isMain === wantsMain) ?? displays[0])?.id;
+  private async getSim(): Promise<Simulator> {
+    this.sim ??= await simulatorApi.getSimulator(this._udid, {logger: this.log});
+    return this.sim;
   }
 
   async start(): Promise<void> {
     const options: VideoRecordingOptions = {
-      displayId: await this._resolveDisplayId(),
+      displayId: this._display,
       codec: this._codec as VideoRecordingOptions['codec'],
       mask: this._mask as VideoRecordingOptions['mask'],
     };
     this.log.debug(`Starting video recording with options: ${JSON.stringify(options)}`);
     try {
-      await this.simctl.startVideoRecording(this._udid, this._videoPath, options);
+      await (await this.getSim()).startVideoRecording(this._videoPath, options);
     } catch (e: any) {
       throw this.log.errorWithException(`Failed to start the screen recording: ${e.message}`);
     }
@@ -189,8 +182,8 @@ export class ScreenRecorder {
 
     if (this.isRunning) {
       try {
-        // On force, coresim releases its recording state even if native stop fails; otherwise preserve `_isRunning`.
-        await this.simctl.stopVideoRecording(this._udid, {force});
+        // On force, the simulator library releases its recording state even if native stop fails; otherwise preserve `_isRunning`.
+        await (await this.getSim()).stopVideoRecording({force});
       } catch (e: any) {
         if (!force) {
           throw new Error(`Screen recording has failed to stop: ${e.message}`, {cause: e});
