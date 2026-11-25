@@ -1,19 +1,15 @@
-import {NativeSimctl, SimDeviceState} from '@appium/coresim';
-import type {SimDeviceInfo, SimPermissionService} from '@appium/coresim';
+import {NativeSimctl} from '@appium/coresim';
+import type {SimPermissionService} from '@appium/coresim';
 import type {AppiumLogger, StringRecord} from '@appium/types';
-import {sleep} from 'asyncbox';
-import {exec} from 'teen_process';
 
 import {resolveSimulator} from './simulator.js';
 
 export type PermissionState = 'yes' | 'no' | 'unset' | 'limited';
-type ExecFn = (cmd: string, args: string[]) => Promise<unknown>;
 
 interface PermissionContext {
   udid: string;
   bundleId: string;
   simctl: NativeSimctl;
-  exec: ExecFn;
 }
 
 interface PermissionService {
@@ -21,25 +17,7 @@ interface PermissionService {
   apply: (ctx: PermissionContext, state: PermissionState) => Promise<void>;
 }
 
-const SIMCTL_ACTIONS = {yes: 'grant', no: 'revoke', unset: 'reset'} as const;
 const BASIC_STATES = ['yes', 'no', 'unset'] as const;
-const BOOT_ATTEMPTS = 5;
-const BOOT_RETRY_DELAY_MS = 1000;
-
-/** Services handled by `xcrun simctl privacy` (not backed by a plain TCC row). */
-const simctlService = (name: string): PermissionService => ({
-  states: BASIC_STATES,
-  apply: async ({udid, bundleId, exec}, state) => {
-    await exec('xcrun', [
-      'simctl',
-      'privacy',
-      udid,
-      SIMCTL_ACTIONS[state as keyof typeof SIMCTL_ACTIONS],
-      name,
-      bundleId,
-    ]);
-  },
-});
 
 /** Services stored as a row in the Simulator's TCC database, handled by `@appium/coresim`. */
 const tccService = (name: SimPermissionService, extraStates: readonly PermissionState[] = []): PermissionService => ({
@@ -59,9 +37,6 @@ const tccService = (name: SimPermissionService, extraStates: readonly Permission
 
 /** Supported services. To support a new one, add an entry here. */
 const PERMISSION_SERVICES: Record<string, PermissionService> = {
-  location: simctlService('location'),
-  'location-always': simctlService('location-always'),
-  'photos-add': simctlService('photos-add'),
   photos: tccService('photos', ['limited']),
   camera: tccService('camera'),
   microphone: tccService('microphone'),
@@ -99,32 +74,8 @@ export function parsePermissions(value: unknown): Record<string, Record<string, 
   return value as Record<string, Record<string, PermissionState>>;
 }
 
-/** Permissions can only be changed on a booted Simulator. */
-async function ensureBooted(device: SimDeviceInfo, simctl: NativeSimctl, log: AppiumLogger): Promise<void> {
-  const {udid} = device;
-  let {state} = device;
-  for (let attempt = 1; state !== SimDeviceState.Booted && state !== SimDeviceState.Booting; attempt++) {
-    log.info(`Booting Simulator ${udid} to apply the requested permissions`);
-    try {
-      await simctl.bootDevice(udid);
-      break;
-    } catch (e) {
-      // Might be booted concurrently or still shutting down - re-check the state and retry
-      state = (await simctl.getDevices()).find((d) => d.udid === udid)?.state ?? state;
-      if (state === SimDeviceState.Booted || state === SimDeviceState.Booting) {
-        break;
-      }
-      if (attempt >= BOOT_ATTEMPTS) {
-        throw e;
-      }
-      await sleep(BOOT_RETRY_DELAY_MS);
-    }
-  }
-  await simctl.waitForBoot(udid);
-}
-
 /** Applies the `permissions` capability to the target Simulator. Must run before Safari is launched. */
-export async function applyPermissions(caps: StringRecord, log: AppiumLogger, execFn: ExecFn = exec): Promise<void> {
+export async function applyPermissions(caps: StringRecord, log: AppiumLogger): Promise<void> {
   if (caps.permissions === undefined) {
     return;
   }
@@ -138,12 +89,11 @@ export async function applyPermissions(caps: StringRecord, log: AppiumLogger, ex
     );
   }
   const simctl = new NativeSimctl();
-  await ensureBooted(device, simctl, log);
   for (const [bundleId, rules] of Object.entries(permissions)) {
     for (const [service, state] of Object.entries(rules)) {
       log.debug(`Setting '${service}' permission of '${bundleId}' to '${state}' on ${device.udid}`);
       try {
-        await PERMISSION_SERVICES[service].apply({udid: device.udid, bundleId, simctl, exec: execFn}, state);
+        await PERMISSION_SERVICES[service].apply({udid: device.udid, bundleId, simctl}, state);
       } catch (e: any) {
         throw new Error(`Cannot set '${service}' permission of '${bundleId}' to '${state}': ${e.message}`, {cause: e});
       }
