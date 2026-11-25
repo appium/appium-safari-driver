@@ -37,6 +37,9 @@ const desiredCapConstraints = {
   'safari:diagnose': {
     isBoolean: true,
   },
+  permissions: {
+    isObject: true,
+  },
   'webkit:WebRTC': {
     isObject: true,
   },

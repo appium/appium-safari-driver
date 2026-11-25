@@ -1,10 +1,10 @@
-import {NativeSimctl, SimDeviceState} from '@appium/coresim';
+import {NativeSimctl} from '@appium/coresim';
 import type {VideoRecordingOptions} from '@appium/coresim';
-import type {AppiumLogger, StringRecord} from '@appium/types';
+import type {AppiumLogger} from '@appium/types';
 import {util, fs, net, tempDir} from 'appium/support.js';
 
 import type {SafariDriver} from '../driver.js';
-import {parseRuntimeIdentifier} from '../utils.js';
+import {resolveSimulator} from '../simulator.js';
 
 declare module '../driver.js' {
   interface SafariDriver {
@@ -245,7 +245,7 @@ export async function startRecordingScreen(this: SafariDriver, options?: StartRe
     }
   }
 
-  const udid = await extractSimulatorUdid(this.caps);
+  const udid = (await resolveSimulator(this.caps, {bootedOnly: true}))?.udid;
   if (!udid) {
     throw new Error('Cannot determine Simulator UDID to record the video from. Double check your session capabilities');
   }
@@ -296,34 +296,4 @@ export async function stopRecordingScreen(this: SafariDriver, options?: StopReco
     this.log.debug(`The size of the resulting screen recording is ${util.toReadableSizeString(size)}`);
   }
   return await uploadRecordedMedia(videoPath, options?.remotePath ?? null, options ?? {});
-}
-
-async function extractSimulatorUdid(caps: StringRecord): Promise<string | null> {
-  if (caps['safari:useSimulator'] === false) {
-    return null;
-  }
-
-  const allDevices = await new NativeSimctl().getDevices();
-  for (const {name, udid, state, runtimeIdentifier} of allDevices) {
-    if (state !== SimDeviceState.Booted) {
-      continue;
-    }
-    const runtimeInfo = parseRuntimeIdentifier(runtimeIdentifier);
-    if (runtimeInfo?.platform !== 'iOS') {
-      continue;
-    }
-
-    if (caps['safari:deviceUDID']?.toLowerCase() === udid.toLowerCase()) {
-      return udid;
-    }
-    if (
-      caps['safari:deviceName']?.toLowerCase() === name.toLowerCase() &&
-      ((caps['safari:platformVersion'] && caps['safari:platformVersion'] === runtimeInfo.version) ||
-        !caps['safari:platformVersion'])
-    ) {
-      return udid;
-    }
-  }
-
-  return null;
 }

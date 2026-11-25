@@ -13,6 +13,7 @@ import {findElOrEls} from './commands/find.js';
 import {startRecordingScreen, stopRecordingScreen, type ScreenRecorder} from './commands/record-screen.js';
 import {desiredCapConstraints, type SafariConstraints} from './desired-caps.js';
 import {newMethodMap} from './method-map.js';
+import {applyPermissions} from './permissions.js';
 import {SafariDriverServer} from './safari.js';
 import {formatCapsForServer} from './utils.js';
 
@@ -80,6 +81,7 @@ export class SafariDriver
     const [sessionId, caps] = await super.createSession(w3cCapabilities);
     this._safari = new SafariDriverServer(this.log);
     try {
+      await applyPermissions(caps, this.log);
       await this.safari.start(formatCapsForServer(caps), {
         reqBasePath: this.basePath,
       });
