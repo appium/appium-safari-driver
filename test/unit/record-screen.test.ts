@@ -149,6 +149,8 @@ describe('ScreenRecorder', () => {
           udid,
           name: 'iPhone 16',
           state: 'Booted',
+          platform: 'iOS',
+          deviceTypeIdentifier: 'com.apple.CoreSimulator.SimDeviceType.iPhone-16',
           runtimeIdentifier: 'com.apple.CoreSimulator.SimRuntime.iOS-18-0',
         } as any,
       ]);

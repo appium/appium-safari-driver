@@ -81,8 +81,13 @@ export class SafariDriver
     const [sessionId, caps] = await super.createSession(w3cCapabilities);
     this._safari = new SafariDriverServer(this.log);
     try {
-      await applyPermissions(caps, this.log);
-      await this.safari.start(formatCapsForServer(caps), {
+      const serverCaps = formatCapsForServer(caps);
+      // Make sure Safari starts on the very Simulator that received the permissions
+      const udid = await applyPermissions(caps, this.log);
+      if (udid) {
+        serverCaps['safari:deviceUDID'] = udid;
+      }
+      await this.safari.start(serverCaps, {
         reqBasePath: this.basePath,
       });
     } catch (e) {

@@ -10,8 +10,16 @@ const log = logger.getLogger('PermissionsTest');
 const RUNTIME = 'com.apple.CoreSimulator.SimRuntime.iOS-17-4';
 const SAFARI = 'com.apple.mobilesafari';
 
-const device = (udid: string, state: string, name = 'iPhone') =>
-  ({udid, name, state, runtimeIdentifier: RUNTIME}) as any;
+const device = (udid: string, state: string, name = 'iPhone', extra: Record<string, string> = {}) =>
+  ({
+    udid,
+    name,
+    state,
+    platform: 'iOS',
+    runtimeIdentifier: RUNTIME,
+    deviceTypeIdentifier: 'com.apple.CoreSimulator.SimDeviceType.iPhone-15',
+    ...extra,
+  }) as any;
 
 describe('parsePermissions', () => {
   it('accepts valid rules', () => {
@@ -28,15 +36,62 @@ describe('parsePermissions', () => {
 describe('resolveSimulator', () => {
   afterEach(() => mock.restoreAll());
 
+  const mockDevices = (...devices: any[]) => mock.method(simulatorApi, 'listSimulators', async () => devices);
+
   it('prefers a booted device among name matches', async () => {
-    mock.method(simulatorApi, 'listSimulators', async () => [device('A', 'Shutdown'), device('B', 'Booted')]);
+    mockDevices(device('A', 'Shutdown'), device('B', 'Booted'));
     assert.equal((await resolveSimulator({'safari:deviceName': 'iPhone'}))?.udid, 'B');
   });
 
   it('falls back to a shutdown device unless bootedOnly', async () => {
-    mock.method(simulatorApi, 'listSimulators', async () => [device('A', 'Shutdown')]);
+    mockDevices(device('A', 'Shutdown'));
     assert.equal((await resolveSimulator({'safari:deviceName': 'iPhone'}))?.udid, 'A');
     assert.equal(await resolveSimulator({'safari:deviceName': 'iPhone'}, {bootedOnly: true}), null);
+  });
+
+  it('lets an explicit UDID rule out other devices with the same name', async () => {
+    mockDevices(device('A', 'Booted'), device('B', 'Shutdown'));
+    assert.equal((await resolveSimulator({'safari:deviceName': 'iPhone', 'safari:deviceUDID': 'b'}))?.udid, 'B');
+    assert.equal(await resolveSimulator({'safari:deviceName': 'iPad', 'safari:deviceUDID': 'b'}), null);
+  });
+
+  it('picks an eligible simulator if only useSimulator is set', async () => {
+    mockDevices(device('A', 'Shutdown'), device('B', 'Booted'));
+    assert.equal((await resolveSimulator({'safari:useSimulator': true}))?.udid, 'B');
+    assert.equal(await resolveSimulator({}), null);
+    assert.equal(await resolveSimulator({'safari:useSimulator': false, 'safari:deviceUDID': 'a'}), null);
+  });
+
+  it('skips non-iOS devices', async () => {
+    mockDevices(device('A', 'Booted', 'iPhone', {platform: 'tvOS'}));
+    assert.equal(await resolveSimulator({'safari:useSimulator': true}), null);
+  });
+
+  it('prefix-matches the platform version', async () => {
+    mockDevices(device('A', 'Booted'));
+    assert.equal((await resolveSimulator({'safari:useSimulator': true, 'safari:platformVersion': '17'}))?.udid, 'A');
+    assert.equal((await resolveSimulator({'safari:useSimulator': true, 'safari:platformVersion': '17.4'}))?.udid, 'A');
+    assert.equal(await resolveSimulator({'safari:useSimulator': true, 'safari:platformVersion': '1'}), null);
+    assert.equal(await resolveSimulator({'safari:useSimulator': true, 'safari:platformVersion': '17.5'}), null);
+  });
+
+  it('supports runtime identifiers with a model suffix', async () => {
+    mockDevices(
+      device('A', 'Shutdown', 'iPhone Duo', {
+        runtimeIdentifier: 'com.apple.CoreSimulator.SimRuntime.iOS-27-2-iPhone19-4',
+      }),
+    );
+    assert.equal((await resolveSimulator({'safari:deviceUDID': 'a'}))?.udid, 'A');
+    assert.equal((await resolveSimulator({'safari:deviceUDID': 'a', 'safari:platformVersion': '27.2'}))?.udid, 'A');
+  });
+
+  it('matches the device type', async () => {
+    mockDevices(
+      device('A', 'Booted', 'iPad', {deviceTypeIdentifier: 'com.apple.CoreSimulator.SimDeviceType.iPad-Pro-11-inch'}),
+      device('B', 'Booted'),
+    );
+    assert.equal((await resolveSimulator({'safari:useSimulator': true, 'safari:deviceType': 'iPad'}))?.udid, 'A');
+    assert.equal((await resolveSimulator({'safari:useSimulator': true, 'safari:deviceType': 'IPHONE'}))?.udid, 'B');
   });
 });
 
@@ -58,7 +113,7 @@ describe('applyPermissions', () => {
   }
 
   it('does nothing without the capability', async () => {
-    await applyPermissions({}, log);
+    assert.equal(await applyPermissions({}, log), null);
   });
 
   it('throws if no simulator matches', async () => {
@@ -75,7 +130,7 @@ describe('applyPermissions', () => {
 
   it('passes the rules to the simulator for Safari without booting it', async () => {
     const sim = mockSim('Shutdown');
-    await applyPermissions(caps({camera: 'yes', photos: 'limited'}), log);
+    assert.equal(await applyPermissions(caps({camera: 'yes', photos: 'limited'}), log), 'ABC');
     assert.deepEqual(
       sim.setPermissions.mock.calls.map((c) => c.arguments),
       [[SAFARI, {camera: 'yes', photos: 'limited'}]],

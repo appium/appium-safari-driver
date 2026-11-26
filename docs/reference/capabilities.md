@@ -66,6 +66,8 @@ iOS/iPadOS Simulator only. Sets Safari's permissions before it is launched, so t
 corresponding native prompts do not appear. The value maps service names to states, where a state is
 one of `yes` (grant), `no` (revoke) or `unset` (reset). The `photos` service also accepts `limited`,
 and `notifications` accepts `critical`.
+The Simulator is selected using the `safari:` device capabilities, and Safari is then started on that
+very Simulator.
 
 Supported services: `calendar`, `camera`, `contacts`, `faceid`, `health`, `homekit`, `location`,
 `location-always`, `medialibrary`, `microphone`, `motion`, `notifications`, `photos`, `reminders`,

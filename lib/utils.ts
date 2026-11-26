@@ -24,8 +24,11 @@ export function formatCapsForServer(caps: StringRecord): StringRecord {
   return result;
 }
 
-/** Parses `com.apple.CoreSimulator.SimRuntime.iOS-17-4` into `{platform: 'iOS', version: '17.4'}`. */
+/**
+ * Parses `com.apple.CoreSimulator.SimRuntime.iOS-17-4` into `{platform: 'iOS', version: '17.4'}`.
+ * A trailing model suffix, as in `iOS-27-2-iPhone19-4`, is ignored.
+ */
 export function parseRuntimeIdentifier(runtimeIdentifier: string): {platform: string; version: string} | null {
-  const match = /\.SimRuntime\.([A-Za-z]+)-([\d-]+)$/.exec(runtimeIdentifier);
+  const match = /\.SimRuntime\.([A-Za-z]+)-(\d+(?:-\d+)*)(?:-.+)?$/.exec(runtimeIdentifier);
   return match ? {platform: match[1], version: match[2].replace(/-/g, '.')} : null;
 }

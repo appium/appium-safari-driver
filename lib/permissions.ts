@@ -18,10 +18,13 @@ export function parsePermissions(value: unknown): StringRecord<string> {
   return value as StringRecord<string>;
 }
 
-/** Applies the `permissions` capability to the target Simulator. Must run before Safari is launched. */
-export async function applyPermissions(caps: StringRecord, log: AppiumLogger): Promise<void> {
+/**
+ * Applies the `permissions` capability to the target Simulator. Must run before Safari is launched.
+ * @returns The UDID of the Simulator that received the permissions, or `null` if none were requested.
+ */
+export async function applyPermissions(caps: StringRecord, log: AppiumLogger): Promise<string | null> {
   if (caps.permissions === undefined) {
-    return;
+    return null;
   }
 
   const permissions = parsePermissions(caps.permissions);
@@ -44,4 +47,5 @@ export async function applyPermissions(caps: StringRecord, log: AppiumLogger): P
   } catch (e: any) {
     throw new Error(`Cannot set permissions ${JSON.stringify(permissions)}: ${e.message}`, {cause: e});
   }
+  return device.udid;
 }
