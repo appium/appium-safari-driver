@@ -70,6 +70,47 @@ describe('ScreenRecorder', () => {
     }
   });
 
+  describe('display selection', () => {
+    const displays = [
+      {id: 'main-port', displayClass: 0, isMain: true},
+      {id: 'external-port', displayClass: 1, isMain: false},
+    ];
+
+    async function recordWithDisplay(display?: string, available = displays) {
+      const tmpRoot = await tempDir.openDir();
+      try {
+        const recorder = new ScreenRecorder('00000000-0000-0000-0000-000000000000', path.join(tmpRoot, 'v.mp4'), log, {
+          display,
+        });
+        const start = mock.fn(async (_file: string, _opts: {displayId?: string}) => {});
+        const getDisplays = mock.fn(async () => available);
+        (recorder as any).sim = {startVideoRecording: start, stopVideoRecording: async () => {}, getDisplays};
+        await recorder.start();
+        await recorder.stop(true);
+        return {displayId: start.mock.calls[0].arguments[1].displayId, listed: getDisplays.mock.callCount() > 0};
+      } finally {
+        await fs.rimraf(tmpRoot);
+      }
+    }
+
+    it('should not list displays by default', async () => {
+      assert.deepEqual(await recordWithDisplay(), {displayId: undefined, listed: false});
+    });
+
+    it('should map internal/external onto display ids', async () => {
+      assert.equal((await recordWithDisplay('internal')).displayId, 'main-port');
+      assert.equal((await recordWithDisplay('external')).displayId, 'external-port');
+    });
+
+    it('should fall back to the first display if there is no match', async () => {
+      assert.equal((await recordWithDisplay('external', [displays[0]])).displayId, 'main-port');
+    });
+
+    it('should pass an explicit display id through', async () => {
+      assert.deepEqual(await recordWithDisplay('some-port'), {displayId: 'some-port', listed: false});
+    });
+  });
+
   it('should throw and preserve isRunning when non-force stop(false) fails natively', async () => {
     const tmpRoot = await tempDir.openDir();
     const videoPath = path.join(tmpRoot, 'non-force-fail.mp4');

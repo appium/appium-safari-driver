@@ -59,7 +59,9 @@ process.on('exit', () => {
 export interface StartRecordingOptions {
   /** Specifies the codec type: "h264" or "hevc" */
   codec?: string;
-  /** The id of the display to record. The primary display is recorded by default */
+  /** "internal", "external" or an explicit display id (e.g. a port UUID). The primary display is recorded by default.
+   * "internal" cannot tell the panels of multi-display devices (such as iPhone Duo) apart, so use a display id there.
+   */
   display?: string;
   /** For non-rectangular displays, handle the mask by policy:
    * - ignored: The mask is ignored and the unmasked framebuffer is saved.
@@ -149,9 +151,19 @@ export class ScreenRecorder {
     return this.sim;
   }
 
+  /** Maps the 'internal'/'external' display option onto a display id; any other value is a display id itself. */
+  private async _resolveDisplayId(): Promise<string | undefined> {
+    if (!this._display || (this._display !== 'internal' && this._display !== 'external')) {
+      return this._display;
+    }
+    const displays = await (await this.getSim()).getDisplays();
+    const wantsMain = this._display === 'internal';
+    return (displays.find((d) => d.isMain === wantsMain) ?? displays[0])?.id;
+  }
+
   async start(): Promise<void> {
     const options: VideoRecordingOptions = {
-      displayId: this._display,
+      displayId: await this._resolveDisplayId(),
       codec: this._codec as VideoRecordingOptions['codec'],
       mask: this._mask as VideoRecordingOptions['mask'],
     };
