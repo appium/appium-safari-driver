@@ -15,13 +15,13 @@ const device = (udid: string, state: string, name = 'iPhone') =>
 
 describe('parsePermissions', () => {
   it('accepts valid rules', () => {
-    const rules = {[SAFARI]: {location: 'yes', camera: 'no', photos: 'limited'}};
+    const rules = {location: 'yes', camera: 'no', photos: 'limited'};
     assert.deepEqual(parsePermissions(rules), rules);
   });
 
   it('rejects non-objects', () => {
     assert.throws(() => parsePermissions('{}'), /must be a map/);
-    assert.throws(() => parsePermissions({[SAFARI]: 'yes'}), /must be a map/);
+    assert.throws(() => parsePermissions(['camera']), /must be a map/);
   });
 });
 
@@ -63,48 +63,42 @@ describe('applyPermissions', () => {
 
   it('throws if no simulator matches', async () => {
     mock.method(simulatorApi, 'listSimulators', async () => []);
-    await assert.rejects(applyPermissions(caps({a: {camera: 'yes'}}), log), /only supported on iOS Simulators/);
+    await assert.rejects(applyPermissions(caps({camera: 'yes'}), log), /only supported on iOS Simulators/);
   });
 
   it('throws if the simulator is explicitly disabled', async () => {
     await assert.rejects(
-      applyPermissions({'safari:useSimulator': false, permissions: {a: {camera: 'yes'}}}, log),
+      applyPermissions({'safari:useSimulator': false, permissions: {camera: 'yes'}}, log),
       /only supported on iOS Simulators/,
     );
   });
 
-  it('passes the rules of each bundle to the simulator without booting it', async () => {
+  it('passes the rules to the simulator for Safari without booting it', async () => {
     const sim = mockSim('Shutdown');
-    await applyPermissions(
-      caps({[SAFARI]: {camera: 'yes', photos: 'limited'}, 'com.example.app': {microphone: 'no'}}),
-      log,
-    );
+    await applyPermissions(caps({camera: 'yes', photos: 'limited'}), log);
     assert.deepEqual(
       sim.setPermissions.mock.calls.map((c) => c.arguments),
-      [
-        [SAFARI, {camera: 'yes', photos: 'limited'}],
-        ['com.example.app', {microphone: 'no'}],
-      ],
+      [[SAFARI, {camera: 'yes', photos: 'limited'}]],
     );
     assert.equal(sim.boot.mock.callCount(), 0);
   });
 
   it('boots the simulator for location services', async () => {
     const sim = mockSim('Shutdown');
-    await applyPermissions(caps({[SAFARI]: {location: 'yes'}}), log);
+    await applyPermissions(caps({location: 'yes'}), log);
     assert.equal(sim.boot.mock.callCount(), 1);
     assert.deepEqual(sim.waitForBoot.mock.calls[0].arguments, [1000]);
     assert.equal(sim.setPermissions.mock.callCount(), 1);
   });
 
-  it('names the failed bundle in the error', async () => {
+  it('includes the rules in the error', async () => {
     const sim = mockSim();
     sim.setPermissions.mock.mockImplementation(async () => {
       throw new Error('boom');
     });
     await assert.rejects(
-      applyPermissions(caps({[SAFARI]: {camera: 'yes'}}), log),
-      /Cannot set permissions of 'com\.apple\.mobilesafari' to \{"camera":"yes"\}: boom/,
+      applyPermissions(caps({camera: 'yes'}), log),
+      /Cannot set permissions \{"camera":"yes"\}: boom/,
     );
   });
 });

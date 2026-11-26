@@ -56,7 +56,7 @@ Simulators, use the [`appium:permissions`](../reference/capabilities.md#permissi
 
 ```json
 {
-  "appium:permissions": {"com.apple.mobilesafari": {"location": "yes"}}
+  "appium:permissions": {"location": "yes"}
 }
 ```
 

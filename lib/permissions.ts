@@ -5,20 +5,17 @@ import {resolveSimulator, simulatorApi} from './simulator.js';
 // Unlike the other services, these are not stored in the TCC database, so the Simulator must be booted
 const SERVICES_REQUIRING_BOOT = ['location', 'location-always'];
 
+const SAFARI_BUNDLE_ID = 'com.apple.mobilesafari';
+
 /**
- * Parses the `permissions` capability: `{<bundleId>: {<service>: <state>}}`.
+ * Parses the `permissions` capability: `{<service>: <state>}`.
  * Services and states are validated by the simulator library.
  */
-export function parsePermissions(value: unknown): Record<string, StringRecord<string>> {
+export function parsePermissions(value: unknown): StringRecord<string> {
   if (!value || typeof value !== 'object' || Array.isArray(value)) {
-    throw new Error(`The 'permissions' capability must be a map of bundle identifiers to permission rules`);
+    throw new Error(`The 'permissions' capability must be a map of service names to states`);
   }
-  for (const [bundleId, rules] of Object.entries(value)) {
-    if (!rules || typeof rules !== 'object' || Array.isArray(rules)) {
-      throw new Error(`The permission rules for '${bundleId}' must be a map of service names to states`);
-    }
-  }
-  return value as Record<string, StringRecord<string>>;
+  return value as StringRecord<string>;
 }
 
 /** Applies the `permissions` capability to the target Simulator. Must run before Safari is launched. */
@@ -36,19 +33,15 @@ export async function applyPermissions(caps: StringRecord, log: AppiumLogger): P
     );
   }
   const sim = await simulatorApi.getSimulator(device.udid, {logger: log});
-  const needsBoot = Object.values(permissions).some((rules) =>
-    Object.keys(rules).some((service) => SERVICES_REQUIRING_BOOT.includes(service.toLowerCase())),
-  );
+  const needsBoot = Object.keys(permissions).some((service) => SERVICES_REQUIRING_BOOT.includes(service.toLowerCase()));
   if (needsBoot) {
     log.info(`Booting Simulator ${device.udid} to apply the requested permissions`);
     await sim.boot();
     await sim.waitForBoot(sim.startupTimeout);
   }
-  for (const [bundleId, rules] of Object.entries(permissions)) {
-    try {
-      await sim.setPermissions(bundleId, rules);
-    } catch (e: any) {
-      throw new Error(`Cannot set permissions of '${bundleId}' to ${JSON.stringify(rules)}: ${e.message}`, {cause: e});
-    }
+  try {
+    await sim.setPermissions(SAFARI_BUNDLE_ID, permissions);
+  } catch (e: any) {
+    throw new Error(`Cannot set permissions ${JSON.stringify(permissions)}: ${e.message}`, {cause: e});
   }
 }
