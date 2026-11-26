@@ -60,5 +60,9 @@ Simulators, use the [`appium:permissions`](../reference/capabilities.md#permissi
 }
 ```
 
+The capability is not supported on real devices. There, grant the permissions manually in the device
+settings beforehand (for example, in the _Settings_ app under _Privacy & Security_ and
+_Apps_ -> _Safari_).
+
 For other native alerts, you can use [the XCUITest driver](https://appium.github.io/appium-xcuitest-driver/)
 with `browserName: 'Safari'`.
