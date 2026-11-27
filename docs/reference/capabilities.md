@@ -66,11 +66,7 @@ iOS/iPadOS Simulator only. Sets Safari's permissions before it is launched, so t
 corresponding native prompts do not appear. The value maps service names to states, where a state is
 one of `yes` (grant), `no` (revoke) or `unset` (reset). The `photos` service also accepts `limited`,
 and `notifications` accepts `critical`.
-The Simulator is selected using the `safari:` device capabilities, and Safari is then started on that
-very Simulator.
-When using `appium:permissions`, omit both `safari:platformBuildVersion` and `browserVersion`. To
-target a particular Simulator, specify its `safari:deviceUDID`. Adding a UDID while keeping either
-of these constraints still fails.
+This capability cannot be combined with `safari:platformBuildVersion` and `browserVersion`.
 
 Supported services: `calendar`, `camera`, `contacts`, `faceid`, `health`, `homekit`, `location`,
 `location-always`, `medialibrary`, `microphone`, `motion`, `notifications`, `photos`, `reminders`,
