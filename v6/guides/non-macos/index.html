@@ -1522,12 +1522,13 @@ test device:</p>
 <p>The <code>safaridriver</code> binary only automates web content, and cannot control any native iOS UI elements
 or simulator settings. As such, XCUITest-specific capabilities like <code>appium:safariAllowPopups</code> have
 no effect in the Safari driver.</p>
-<p>In order to bypass native iOS system permission prompts (such as geolocation alerts) on iOS
-Simulators, grant the permission beforehand:
-<div class="language-text highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>xcrun simctl privacy &lt;udid&gt; grant location com.apple.mobilesafari
-</span></code></pre></div>
-Alternatively, you can use <a href="https://appium.github.io/appium-xcuitest-driver/">the XCUITest driver</a>
-with <code>browserName: 'Safari'</code> when native alert or permission handling is needed.</p>
+<p>To bypass native iOS system permission prompts (such as geolocation alerts) on iOS
+Simulators, use the <a href="../../reference/capabilities/#permissions"><code>appium:permissions</code></a> capability.
+The capability is not supported on real devices. There, grant the permissions manually in the device
+settings beforehand (for example, in the <em>Settings</em> app under <em>Privacy &amp; Security</em> and
+<em>Apps</em> -&gt; <em>Safari</em>).</p>
+<p>For other native alerts, you can use <a href="https://appium.github.io/appium-xcuitest-driver/">the XCUITest driver</a>
+with <code>browserName: 'Safari'</code>.</p>
 
 
 
@@ -1548,7 +1549,7 @@ with <code>browserName: 'Safari'</code> when native alert or permission handling
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="November 24, 2026 13:38:34 UTC"><span class="timeago" datetime="2026-11-24T13:38:34+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="November 24, 2026 13:38:34 UTC">2026-11-24</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="November 27, 2026 19:23:30 UTC"><span class="timeago" datetime="2026-11-27T19:23:30+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="November 27, 2026 19:23:30 UTC">2026-11-27</span>
   </span>
 
     

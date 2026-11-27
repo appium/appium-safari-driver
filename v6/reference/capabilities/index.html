@@ -1024,6 +1024,43 @@
   
 </li>
         
+          <!--
+  Copyright (c) 2016-2024 Martin Donath <martin.donath@squidfunk.com>
+
+  Permission is hereby granted, free of charge, to any person obtaining a copy
+  of this software and associated documentation files (the "Software"), to
+  deal in the Software without restriction, including without limitation the
+  rights to use, copy, modify, merge, publish, distribute, sublicense, and/or
+  sell copies of the Software, and to permit persons to whom the Software is
+  furnished to do so, subject to the following conditions:
+
+  The above copyright notice and this permission notice shall be included in
+  all copies or substantial portions of the Software.
+
+  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+  FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT. IN NO EVENT SHALL THE
+  AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+  FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
+  IN THE SOFTWARE.
+-->
+
+<!-- modified from https://raw.githubusercontent.com/squidfunk/mkdocs-material/master/src/templates/partials/toc-item.html
+     for the purpose of not showing all heading objects in the TOC -->
+
+<!-- Table of contents item -->
+<li class="md-nav__item">
+  <a href="#permissions" class="md-nav__link">
+    <span class="md-ellipsis">
+      permissions
+    </span>
+  </a>
+
+  <!-- Table of contents list -->
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -2300,6 +2337,43 @@
   
 </li>
         
+          <!--
+  Copyright (c) 2016-2024 Martin Donath <martin.donath@squidfunk.com>
+
+  Permission is hereby granted, free of charge, to any person obtaining a copy
+  of this software and associated documentation files (the "Software"), to
+  deal in the Software without restriction, including without limitation the
+  rights to use, copy, modify, merge, publish, distribute, sublicense, and/or
+  sell copies of the Software, and to permit persons to whom the Software is
+  furnished to do so, subject to the following conditions:
+
+  The above copyright notice and this permission notice shall be included in
+  all copies or substantial portions of the Software.
+
+  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+  FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT. IN NO EVENT SHALL THE
+  AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+  FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
+  IN THE SOFTWARE.
+-->
+
+<!-- modified from https://raw.githubusercontent.com/squidfunk/mkdocs-material/master/src/templates/partials/toc-item.html
+     for the purpose of not showing all heading objects in the TOC -->
+
+<!-- Table of contents item -->
+<li class="md-nav__item">
+  <a href="#permissions" class="md-nav__link">
+    <span class="md-ellipsis">
+      permissions
+    </span>
+  </a>
+
+  <!-- Table of contents list -->
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -3035,6 +3109,38 @@ example, a value of '12' will allow hosts with a Safari version of '12.0.1' or '
 </tbody>
 </table>
 <p>Specifies the Appium driver to use. Must be set to <code>Safari</code> (case-insensitive)</p>
+<h3 id="permissions">permissions<a class="headerlink" href="#permissions" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Type</th>
+<th>Default</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>appium:permissions</code></td>
+<td><code>object</code></td>
+<td>Not specified</td>
+</tr>
+</tbody>
+</table>
+<p>iOS/iPadOS Simulator only. Sets Safari's permissions before it is launched, so that the
+corresponding native prompts do not appear. The value maps service names to states, where a state is
+one of <code>yes</code> (grant), <code>no</code> (revoke) or <code>unset</code> (reset). The <code>photos</code> service also accepts <code>limited</code>,
+and <code>notifications</code> accepts <code>critical</code>.
+This capability cannot be combined with <code>safari:platformBuildVersion</code> and <code>browserVersion</code>.</p>
+<p>Supported services: <code>calendar</code>, <code>camera</code>, <code>contacts</code>, <code>faceid</code>, <code>health</code>, <code>homekit</code>, <code>location</code>,
+<code>location-always</code>, <code>medialibrary</code>, <code>microphone</code>, <code>motion</code>, <code>notifications</code>, <code>photos</code>, <code>reminders</code>,
+<code>siri</code>, <code>speech</code>, <code>usertracking</code> and <code>all</code>. <code>all</code> applies its state to every service except
+<code>notifications</code>, <code>location</code> and <code>location-always</code>, which must be listed explicitly. The Simulator is
+booted if <code>location</code> or <code>location-always</code> is requested, unless it is already running (it is never
+restarted).</p>
+<div class="language-json highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="p">{</span>
+</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="w">  </span><span class="nt">"appium:permissions"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="nt">"location"</span><span class="p">:</span><span class="w"> </span><span class="s2">"yes"</span><span class="p">}</span>
+</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="p">}</span>
+</span></code></pre></div>
 <h2 id="safari">Safari<a class="headerlink" href="#safari" title="Permanent link">&para;</a></h2>
 <h3 id="platformversion">platformVersion<a class="headerlink" href="#platformversion" title="Permanent link">&para;</a></h3>
 <table>
@@ -3292,7 +3398,7 @@ per-website settings.</p>
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="August 12, 2026 13:10:31 UTC"><span class="timeago" datetime="2026-08-12T13:10:31+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="August 12, 2026 13:10:31 UTC">2026-08-12</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="November 27, 2026 19:23:30 UTC"><span class="timeago" datetime="2026-11-27T19:23:30+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="November 27, 2026 19:23:30 UTC">2026-11-27</span>
   </span>
 
     
