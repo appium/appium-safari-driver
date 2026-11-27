@@ -1,10 +1,9 @@
-import {NativeSimctl, SimDeviceState} from '@appium/coresim';
-import type {VideoRecordingOptions} from '@appium/coresim';
-import type {AppiumLogger, StringRecord} from '@appium/types';
+import type {AppiumLogger} from '@appium/types';
+import type {Simulator, VideoRecordingOptions} from 'appium-ios-simulator';
 import {util, fs, net, tempDir} from 'appium/support.js';
 
 import type {SafariDriver} from '../driver.js';
-import {parseRuntimeIdentifier} from '../utils.js';
+import {findSimulators, simulatorApi} from '../simulator.js';
 
 declare module '../driver.js' {
   interface SafariDriver {
@@ -60,7 +59,9 @@ process.on('exit', () => {
 export interface StartRecordingOptions {
   /** Specifies the codec type: "h264" or "hevc" */
   codec?: string;
-  /** Supports "internal" or "external". Default is "internal" */
+  /** "internal", "external" or an explicit display id (e.g. a port UUID). The primary display is recorded by default.
+   * "internal" cannot tell the panels of multi-display devices (such as iPhone Duo) apart, so use a display id there.
+   */
   display?: string;
   /** For non-rectangular displays, handle the mask by policy:
    * - ignored: The mask is ignored and the unmasked framebuffer is saved.
@@ -108,7 +109,7 @@ interface ScreenRecorderOptions {
 
 export class ScreenRecorder {
   private log: AppiumLogger;
-  private simctl: NativeSimctl;
+  private sim: Simulator | null = null;
   private _udid: string;
   private _videoPath: string;
   private _codec?: string;
@@ -120,7 +121,6 @@ export class ScreenRecorder {
 
   constructor(udid: string, videoPath: string, log: AppiumLogger, opts: ScreenRecorderOptions = {}) {
     this.log = log;
-    this.simctl = new NativeSimctl();
     this._udid = udid;
     this._videoPath = videoPath;
     this._codec = opts.codec;
@@ -146,12 +146,17 @@ export class ScreenRecorder {
     return '';
   }
 
-  /** Maps the legacy 'internal'/'external' display capability onto a coresim display id. */
+  private async getSim(): Promise<Simulator> {
+    this.sim ??= await simulatorApi.getSimulator(this._udid, {logger: this.log});
+    return this.sim;
+  }
+
+  /** Maps the 'internal'/'external' display option onto a display id; any other value is a display id itself. */
   private async _resolveDisplayId(): Promise<string | undefined> {
-    if (!this._display) {
-      return undefined;
+    if (!this._display || (this._display !== 'internal' && this._display !== 'external')) {
+      return this._display;
     }
-    const displays = await this.simctl.getDisplays(this._udid);
+    const displays = await (await this.getSim()).getDisplays();
     const wantsMain = this._display === 'internal';
     return (displays.find((d) => d.isMain === wantsMain) ?? displays[0])?.id;
   }
@@ -164,7 +169,7 @@ export class ScreenRecorder {
     };
     this.log.debug(`Starting video recording with options: ${JSON.stringify(options)}`);
     try {
-      await this.simctl.startVideoRecording(this._udid, this._videoPath, options);
+      await (await this.getSim()).startVideoRecording(this._videoPath, options);
     } catch (e: any) {
       throw this.log.errorWithException(`Failed to start the screen recording: ${e.message}`);
     }
@@ -189,8 +194,8 @@ export class ScreenRecorder {
 
     if (this.isRunning) {
       try {
-        // On force, coresim releases its recording state even if native stop fails; otherwise preserve `_isRunning`.
-        await this.simctl.stopVideoRecording(this._udid, {force});
+        // On force, the simulator library releases its recording state even if native stop fails; otherwise preserve `_isRunning`.
+        await (await this.getSim()).stopVideoRecording({force});
       } catch (e: any) {
         if (!force) {
           throw new Error(`Screen recording has failed to stop: ${e.message}`, {cause: e});
@@ -226,14 +231,30 @@ export class ScreenRecorder {
  */
 export async function startRecordingScreen(this: SafariDriver, options?: StartRecordingOptions): Promise<void> {
   const {timeLimit, codec, display, mask, forceRestart = true} = options ?? {};
+  if (this._screenRecorder?.isRunning && !forceRestart) {
+    this.log.info('The screen recording is already running. Doing nothing');
+    return;
+  }
+
+  // Resolve the target first, so an unresolvable one does not discard the existing recording
+  let udid = this._simulatorUdid;
+  if (!udid) {
+    const booted = await findSimulators(this.caps, {bootedOnly: true});
+    if (booted.length > 1) {
+      throw new Error(
+        `Cannot tell which of the ${booted.length} matching booted Simulators to record the video from. ` +
+          `Specify 'safari:deviceUDID' in the session capabilities`,
+      );
+    }
+    udid = booted[0]?.udid ?? null;
+  }
+  if (!udid) {
+    throw new Error('Cannot determine Simulator UDID to record the video from. Double check your session capabilities');
+  }
+
   if (this._screenRecorder) {
     if (this._screenRecorder.isRunning) {
-      this.log.info('The screen recording is already running');
-      if (!forceRestart) {
-        this.log.info('Doing nothing');
-        return;
-      }
-      this.log.info('Forcing the active screen recording to stop');
+      this.log.info('The screen recording is already running. Forcing it to stop');
     }
     // Best-effort cleanup so a stale temp artifact cannot block starting a new recording.
     try {
@@ -243,11 +264,6 @@ export async function startRecordingScreen(this: SafariDriver, options?: StartRe
     } finally {
       this._screenRecorder = null;
     }
-  }
-
-  const udid = await extractSimulatorUdid(this.caps);
-  if (!udid) {
-    throw new Error('Cannot determine Simulator UDID to record the video from. Double check your session capabilities');
   }
 
   const videoPath = await tempDir.path({
@@ -296,34 +312,4 @@ export async function stopRecordingScreen(this: SafariDriver, options?: StopReco
     this.log.debug(`The size of the resulting screen recording is ${util.toReadableSizeString(size)}`);
   }
   return await uploadRecordedMedia(videoPath, options?.remotePath ?? null, options ?? {});
-}
-
-async function extractSimulatorUdid(caps: StringRecord): Promise<string | null> {
-  if (caps['safari:useSimulator'] === false) {
-    return null;
-  }
-
-  const allDevices = await new NativeSimctl().getDevices();
-  for (const {name, udid, state, runtimeIdentifier} of allDevices) {
-    if (state !== SimDeviceState.Booted) {
-      continue;
-    }
-    const runtimeInfo = parseRuntimeIdentifier(runtimeIdentifier);
-    if (runtimeInfo?.platform !== 'iOS') {
-      continue;
-    }
-
-    if (caps['safari:deviceUDID']?.toLowerCase() === udid.toLowerCase()) {
-      return udid;
-    }
-    if (
-      caps['safari:deviceName']?.toLowerCase() === name.toLowerCase() &&
-      ((caps['safari:platformVersion'] && caps['safari:platformVersion'] === runtimeInfo.version) ||
-        !caps['safari:platformVersion'])
-    ) {
-      return udid;
-    }
-  }
-
-  return null;
 }

@@ -56,6 +56,31 @@ This capability requires Safari 15.4 or later (originally added in [Safari Techn
 
 Specifies the Appium driver to use. Must be set to `Safari` (case-insensitive)
 
+### permissions
+
+| Name | Type | Default |
+| -- | -- | -- |
+| `appium:permissions` | `object` | Not specified |
+
+iOS/iPadOS Simulator only. Sets Safari's permissions before it is launched, so that the
+corresponding native prompts do not appear. The value maps service names to states, where a state is
+one of `yes` (grant), `no` (revoke) or `unset` (reset). The `photos` service also accepts `limited`,
+and `notifications` accepts `critical`.
+This capability cannot be combined with `safari:platformBuildVersion` and `browserVersion`.
+
+Supported services: `calendar`, `camera`, `contacts`, `faceid`, `health`, `homekit`, `location`,
+`location-always`, `medialibrary`, `microphone`, `motion`, `notifications`, `photos`, `reminders`,
+`siri`, `speech`, `usertracking` and `all`. `all` applies its state to every service except
+`notifications`, `location` and `location-always`, which must be listed explicitly. The Simulator is
+booted if `location` or `location-always` is requested, unless it is already running (it is never
+restarted).
+
+```json
+{
+  "appium:permissions": {"location": "yes"}
+}
+```
+
 ## Safari
 
 ### platformVersion

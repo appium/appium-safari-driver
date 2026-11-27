@@ -13,6 +13,7 @@ import {findElOrEls} from './commands/find.js';
 import {startRecordingScreen, stopRecordingScreen, type ScreenRecorder} from './commands/record-screen.js';
 import {desiredCapConstraints, type SafariConstraints} from './desired-caps.js';
 import {newMethodMap} from './method-map.js';
+import {applyPermissions} from './permissions.js';
 import {SafariDriverServer} from './safari.js';
 import {formatCapsForServer} from './utils.js';
 
@@ -35,6 +36,8 @@ export class SafariDriver
 
   proxyReqRes: ((...args: any[]) => any) | null = null;
   _screenRecorder: ScreenRecorder | null = null;
+  /** UDID of the Simulator chosen for the session, if the driver had to pick one */
+  _simulatorUdid: string | null = null;
 
   private isProxyActive = false;
   private _safari: SafariDriverServer | null = null;
@@ -80,7 +83,14 @@ export class SafariDriver
     const [sessionId, caps] = await super.createSession(w3cCapabilities);
     this._safari = new SafariDriverServer(this.log);
     try {
-      await this.safari.start(formatCapsForServer(caps), {
+      const serverCaps = formatCapsForServer(caps);
+      // Make sure Safari starts on the very Simulator that received the permissions
+      const udid = await applyPermissions(caps, this.log);
+      if (udid) {
+        this._simulatorUdid = udid;
+        serverCaps['safari:deviceUDID'] = udid;
+      }
+      await this.safari.start(serverCaps, {
         reqBasePath: this.basePath,
       });
     } catch (e) {
@@ -111,6 +121,7 @@ export class SafariDriver
     this.proxyReqRes = null;
     this.isProxyActive = false;
     this._screenRecorder = null;
+    this._simulatorUdid = null;
   }
 }
 

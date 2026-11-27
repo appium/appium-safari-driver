@@ -2,11 +2,11 @@ import assert from 'node:assert/strict';
 import path from 'node:path';
 import {describe, it, mock} from 'node:test';
 
-import {NativeSimctl, SimDeviceState} from '@appium/coresim';
 import {fs, logger, tempDir} from 'appium/support.js';
 
 import {ScreenRecorder} from '../../lib/commands/record-screen.js';
 import {SafariDriver} from '../../lib/driver.js';
+import {simulatorApi} from '../../lib/simulator.js';
 
 const log = logger.getLogger('ScreenRecorderTest');
 
@@ -18,7 +18,7 @@ describe('ScreenRecorder', () => {
       await fs.writeFile(videoPath, 'video-bytes');
       const recorder = new ScreenRecorder('00000000-0000-0000-0000-000000000000', videoPath, log);
       let stopCalls = 0;
-      (recorder as any).simctl = {
+      (recorder as any).sim = {
         startVideoRecording: async () => {},
         stopVideoRecording: async () => {
           stopCalls += 1;
@@ -51,7 +51,7 @@ describe('ScreenRecorder', () => {
     try {
       await fs.writeFile(videoPath, 'video-bytes');
       const recorder = new ScreenRecorder('00000000-0000-0000-0000-000000000000', videoPath, log);
-      (recorder as any).simctl = {
+      (recorder as any).sim = {
         startVideoRecording: async () => {},
         stopVideoRecording: async () => {
           throw new Error('native stop error');
@@ -70,13 +70,54 @@ describe('ScreenRecorder', () => {
     }
   });
 
+  describe('display selection', () => {
+    const displays = [
+      {id: 'main-port', displayClass: 0, isMain: true},
+      {id: 'external-port', displayClass: 1, isMain: false},
+    ];
+
+    async function recordWithDisplay(display?: string, available = displays) {
+      const tmpRoot = await tempDir.openDir();
+      try {
+        const recorder = new ScreenRecorder('00000000-0000-0000-0000-000000000000', path.join(tmpRoot, 'v.mp4'), log, {
+          display,
+        });
+        const start = mock.fn(async (_file: string, _opts: {displayId?: string}) => {});
+        const getDisplays = mock.fn(async () => available);
+        (recorder as any).sim = {startVideoRecording: start, stopVideoRecording: async () => {}, getDisplays};
+        await recorder.start();
+        await recorder.stop(true);
+        return {displayId: start.mock.calls[0].arguments[1].displayId, listed: getDisplays.mock.callCount() > 0};
+      } finally {
+        await fs.rimraf(tmpRoot);
+      }
+    }
+
+    it('should not list displays by default', async () => {
+      assert.deepEqual(await recordWithDisplay(), {displayId: undefined, listed: false});
+    });
+
+    it('should map internal/external onto display ids', async () => {
+      assert.equal((await recordWithDisplay('internal')).displayId, 'main-port');
+      assert.equal((await recordWithDisplay('external')).displayId, 'external-port');
+    });
+
+    it('should fall back to the first display if there is no match', async () => {
+      assert.equal((await recordWithDisplay('external', [displays[0]])).displayId, 'main-port');
+    });
+
+    it('should pass an explicit display id through', async () => {
+      assert.deepEqual(await recordWithDisplay('some-port'), {displayId: 'some-port', listed: false});
+    });
+  });
+
   it('should throw and preserve isRunning when non-force stop(false) fails natively', async () => {
     const tmpRoot = await tempDir.openDir();
     const videoPath = path.join(tmpRoot, 'non-force-fail.mp4');
     try {
       await fs.writeFile(videoPath, 'video-bytes');
       const recorder = new ScreenRecorder('00000000-0000-0000-0000-000000000000', videoPath, log);
-      (recorder as any).simctl = {
+      (recorder as any).sim = {
         startVideoRecording: async () => {},
         stopVideoRecording: async () => {
           throw new Error('native stop error');
@@ -102,16 +143,18 @@ describe('ScreenRecorder', () => {
       await fs.writeFile(firstVideoPath, 'first');
       await fs.writeFile(secondVideoPath, 'second');
 
-      mock.method(NativeSimctl.prototype, 'getDevices', async () => [
+      const fakeSim = {startVideoRecording: async () => {}, stopVideoRecording: async () => {}};
+      mock.method(simulatorApi, 'listSimulators', async () => [
         {
           udid,
           name: 'iPhone 16',
-          state: SimDeviceState.Booted,
+          state: 'Booted',
+          platform: 'iOS',
+          deviceTypeIdentifier: 'com.apple.CoreSimulator.SimDeviceType.iPhone-16',
           runtimeIdentifier: 'com.apple.CoreSimulator.SimRuntime.iOS-18-0',
         } as any,
       ]);
-      mock.method(NativeSimctl.prototype, 'startVideoRecording', async () => {});
-      mock.method(NativeSimctl.prototype, 'stopVideoRecording', async () => {});
+      mock.method(simulatorApi, 'getSimulator', async () => fakeSim as any);
 
       const driver = new SafariDriver();
       driver.caps = {'safari:deviceUDID': udid} as any;
@@ -144,6 +187,67 @@ describe('ScreenRecorder', () => {
     } finally {
       mock.restoreAll();
       await fs.rimraf(tmpRoot);
+    }
+  });
+
+  it('should refuse to record if several booted Simulators match and none is pinned', async () => {
+    const entry = (udid: string) => ({
+      udid,
+      name: udid,
+      state: 'Booted',
+      platform: 'iOS',
+      deviceTypeIdentifier: 'com.apple.CoreSimulator.SimDeviceType.iPhone-16',
+      runtimeIdentifier: 'com.apple.CoreSimulator.SimRuntime.iOS-18-0',
+    });
+    mock.method(simulatorApi, 'listSimulators', async () => [entry('A'), entry('B')] as any);
+    const getSimulator = mock.method(simulatorApi, 'getSimulator', async () => ({}) as any);
+    try {
+      const driver = new SafariDriver();
+      driver.caps = {'safari:useSimulator': true} as any;
+      await assert.rejects(driver.startRecordingScreen(), /which of the 2 matching booted Simulators/);
+      assert.equal(getSimulator.mock.callCount(), 0);
+    } finally {
+      mock.restoreAll();
+    }
+  });
+
+  it('should keep the running recording if the new target cannot be resolved', async () => {
+    mock.method(simulatorApi, 'listSimulators', async () => []);
+    try {
+      const driver = new SafariDriver();
+      driver.caps = {'safari:useSimulator': true} as any;
+      const stop = mock.fn(async () => {});
+      const recorder = {isRunning: true, stop} as any;
+      driver._screenRecorder = recorder;
+      await assert.rejects(driver.startRecordingScreen(), /Cannot determine Simulator UDID/);
+      assert.equal(stop.mock.callCount(), 0);
+      assert.equal(driver._screenRecorder, recorder);
+    } finally {
+      mock.restoreAll();
+    }
+  });
+
+  it('should record the Simulator pinned for the session instead of re-resolving it', async () => {
+    const list = mock.method(simulatorApi, 'listSimulators', async () => []);
+    const getSimulator = mock.method(
+      simulatorApi,
+      'getSimulator',
+      async () =>
+        ({
+          startVideoRecording: async () => {},
+          stopVideoRecording: async () => {},
+        }) as any,
+    );
+    try {
+      const driver = new SafariDriver();
+      driver.caps = {'safari:useSimulator': true} as any;
+      driver._simulatorUdid = 'B';
+      await driver.startRecordingScreen();
+      assert.equal(list.mock.callCount(), 0);
+      assert.equal(getSimulator.mock.calls[0].arguments[0], 'B');
+      await driver._screenRecorder?.stop(true);
+    } finally {
+      mock.restoreAll();
     }
   });
 });

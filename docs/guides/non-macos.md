@@ -51,10 +51,11 @@ The `safaridriver` binary only automates web content, and cannot control any nat
 or simulator settings. As such, XCUITest-specific capabilities like `appium:safariAllowPopups` have
 no effect in the Safari driver.
 
-In order to bypass native iOS system permission prompts (such as geolocation alerts) on iOS
-Simulators, grant the permission beforehand:
-```
-xcrun simctl privacy <udid> grant location com.apple.mobilesafari
-```
-Alternatively, you can use [the XCUITest driver](https://appium.github.io/appium-xcuitest-driver/)
-with `browserName: 'Safari'` when native alert or permission handling is needed.
+To bypass native iOS system permission prompts (such as geolocation alerts) on iOS
+Simulators, use the [`appium:permissions`](../reference/capabilities.md#permissions) capability.
+The capability is not supported on real devices. There, grant the permissions manually in the device
+settings beforehand (for example, in the _Settings_ app under _Privacy & Security_ and
+_Apps_ -> _Safari_).
+
+For other native alerts, you can use [the XCUITest driver](https://appium.github.io/appium-xcuitest-driver/)
+with `browserName: 'Safari'`.
