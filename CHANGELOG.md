@@ -1,3 +1,9 @@
+## [6.1.0](https://github.com/appium/appium-safari-driver/compare/v6.0.6...v6.1.0) (2026-11-27)
+
+### Features
+
+* add permissions capability for iOS simulators ([#215](https://github.com/appium/appium-safari-driver/issues/215)) ([940b45b](https://github.com/appium/appium-safari-driver/commit/940b45bec85ee0e41be544a7be29855e6dd1e163))
+
 ## [6.0.6](https://github.com/appium/appium-safari-driver/compare/v6.0.5...v6.0.6) (2026-11-27)
 
 ### Miscellaneous Chores
