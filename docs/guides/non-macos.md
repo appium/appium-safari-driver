@@ -52,14 +52,7 @@ or simulator settings. As such, XCUITest-specific capabilities like `appium:safa
 no effect in the Safari driver.
 
 To bypass native iOS system permission prompts (such as geolocation alerts) on iOS
-Simulators, use the [`appium:permissions`](../reference/capabilities.md#permissions) capability:
-
-```json
-{
-  "appium:permissions": {"location": "yes"}
-}
-```
-
+Simulators, use the [`appium:permissions`](../reference/capabilities.md#permissions) capability.
 The capability is not supported on real devices. There, grant the permissions manually in the device
 settings beforehand (for example, in the _Settings_ app under _Privacy & Security_ and
 _Apps_ -> _Safari_).

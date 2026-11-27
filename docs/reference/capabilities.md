@@ -72,7 +72,8 @@ Supported services: `calendar`, `camera`, `contacts`, `faceid`, `health`, `homek
 `location-always`, `medialibrary`, `microphone`, `motion`, `notifications`, `photos`, `reminders`,
 `siri`, `speech`, `usertracking` and `all`. `all` applies its state to every service except
 `notifications`, `location` and `location-always`, which must be listed explicitly. The Simulator is
-booted if `location` or `location-always` is requested.
+booted if `location` or `location-always` is requested, unless it is already running (it is never
+restarted).
 
 ```json
 {
