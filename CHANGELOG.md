@@ -1,3 +1,9 @@
+## [6.0.6](https://github.com/appium/appium-safari-driver/compare/v6.0.5...v6.0.6) (2026-11-27)
+
+### Miscellaneous Chores
+
+* bump @appium/types to v3 ([#216](https://github.com/appium/appium-safari-driver/issues/216)) ([192cc6f](https://github.com/appium/appium-safari-driver/commit/192cc6ff7a422abe8e19b4cfa5c8f58eaaf97cb1))
+
 ## [6.0.5](https://github.com/appium/appium-safari-driver/compare/v6.0.4...v6.0.5) (2026-11-22)
 
 ### Miscellaneous Chores
