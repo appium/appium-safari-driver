@@ -13,23 +13,22 @@ function isVersionMatch(requested: string, actual: string): boolean {
 }
 
 /**
- * Finds the iOS Simulator matching the session capabilities, or `null` if there is none.
- * Every specified capability must match. If several devices match, a booted one is preferred.
+ * Finds all iOS Simulators matching the session capabilities. Every specified capability must match.
  */
-export async function resolveSimulator(
+export async function findSimulators(
   caps: StringRecord,
   {bootedOnly = false}: {bootedOnly?: boolean} = {},
-): Promise<SimulatorListEntry | null> {
+): Promise<SimulatorListEntry[]> {
   const udid = caps['safari:deviceUDID']?.toLowerCase();
   const name = caps['safari:deviceName']?.toLowerCase();
   const deviceType = caps['safari:deviceType']?.toLowerCase();
   const platformVersion = caps['safari:platformVersion'];
   // Without a device identifier, a simulator must be requested explicitly
   if (caps['safari:useSimulator'] === false || (!udid && !name && caps['safari:useSimulator'] !== true)) {
-    return null;
+    return [];
   }
 
-  const matches = (await simulatorApi.listSimulators()).filter((device) => {
+  return (await simulatorApi.listSimulators()).filter((device) => {
     if (device.platform !== 'iOS' || (bootedOnly && device.state !== 'Booted')) {
       return false;
     }
@@ -53,5 +52,10 @@ export async function resolveSimulator(
     }
     return true;
   });
+}
+
+/** Finds the iOS Simulator matching the session capabilities, preferring a booted one. */
+export async function resolveSimulator(caps: StringRecord): Promise<SimulatorListEntry | null> {
+  const matches = await findSimulators(caps);
   return matches.find((device) => device.state === 'Booted') ?? matches[0] ?? null;
 }

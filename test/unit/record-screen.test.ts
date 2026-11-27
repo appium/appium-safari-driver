@@ -190,6 +190,27 @@ describe('ScreenRecorder', () => {
     }
   });
 
+  it('should refuse to record if several booted Simulators match and none is pinned', async () => {
+    const entry = (udid: string) => ({
+      udid,
+      name: udid,
+      state: 'Booted',
+      platform: 'iOS',
+      deviceTypeIdentifier: 'com.apple.CoreSimulator.SimDeviceType.iPhone-16',
+      runtimeIdentifier: 'com.apple.CoreSimulator.SimRuntime.iOS-18-0',
+    });
+    mock.method(simulatorApi, 'listSimulators', async () => [entry('A'), entry('B')] as any);
+    const getSimulator = mock.method(simulatorApi, 'getSimulator', async () => ({}) as any);
+    try {
+      const driver = new SafariDriver();
+      driver.caps = {'safari:useSimulator': true} as any;
+      await assert.rejects(driver.startRecordingScreen(), /which of the 2 matching booted Simulators/);
+      assert.equal(getSimulator.mock.callCount(), 0);
+    } finally {
+      mock.restoreAll();
+    }
+  });
+
   it('should record the Simulator pinned for the session instead of re-resolving it', async () => {
     const list = mock.method(simulatorApi, 'listSimulators', async () => []);
     const getSimulator = mock.method(

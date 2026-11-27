@@ -4,7 +4,7 @@ import {afterEach, describe, it, mock} from 'node:test';
 import {logger} from 'appium/support.js';
 
 import {parsePermissions, applyPermissions} from '../../lib/permissions.js';
-import {resolveSimulator, simulatorApi} from '../../lib/simulator.js';
+import {findSimulators, resolveSimulator, simulatorApi} from '../../lib/simulator.js';
 
 const log = logger.getLogger('PermissionsTest');
 const RUNTIME = 'com.apple.CoreSimulator.SimRuntime.iOS-17-4';
@@ -43,10 +43,10 @@ describe('resolveSimulator', () => {
     assert.equal((await resolveSimulator({'safari:deviceName': 'iPhone'}))?.udid, 'B');
   });
 
-  it('falls back to a shutdown device unless bootedOnly', async () => {
+  it('falls back to a shutdown device unless booted ones are requested', async () => {
     mockDevices(device('A', 'Shutdown'));
     assert.equal((await resolveSimulator({'safari:deviceName': 'iPhone'}))?.udid, 'A');
-    assert.equal(await resolveSimulator({'safari:deviceName': 'iPhone'}, {bootedOnly: true}), null);
+    assert.deepEqual(await findSimulators({'safari:deviceName': 'iPhone'}, {bootedOnly: true}), []);
   });
 
   it('lets an explicit UDID rule out other devices with the same name', async () => {

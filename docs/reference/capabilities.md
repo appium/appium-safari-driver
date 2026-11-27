@@ -68,8 +68,9 @@ one of `yes` (grant), `no` (revoke) or `unset` (reset). The `photos` service als
 and `notifications` accepts `critical`.
 The Simulator is selected using the `safari:` device capabilities, and Safari is then started on that
 very Simulator.
-The capability cannot be combined with `safari:platformBuildVersion` or `browserVersion`; use
-`safari:deviceUDID` to select the Simulator in that case.
+When using `appium:permissions`, omit both `safari:platformBuildVersion` and `browserVersion`. To
+target a particular Simulator, specify its `safari:deviceUDID`. Adding a UDID while keeping either
+of these constraints still fails.
 
 Supported services: `calendar`, `camera`, `contacts`, `faceid`, `health`, `homekit`, `location`,
 `location-always`, `medialibrary`, `microphone`, `motion`, `notifications`, `photos`, `reminders`,

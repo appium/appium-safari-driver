@@ -3,7 +3,7 @@ import type {Simulator, VideoRecordingOptions} from 'appium-ios-simulator';
 import {util, fs, net, tempDir} from 'appium/support.js';
 
 import type {SafariDriver} from '../driver.js';
-import {resolveSimulator, simulatorApi} from '../simulator.js';
+import {findSimulators, simulatorApi} from '../simulator.js';
 
 declare module '../driver.js' {
   interface SafariDriver {
@@ -250,7 +250,17 @@ export async function startRecordingScreen(this: SafariDriver, options?: StartRe
     }
   }
 
-  const udid = this._simulatorUdid ?? (await resolveSimulator(this.caps, {bootedOnly: true}))?.udid;
+  let udid = this._simulatorUdid;
+  if (!udid) {
+    const booted = await findSimulators(this.caps, {bootedOnly: true});
+    if (booted.length > 1) {
+      throw new Error(
+        `Cannot tell which of the ${booted.length} matching booted Simulators to record the video from. ` +
+          `Specify 'safari:deviceUDID' in the session capabilities`,
+      );
+    }
+    udid = booted[0]?.udid ?? null;
+  }
   if (!udid) {
     throw new Error('Cannot determine Simulator UDID to record the video from. Double check your session capabilities');
   }
