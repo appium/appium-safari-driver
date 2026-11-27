@@ -250,7 +250,7 @@ export async function startRecordingScreen(this: SafariDriver, options?: StartRe
     }
   }
 
-  const udid = (await resolveSimulator(this.caps, {bootedOnly: true}))?.udid;
+  const udid = this._simulatorUdid ?? (await resolveSimulator(this.caps, {bootedOnly: true}))?.udid;
   if (!udid) {
     throw new Error('Cannot determine Simulator UDID to record the video from. Double check your session capabilities');
   }

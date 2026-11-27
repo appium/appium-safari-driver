@@ -189,4 +189,28 @@ describe('ScreenRecorder', () => {
       await fs.rimraf(tmpRoot);
     }
   });
+
+  it('should record the Simulator pinned for the session instead of re-resolving it', async () => {
+    const list = mock.method(simulatorApi, 'listSimulators', async () => []);
+    const getSimulator = mock.method(
+      simulatorApi,
+      'getSimulator',
+      async () =>
+        ({
+          startVideoRecording: async () => {},
+          stopVideoRecording: async () => {},
+        }) as any,
+    );
+    try {
+      const driver = new SafariDriver();
+      driver.caps = {'safari:useSimulator': true} as any;
+      driver._simulatorUdid = 'B';
+      await driver.startRecordingScreen();
+      assert.equal(list.mock.callCount(), 0);
+      assert.equal(getSimulator.mock.calls[0].arguments[0], 'B');
+      await driver._screenRecorder?.stop(true);
+    } finally {
+      mock.restoreAll();
+    }
+  });
 });

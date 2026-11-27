@@ -68,6 +68,8 @@ one of `yes` (grant), `no` (revoke) or `unset` (reset). The `photos` service als
 and `notifications` accepts `critical`.
 The Simulator is selected using the `safari:` device capabilities, and Safari is then started on that
 very Simulator.
+The capability cannot be combined with `safari:platformBuildVersion` or `browserVersion`; use
+`safari:deviceUDID` to select the Simulator in that case.
 
 Supported services: `calendar`, `camera`, `contacts`, `faceid`, `health`, `homekit`, `location`,
 `location-always`, `medialibrary`, `microphone`, `motion`, `notifications`, `photos`, `reminders`,

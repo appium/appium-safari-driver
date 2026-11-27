@@ -36,6 +36,8 @@ export class SafariDriver
 
   proxyReqRes: ((...args: any[]) => any) | null = null;
   _screenRecorder: ScreenRecorder | null = null;
+  /** UDID of the Simulator chosen for the session, if the driver had to pick one */
+  _simulatorUdid: string | null = null;
 
   private isProxyActive = false;
   private _safari: SafariDriverServer | null = null;
@@ -85,6 +87,7 @@ export class SafariDriver
       // Make sure Safari starts on the very Simulator that received the permissions
       const udid = await applyPermissions(caps, this.log);
       if (udid) {
+        this._simulatorUdid = udid;
         serverCaps['safari:deviceUDID'] = udid;
       }
       await this.safari.start(serverCaps, {
@@ -118,6 +121,7 @@ export class SafariDriver
     this.proxyReqRes = null;
     this.isProxyActive = false;
     this._screenRecorder = null;
+    this._simulatorUdid = null;
   }
 }
 

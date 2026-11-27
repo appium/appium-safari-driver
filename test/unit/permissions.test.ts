@@ -128,6 +128,14 @@ describe('applyPermissions', () => {
     );
   });
 
+  it('rejects constraints that cannot be matched, without touching the simulator', async () => {
+    const sim = mockSim();
+    for (const extra of [{'safari:platformBuildVersion': '22A100'}, {browserVersion: '18.0'}]) {
+      await assert.rejects(applyPermissions({...caps({camera: 'yes'}), ...extra}, log), /cannot be combined with/);
+    }
+    assert.equal(sim.setPermissions.mock.callCount(), 0);
+  });
+
   it('passes the rules to the simulator for Safari without booting it', async () => {
     const sim = mockSim('Shutdown');
     assert.equal(await applyPermissions(caps({camera: 'yes', photos: 'limited'}), log), 'ABC');

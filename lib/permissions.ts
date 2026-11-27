@@ -28,6 +28,14 @@ export async function applyPermissions(caps: StringRecord, log: AppiumLogger): P
   }
 
   const permissions = parsePermissions(caps.permissions);
+  // The Simulator list has no build or Safari versions, so these cannot be matched before changing any state
+  const unverifiable = ['safari:platformBuildVersion', 'browserVersion'].filter((name) => caps[name]);
+  if (unverifiable.length > 0) {
+    throw new Error(
+      `The 'permissions' capability cannot be combined with ${unverifiable.map((n) => `'${n}'`).join(' or ')}, ` +
+        `since the matching Simulator cannot be determined. Use 'safari:deviceUDID' to select the Simulator instead`,
+    );
+  }
   const device = await resolveSimulator(caps);
   if (!device) {
     throw new Error(
