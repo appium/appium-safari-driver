@@ -211,6 +211,22 @@ describe('ScreenRecorder', () => {
     }
   });
 
+  it('should keep the running recording if the new target cannot be resolved', async () => {
+    mock.method(simulatorApi, 'listSimulators', async () => []);
+    try {
+      const driver = new SafariDriver();
+      driver.caps = {'safari:useSimulator': true} as any;
+      const stop = mock.fn(async () => {});
+      const recorder = {isRunning: true, stop} as any;
+      driver._screenRecorder = recorder;
+      await assert.rejects(driver.startRecordingScreen(), /Cannot determine Simulator UDID/);
+      assert.equal(stop.mock.callCount(), 0);
+      assert.equal(driver._screenRecorder, recorder);
+    } finally {
+      mock.restoreAll();
+    }
+  });
+
   it('should record the Simulator pinned for the session instead of re-resolving it', async () => {
     const list = mock.method(simulatorApi, 'listSimulators', async () => []);
     const getSimulator = mock.method(

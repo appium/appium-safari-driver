@@ -231,25 +231,12 @@ export class ScreenRecorder {
  */
 export async function startRecordingScreen(this: SafariDriver, options?: StartRecordingOptions): Promise<void> {
   const {timeLimit, codec, display, mask, forceRestart = true} = options ?? {};
-  if (this._screenRecorder) {
-    if (this._screenRecorder.isRunning) {
-      this.log.info('The screen recording is already running');
-      if (!forceRestart) {
-        this.log.info('Doing nothing');
-        return;
-      }
-      this.log.info('Forcing the active screen recording to stop');
-    }
-    // Best-effort cleanup so a stale temp artifact cannot block starting a new recording.
-    try {
-      await this._screenRecorder.stop(true);
-    } catch (e: any) {
-      this.log.warn(`Failed to clean up the previous screen recording: ${e.message}`);
-    } finally {
-      this._screenRecorder = null;
-    }
+  if (this._screenRecorder?.isRunning && !forceRestart) {
+    this.log.info('The screen recording is already running. Doing nothing');
+    return;
   }
 
+  // Resolve the target first, so an unresolvable one does not discard the existing recording
   let udid = this._simulatorUdid;
   if (!udid) {
     const booted = await findSimulators(this.caps, {bootedOnly: true});
@@ -263,6 +250,20 @@ export async function startRecordingScreen(this: SafariDriver, options?: StartRe
   }
   if (!udid) {
     throw new Error('Cannot determine Simulator UDID to record the video from. Double check your session capabilities');
+  }
+
+  if (this._screenRecorder) {
+    if (this._screenRecorder.isRunning) {
+      this.log.info('The screen recording is already running. Forcing it to stop');
+    }
+    // Best-effort cleanup so a stale temp artifact cannot block starting a new recording.
+    try {
+      await this._screenRecorder.stop(true);
+    } catch (e: any) {
+      this.log.warn(`Failed to clean up the previous screen recording: ${e.message}`);
+    } finally {
+      this._screenRecorder = null;
+    }
   }
 
   const videoPath = await tempDir.path({
