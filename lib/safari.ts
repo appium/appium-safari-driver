@@ -2,7 +2,7 @@ import {execSync} from 'node:child_process';
 import os from 'node:os';
 import path from 'node:path';
 
-import type {AppiumLogger, StringRecord, HTTPMethod, HTTPBody} from '@appium/types';
+import type {AppiumLogger, StringRecord, HTTPMethod, HTTPBody, ProxyResponse} from '@appium/types';
 import {WebDriverProxy, errors} from 'appium/driver.js';
 import {fs, logger, util, net} from 'appium/support.js';
 import {ConditionUnmetError, waitForCondition} from 'asyncbox';
@@ -21,7 +21,11 @@ const SAFARI_SERVER_GUARD = util.getLockFileGuard(path.resolve(os.tmpdir(), 'saf
 class SafariProxy extends WebDriverProxy {
   didProcessExit?: boolean;
 
-  override async proxyCommand(url: string, method: HTTPMethod, body: HTTPBody = null) {
+  override async proxyCommand(
+    url: string,
+    method: HTTPMethod,
+    body: HTTPBody = null,
+  ): Promise<[ProxyResponse, HTTPBody]> {
     if (this.didProcessExit) {
       throw new errors.InvalidContextError(
         `'${method} ${url}' cannot be proxied to Safari Driver server because ` +
